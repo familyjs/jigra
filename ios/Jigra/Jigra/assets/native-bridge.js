@@ -2,7 +2,7 @@
 /*! Jigra: https://jigrajs.web.app/ - MIT License */
 /* Generated File. Do not edit. */
 
-const nativeBridge = (function (exports) {
+var nativeBridge = (function (exports) {
     'use strict';
 
     // For removing exports for iOS/Android, keep let for reassignment

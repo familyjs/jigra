@@ -5,4 +5,4 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 # 3.7.0-rc.1 (2022-08-17)
 
-**Note:** Version bump only for package @jigra/core
+**Note:** Version bump only for package @jigra/cli

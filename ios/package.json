@@ -1,6 +1,6 @@
 {
   "name": "@jigra/ios",
-  "version": "3.7.0-rc.0",
+  "version": "3.7.0-rc.1",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Navify Team",
@@ -24,7 +24,7 @@
     "xc:build:JigraCordova": "cd JigraCordova && xcodebuild && cd .."
   },
   "peerDependencies": {
-    "@jigra/core": "^3.7.0-rc.0"
+    "@jigra/core": "^3.7.0-rc.1"
   },
   "publishConfig": {
     "access": "public"

@@ -1,0 +1,8 @@
+framework module Jigra {
+  umbrella header "Jigra.h"
+  exclude header "JIGBridgedJSTypes.h"
+  exclude header "JIGBridgeViewController+CDVScreenOrientationDelegate.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,24 @@
+{
+  "appId": "app.web.jigrajs.testshostapp",
+  "appName": "testshostapp",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "build",
+  "overrideUserAgent": "level 1 override",
+  "appendUserAgent": "level 1 append",
+  "backgroundColor": "#ffffff",
+  "hideLogs": true,
+  "loggingBehavior": "production",
+  "server": {
+  	"iosScheme": "override",
+  	"allowNavigation": ["*-jigrajs.web.app", "navify.web.app", "192.168.0.1", "subdomain-*-navifyframework.web.app", "*.*.example.com"],
+  	"hostname": "myhost",
+  	"url": "http://192.168.100.1:2057"
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {}
+}

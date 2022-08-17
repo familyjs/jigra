@@ -1,0 +1,6 @@
+framework module Cordova {
+  umbrella header "JigraCordova.h"
+
+  export *
+  module * { export * }
+}

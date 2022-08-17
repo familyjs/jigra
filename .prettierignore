@@ -1,0 +1,6 @@
+build
+core/types
+cli/assets
+dist
+android/jigra/src/main/assets/native-bridge.js
+ios/Jigra/Jigra/assets/native-bridge.js

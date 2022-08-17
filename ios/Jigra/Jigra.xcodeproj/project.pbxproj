@@ -1,0 +1,1003 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0F83E885285A332E006C43CB /* AppUUID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F83E884285A332D006C43CB /* AppUUID.swift */; };
+		2F81F5C926FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 2F81F5C726FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h */; };
+		2F81F5CA26FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */; };
+		373A69C1255C9360000A6F44 /* NotificationHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373A69C0255C9360000A6F44 /* NotificationHandlerProtocol.swift */; };
+		373A69F2255C95D0000A6F44 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373A69F1255C95D0000A6F44 /* NotificationRouter.swift */; };
+		501CBAA71FC0A723009B0D4D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501CBAA61FC0A723009B0D4D /* WebKit.framework */; };
+		50503EE91FC08595003606DC /* Jigra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50503EDF1FC08594003606DC /* Jigra.framework */; };
+		50503EEE1FC08595003606DC /* JigraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50503EED1FC08595003606DC /* JigraTests.swift */; };
+		55F6736A26C371E6001E7AB9 /* JIGWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F6736826C371E6001E7AB9 /* JIGWebView.swift */; };
+		6214934725509C3F006C36F9 /* JIGInstanceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */; };
+		621ECCB72542045900D3D615 /* JIGBridgedJSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCB42542045900D3D615 /* JIGBridgedJSTypes.m */; };
+		621ECCB82542045900D3D615 /* JIGBridgedJSTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 621ECCB62542045900D3D615 /* JIGBridgedJSTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		621ECCBC2542046400D3D615 /* JSTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCBB2542046400D3D615 /* JSTypes.swift */; };
+		621ECCC3254204B700D3D615 /* BridgedTypesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCC2254204B700D3D615 /* BridgedTypesTests.swift */; };
+		621ECCC8254204BE00D3D615 /* JSONSerializationWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCC6254204BE00D3D615 /* JSONSerializationWrapper.m */; };
+		621ECCD6254205BD00D3D615 /* JIGBridgeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCD4254205BD00D3D615 /* JIGBridgeProtocol.swift */; };
+		621ECCDA254205C400D3D615 /* JigraBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCD9254205C400D3D615 /* JigraBridge.swift */; };
+		621ECCE3254206A600D3D615 /* JIGApplicationDelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCE2254206A600D3D615 /* JIGApplicationDelegateProxy.swift */; };
+		623D68FA254C5037002D01D1 /* KeyPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D68F9254C5037002D01D1 /* KeyPath.swift */; };
+		623D6909254C6FDF002D01D1 /* JIGInstanceDescriptor.h in Headers */ = {isa = PBXBuildFile; fileRef = 623D6907254C6FDF002D01D1 /* JIGInstanceDescriptor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		623D690A254C6FDF002D01D1 /* JIGInstanceDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 623D6908254C6FDF002D01D1 /* JIGInstanceDescriptor.m */; };
+		623D6914254C7030002D01D1 /* JIGInstanceDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 623D6913254C7030002D01D1 /* JIGInstanceDescriptor.swift */; };
+		623D691D254C7462002D01D1 /* JIGInstanceConfiguration.h in Headers */ = {isa = PBXBuildFile; fileRef = 623D691B254C7462002D01D1 /* JIGInstanceConfiguration.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		623D691E254C7462002D01D1 /* JIGInstanceConfiguration.m in Sources */ = {isa = PBXBuildFile; fileRef = 623D691C254C7462002D01D1 /* JIGInstanceConfiguration.m */; };
+		625AF1ED258963C700869675 /* WebViewAssetHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625AF1EC258963C700869675 /* WebViewAssetHandler.swift */; };
+		6263686025F6EC0100576C1C /* PluginCallAccessorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6263685F25F6EC0100576C1C /* PluginCallAccessorTests.m */; };
+		626D2D992613B61E0046CE81 /* hidinglogs.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 626D2D902613B4BB0046CE81 /* hidinglogs.json */; };
+		62959B162524DA7800A3D7F1 /* JIGPluginCall.h in Headers */ = {isa = PBXBuildFile; fileRef = 62959AE22524DA7700A3D7F1 /* JIGPluginCall.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62959B172524DA7800A3D7F1 /* JSExport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AE32524DA7700A3D7F1 /* JSExport.swift */; };
+		62959B192524DA7800A3D7F1 /* JIGBridgedPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 62959AE52524DA7700A3D7F1 /* JIGBridgedPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62959B1A2524DA7800A3D7F1 /* JIGPluginCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AE62524DA7700A3D7F1 /* JIGPluginCall.swift */; };
+		62959B1B2524DA7800A3D7F1 /* JIGFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AE72524DA7700A3D7F1 /* JIGFile.swift */; };
+		62959B1C2524DA7800A3D7F1 /* JIGPluginMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = 62959AE82524DA7700A3D7F1 /* JIGPluginMethod.m */; };
+		62959B1D2524DA7800A3D7F1 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AE92524DA7700A3D7F1 /* UIColor.swift */; };
+		62959B222524DA7800A3D7F1 /* Console.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AEF2524DA7700A3D7F1 /* Console.swift */; };
+		62959B262524DA7800A3D7F1 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AF32524DA7700A3D7F1 /* WebView.swift */; };
+		62959B2F2524DA7800A3D7F1 /* DefaultPlugins.m in Sources */ = {isa = PBXBuildFile; fileRef = 62959AFD2524DA7700A3D7F1 /* DefaultPlugins.m */; };
+		62959B302524DA7800A3D7F1 /* UIStatusBarManager+JIGHandleTapAction.m in Sources */ = {isa = PBXBuildFile; fileRef = 62959AFE2524DA7700A3D7F1 /* UIStatusBarManager+JIGHandleTapAction.m */; };
+		62959B312524DA7800A3D7F1 /* JS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959AFF2524DA7700A3D7F1 /* JS.swift */; };
+		62959B332524DA7800A3D7F1 /* JIGPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 62959B012524DA7700A3D7F1 /* JIGPlugin.m */; };
+		62959B362524DA7800A3D7F1 /* JIGBridgeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B042524DA7700A3D7F1 /* JIGBridgeViewController.swift */; };
+		62959B382524DA7800A3D7F1 /* JIGPluginCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 62959B062524DA7700A3D7F1 /* JIGPluginCall.m */; };
+		62959B392524DA7800A3D7F1 /* JigraExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B072524DA7700A3D7F1 /* JigraExtension.swift */; };
+		62959B3A2524DA7800A3D7F1 /* JIGLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B082524DA7700A3D7F1 /* JIGLog.swift */; };
+		62959B3B2524DA7800A3D7F1 /* JIGPluginMethod.h in Headers */ = {isa = PBXBuildFile; fileRef = 62959B092524DA7700A3D7F1 /* JIGPluginMethod.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62959B3C2524DA7800A3D7F1 /* JIGBridgeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B0A2524DA7700A3D7F1 /* JIGBridgeDelegate.swift */; };
+		62959B402524DA7800A3D7F1 /* TmpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B0E2524DA7700A3D7F1 /* TmpViewController.swift */; };
+		62959B412524DA7800A3D7F1 /* Jigra.h in Headers */ = {isa = PBXBuildFile; fileRef = 62959B0F2524DA7700A3D7F1 /* Jigra.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62959B422524DA7800A3D7F1 /* DocLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B102524DA7700A3D7F1 /* DocLinks.swift */; };
+		62959B432524DA7800A3D7F1 /* Data+Jigra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B112524DA7700A3D7F1 /* Data+Jigra.swift */; };
+		62959B452524DA7800A3D7F1 /* JIGPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 62959B132524DA7700A3D7F1 /* JIGPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		62959B462524DA7800A3D7F1 /* JIGBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B142524DA7700A3D7F1 /* JIGBridge.swift */; };
+		62959B472524DA7800A3D7F1 /* JIGNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62959B152524DA7700A3D7F1 /* JIGNotifications.swift */; };
+		62959BA52526475A00A3D7F1 /* Cordova.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62959BA02526474300A3D7F1 /* Cordova.framework */; };
+		62959BA62526475A00A3D7F1 /* Cordova.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 62959BA02526474300A3D7F1 /* Cordova.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6296A77E253A2E49005A202A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296A77D253A2E49005A202A /* AppDelegate.swift */; };
+		6296A782253A2E49005A202A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6296A781253A2E49005A202A /* ViewController.swift */; };
+		6296A785253A2E49005A202A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6296A783253A2E49005A202A /* Main.storyboard */; };
+		6296A787253A2E49005A202A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6296A786253A2E49005A202A /* Assets.xcassets */; };
+		6296A78A253A2E49005A202A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6296A788253A2E49005A202A /* LaunchScreen.storyboard */; };
+		62A91C3425535F5700861508 /* ConfigurationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62A91C3325535F5700861508 /* ConfigurationTests.swift */; };
+		62A91C3F2553710E00861508 /* nonjson.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62A91C392553710300861508 /* nonjson.json */; };
+		62ADC0CA25CB678000E914DE /* PluginCallResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62ADC0C925CB678000E914DE /* PluginCallResult.swift */; };
+		62D43AF02581817500673C24 /* WKWebView+Jigra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62D43AEF2581817500673C24 /* WKWebView+Jigra.swift */; };
+		62D43B652582A13D00673C24 /* WKWebView+Jigra.m in Sources */ = {isa = PBXBuildFile; fileRef = 62D43B642582A13D00673C24 /* WKWebView+Jigra.m */; };
+		62E0736125535E8700BAAADB /* server.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62E0735225535E6500BAAADB /* server.json */; };
+		62E0736225535E8700BAAADB /* bad.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62E0735325535E6500BAAADB /* bad.json */; };
+		62E0736325535E8700BAAADB /* flat.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62E0735425535E6500BAAADB /* flat.json */; };
+		62E0736425535E8700BAAADB /* hierarchy.json in CopyFiles */ = {isa = PBXBuildFile; fileRef = 62E0735525535E6500BAAADB /* hierarchy.json */; };
+		62E207AE2588234500A78983 /* WebViewDelegationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E207AD2588234500A78983 /* WebViewDelegationHandler.swift */; };
+		62E79C722638B23300414164 /* JSExportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62E79C712638B23300414164 /* JSExportTests.swift */; };
+		62E79CD7263A178B00414164 /* native-bridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 62E79C572638AF7500414164 /* native-bridge.js */; };
+		62FABD1A25AE5C01007B3814 /* Array+Jigra.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FABD1925AE5C01007B3814 /* Array+Jigra.swift */; };
+		62FABD2325AE60BA007B3814 /* BridgedTypesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 62FABD2225AE60BA007B3814 /* BridgedTypesTests.m */; };
+		62FABD2B25AE6182007B3814 /* BridgedTypesHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62FABD2A25AE6182007B3814 /* BridgedTypesHelper.swift */; };
+		A71289E627F380A500DADDF3 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71289E527F380A500DADDF3 /* Router.swift */; };
+		A71289EB27F380FD00DADDF3 /* RouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71289EA27F380FD00DADDF3 /* RouterTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		50503EEA1FC08595003606DC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50503ED61FC08594003606DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50503EDE1FC08594003606DC;
+			remoteInfo = Avocado;
+		};
+		62959B9F2526474300A3D7F1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 62959B9B2526474300A3D7F1 /* JigraCordova.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2F5C86DC1FE94845004B09C7;
+			remoteInfo = Cordova;
+		};
+		6296A796253A2EAE005A202A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50503ED61FC08594003606DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6296A77A253A2E49005A202A;
+			remoteInfo = TestsHostApp;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		622BB9C32541FE1900A5DBCA /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = configurations;
+			dstSubfolderSpec = 1;
+			files = (
+				626D2D992613B61E0046CE81 /* hidinglogs.json in CopyFiles */,
+				62A91C3F2553710E00861508 /* nonjson.json in CopyFiles */,
+				62E0736125535E8700BAAADB /* server.json in CopyFiles */,
+				62E0736225535E8700BAAADB /* bad.json in CopyFiles */,
+				62E0736325535E8700BAAADB /* flat.json in CopyFiles */,
+				62E0736425535E8700BAAADB /* hierarchy.json in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		62959BA72526475A00A3D7F1 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				62959BA62526475A00A3D7F1 /* Cordova.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0F83E884285A332D006C43CB /* AppUUID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUUID.swift; sourceTree = "<group>"; };
+		2F81F5C726FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JIGBridgeViewController+CDVScreenOrientationDelegate.h"; sourceTree = "<group>"; };
+		2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JIGBridgeViewController+CDVScreenOrientationDelegate.m"; sourceTree = "<group>"; };
+		373A69C0255C9360000A6F44 /* NotificationHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandlerProtocol.swift; sourceTree = "<group>"; };
+		373A69F1255C95D0000A6F44 /* NotificationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
+		501CBAA61FC0A723009B0D4D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		50503EDF1FC08594003606DC /* Jigra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Jigra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		50503EE81FC08595003606DC /* JigraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JigraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		50503EED1FC08595003606DC /* JigraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JigraTests.swift; sourceTree = "<group>"; };
+		55F6736826C371E6001E7AB9 /* JIGWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGWebView.swift; sourceTree = "<group>"; };
+		6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIGInstanceConfiguration.swift; sourceTree = "<group>"; };
+		621ECCB42542045900D3D615 /* JIGBridgedJSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIGBridgedJSTypes.m; sourceTree = "<group>"; };
+		621ECCB62542045900D3D615 /* JIGBridgedJSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGBridgedJSTypes.h; sourceTree = "<group>"; };
+		621ECCBB2542046400D3D615 /* JSTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSTypes.swift; sourceTree = "<group>"; };
+		621ECCC2254204B700D3D615 /* BridgedTypesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgedTypesTests.swift; sourceTree = "<group>"; };
+		621ECCC6254204BE00D3D615 /* JSONSerializationWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONSerializationWrapper.m; sourceTree = "<group>"; };
+		621ECCC7254204BE00D3D615 /* JSONSerializationWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONSerializationWrapper.h; sourceTree = "<group>"; };
+		621ECCCD254204C400D3D615 /* JigraTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JigraTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		621ECCD4254205BD00D3D615 /* JIGBridgeProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGBridgeProtocol.swift; sourceTree = "<group>"; };
+		621ECCD9254205C400D3D615 /* JigraBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JigraBridge.swift; sourceTree = "<group>"; };
+		621ECCE2254206A600D3D615 /* JIGApplicationDelegateProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGApplicationDelegateProxy.swift; sourceTree = "<group>"; };
+		623D68F9254C5037002D01D1 /* KeyPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyPath.swift; sourceTree = "<group>"; };
+		623D6907254C6FDF002D01D1 /* JIGInstanceDescriptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JIGInstanceDescriptor.h; sourceTree = "<group>"; };
+		623D6908254C6FDF002D01D1 /* JIGInstanceDescriptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JIGInstanceDescriptor.m; sourceTree = "<group>"; };
+		623D6913254C7030002D01D1 /* JIGInstanceDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIGInstanceDescriptor.swift; sourceTree = "<group>"; };
+		623D691B254C7462002D01D1 /* JIGInstanceConfiguration.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JIGInstanceConfiguration.h; sourceTree = "<group>"; };
+		623D691C254C7462002D01D1 /* JIGInstanceConfiguration.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JIGInstanceConfiguration.m; sourceTree = "<group>"; };
+		625AF1EC258963C700869675 /* WebViewAssetHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewAssetHandler.swift; sourceTree = "<group>"; };
+		6263685F25F6EC0100576C1C /* PluginCallAccessorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PluginCallAccessorTests.m; sourceTree = "<group>"; };
+		626D2D902613B4BB0046CE81 /* hidinglogs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hidinglogs.json; sourceTree = "<group>"; };
+		62959AE22524DA7700A3D7F1 /* JIGPluginCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGPluginCall.h; sourceTree = "<group>"; };
+		62959AE32524DA7700A3D7F1 /* JSExport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSExport.swift; sourceTree = "<group>"; };
+		62959AE52524DA7700A3D7F1 /* JIGBridgedPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGBridgedPlugin.h; sourceTree = "<group>"; };
+		62959AE62524DA7700A3D7F1 /* JIGPluginCall.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGPluginCall.swift; sourceTree = "<group>"; };
+		62959AE72524DA7700A3D7F1 /* JIGFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGFile.swift; sourceTree = "<group>"; };
+		62959AE82524DA7700A3D7F1 /* JIGPluginMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIGPluginMethod.m; sourceTree = "<group>"; };
+		62959AE92524DA7700A3D7F1 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		62959AEF2524DA7700A3D7F1 /* Console.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Console.swift; sourceTree = "<group>"; };
+		62959AF32524DA7700A3D7F1 /* WebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		62959AFD2524DA7700A3D7F1 /* DefaultPlugins.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DefaultPlugins.m; sourceTree = "<group>"; };
+		62959AFE2524DA7700A3D7F1 /* UIStatusBarManager+JIGHandleTapAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIStatusBarManager+JIGHandleTapAction.m"; sourceTree = "<group>"; };
+		62959AFF2524DA7700A3D7F1 /* JS.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JS.swift; sourceTree = "<group>"; };
+		62959B012524DA7700A3D7F1 /* JIGPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIGPlugin.m; sourceTree = "<group>"; };
+		62959B042524DA7700A3D7F1 /* JIGBridgeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGBridgeViewController.swift; sourceTree = "<group>"; };
+		62959B062524DA7700A3D7F1 /* JIGPluginCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIGPluginCall.m; sourceTree = "<group>"; };
+		62959B072524DA7700A3D7F1 /* JigraExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JigraExtension.swift; sourceTree = "<group>"; };
+		62959B082524DA7700A3D7F1 /* JIGLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGLog.swift; sourceTree = "<group>"; };
+		62959B092524DA7700A3D7F1 /* JIGPluginMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGPluginMethod.h; sourceTree = "<group>"; };
+		62959B0A2524DA7700A3D7F1 /* JIGBridgeDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGBridgeDelegate.swift; sourceTree = "<group>"; };
+		62959B0E2524DA7700A3D7F1 /* TmpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TmpViewController.swift; sourceTree = "<group>"; };
+		62959B0F2524DA7700A3D7F1 /* Jigra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Jigra.h; sourceTree = "<group>"; };
+		62959B102524DA7700A3D7F1 /* DocLinks.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocLinks.swift; sourceTree = "<group>"; };
+		62959B112524DA7700A3D7F1 /* Data+Jigra.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Jigra.swift"; sourceTree = "<group>"; };
+		62959B122524DA7700A3D7F1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62959B132524DA7700A3D7F1 /* JIGPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGPlugin.h; sourceTree = "<group>"; };
+		62959B142524DA7700A3D7F1 /* JIGBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGBridge.swift; sourceTree = "<group>"; };
+		62959B152524DA7700A3D7F1 /* JIGNotifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGNotifications.swift; sourceTree = "<group>"; };
+		62959B56252518FB00A3D7F1 /* Cordova.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Cordova.framework; sourceTree = "<group>"; };
+		62959B8225253A9500A3D7F1 /* Jigra.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = Jigra.modulemap; sourceTree = "<group>"; };
+		62959B9B2526474300A3D7F1 /* JigraCordova.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JigraCordova.xcodeproj; path = ../JigraCordova/JigraCordova.xcodeproj; sourceTree = "<group>"; };
+		62959BBD2526510200A3D7F1 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6296A77B253A2E49005A202A /* TestsHostApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestsHostApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6296A77D253A2E49005A202A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		6296A781253A2E49005A202A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6296A784253A2E49005A202A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		6296A786253A2E49005A202A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		6296A789253A2E49005A202A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		6296A78B253A2E49005A202A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		62A91C3325535F5700861508 /* ConfigurationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigurationTests.swift; sourceTree = "<group>"; };
+		62A91C392553710300861508 /* nonjson.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = nonjson.json; sourceTree = "<group>"; };
+		62ADC0C925CB678000E914DE /* PluginCallResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PluginCallResult.swift; sourceTree = "<group>"; };
+		62D43AEF2581817500673C24 /* WKWebView+Jigra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "WKWebView+Jigra.swift"; sourceTree = "<group>"; };
+		62D43B642582A13D00673C24 /* WKWebView+Jigra.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+Jigra.m"; sourceTree = "<group>"; };
+		62E0735225535E6500BAAADB /* server.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = server.json; sourceTree = "<group>"; };
+		62E0735325535E6500BAAADB /* bad.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bad.json; sourceTree = "<group>"; };
+		62E0735425535E6500BAAADB /* flat.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = flat.json; sourceTree = "<group>"; };
+		62E0735525535E6500BAAADB /* hierarchy.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = hierarchy.json; sourceTree = "<group>"; };
+		62E207AD2588234500A78983 /* WebViewDelegationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewDelegationHandler.swift; sourceTree = "<group>"; };
+		62E79C572638AF7500414164 /* native-bridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "native-bridge.js"; sourceTree = "<group>"; };
+		62E79C712638B23300414164 /* JSExportTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSExportTests.swift; sourceTree = "<group>"; };
+		62FABD1925AE5C01007B3814 /* Array+Jigra.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Jigra.swift"; sourceTree = "<group>"; };
+		62FABD2225AE60BA007B3814 /* BridgedTypesTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BridgedTypesTests.m; sourceTree = "<group>"; };
+		62FABD2A25AE6182007B3814 /* BridgedTypesHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BridgedTypesHelper.swift; sourceTree = "<group>"; };
+		A71289E527F380A500DADDF3 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
+		A71289EA27F380FD00DADDF3 /* RouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		50503EDB1FC08594003606DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				501CBAA71FC0A723009B0D4D /* WebKit.framework in Frameworks */,
+				62959BA52526475A00A3D7F1 /* Cordova.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50503EE51FC08595003606DC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				50503EE91FC08595003606DC /* Jigra.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6296A778253A2E49005A202A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		501CBAA51FC0A723009B0D4D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				62959B9B2526474300A3D7F1 /* JigraCordova.xcodeproj */,
+				62959B56252518FB00A3D7F1 /* Cordova.framework */,
+				501CBAA61FC0A723009B0D4D /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		50503ED51FC08594003606DC = {
+			isa = PBXGroup;
+			children = (
+				62959AE12524DA7700A3D7F1 /* Jigra */,
+				50503EEC1FC08595003606DC /* JigraTests */,
+				6296A77C253A2E49005A202A /* TestsHostApp */,
+				50503EE01FC08594003606DC /* Products */,
+				501CBAA51FC0A723009B0D4D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		50503EE01FC08594003606DC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				50503EDF1FC08594003606DC /* Jigra.framework */,
+				50503EE81FC08595003606DC /* JigraTests.xctest */,
+				6296A77B253A2E49005A202A /* TestsHostApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		50503EEC1FC08595003606DC /* JigraTests */ = {
+			isa = PBXGroup;
+			children = (
+				50503EED1FC08595003606DC /* JigraTests.swift */,
+				621ECCC2254204B700D3D615 /* BridgedTypesTests.swift */,
+				62FABD2225AE60BA007B3814 /* BridgedTypesTests.m */,
+				62A91C3325535F5700861508 /* ConfigurationTests.swift */,
+				62FABD2A25AE6182007B3814 /* BridgedTypesHelper.swift */,
+				621ECCC7254204BE00D3D615 /* JSONSerializationWrapper.h */,
+				621ECCC6254204BE00D3D615 /* JSONSerializationWrapper.m */,
+				6263685F25F6EC0100576C1C /* PluginCallAccessorTests.m */,
+				621ECCCD254204C400D3D615 /* JigraTests-Bridging-Header.h */,
+				62E79C712638B23300414164 /* JSExportTests.swift */,
+				62959BBD2526510200A3D7F1 /* Info.plist */,
+				A71289EA27F380FD00DADDF3 /* RouterTests.swift */,
+			);
+			path = JigraTests;
+			sourceTree = "<group>";
+		};
+		62959AE12524DA7700A3D7F1 /* Jigra */ = {
+			isa = PBXGroup;
+			children = (
+				62959B0F2524DA7700A3D7F1 /* Jigra.h */,
+				62959B132524DA7700A3D7F1 /* JIGPlugin.h */,
+				62959B012524DA7700A3D7F1 /* JIGPlugin.m */,
+				62959AE52524DA7700A3D7F1 /* JIGBridgedPlugin.h */,
+				62959B092524DA7700A3D7F1 /* JIGPluginMethod.h */,
+				62959AE82524DA7700A3D7F1 /* JIGPluginMethod.m */,
+				62959AE22524DA7700A3D7F1 /* JIGPluginCall.h */,
+				62959B062524DA7700A3D7F1 /* JIGPluginCall.m */,
+				62959AE62524DA7700A3D7F1 /* JIGPluginCall.swift */,
+				62ADC0C925CB678000E914DE /* PluginCallResult.swift */,
+				621ECCBB2542046400D3D615 /* JSTypes.swift */,
+				621ECCB62542045900D3D615 /* JIGBridgedJSTypes.h */,
+				621ECCB42542045900D3D615 /* JIGBridgedJSTypes.m */,
+				623D68F9254C5037002D01D1 /* KeyPath.swift */,
+				62959AFF2524DA7700A3D7F1 /* JS.swift */,
+				62959AE32524DA7700A3D7F1 /* JSExport.swift */,
+				621ECCD4254205BD00D3D615 /* JIGBridgeProtocol.swift */,
+				621ECCD9254205C400D3D615 /* JigraBridge.swift */,
+				62959B142524DA7700A3D7F1 /* JIGBridge.swift */,
+				62959B042524DA7700A3D7F1 /* JIGBridgeViewController.swift */,
+				621ECCE2254206A600D3D615 /* JIGApplicationDelegateProxy.swift */,
+				62959B0A2524DA7700A3D7F1 /* JIGBridgeDelegate.swift */,
+				62E207AD2588234500A78983 /* WebViewDelegationHandler.swift */,
+				625AF1EC258963C700869675 /* WebViewAssetHandler.swift */,
+				62959AEA2524DA7700A3D7F1 /* Plugins */,
+				623D6907254C6FDF002D01D1 /* JIGInstanceDescriptor.h */,
+				623D6908254C6FDF002D01D1 /* JIGInstanceDescriptor.m */,
+				623D6913254C7030002D01D1 /* JIGInstanceDescriptor.swift */,
+				623D691B254C7462002D01D1 /* JIGInstanceConfiguration.h */,
+				623D691C254C7462002D01D1 /* JIGInstanceConfiguration.m */,
+				55F6736826C371E6001E7AB9 /* JIGWebView.swift */,
+				6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */,
+				62959B082524DA7700A3D7F1 /* JIGLog.swift */,
+				62959AE72524DA7700A3D7F1 /* JIGFile.swift */,
+				62959B0E2524DA7700A3D7F1 /* TmpViewController.swift */,
+				62959B102524DA7700A3D7F1 /* DocLinks.swift */,
+				62959B152524DA7700A3D7F1 /* JIGNotifications.swift */,
+				62959B072524DA7700A3D7F1 /* JigraExtension.swift */,
+				62959B112524DA7700A3D7F1 /* Data+Jigra.swift */,
+				62FABD1925AE5C01007B3814 /* Array+Jigra.swift */,
+				62D43AEF2581817500673C24 /* WKWebView+Jigra.swift */,
+				62D43B642582A13D00673C24 /* WKWebView+Jigra.m */,
+				2F81F5C726FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h */,
+				2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */,
+				62959AE92524DA7700A3D7F1 /* UIColor.swift */,
+				62959AFE2524DA7700A3D7F1 /* UIStatusBarManager+JIGHandleTapAction.m */,
+				62959B122524DA7700A3D7F1 /* Info.plist */,
+				62959B8225253A9500A3D7F1 /* Jigra.modulemap */,
+				373A69C0255C9360000A6F44 /* NotificationHandlerProtocol.swift */,
+				373A69F1255C95D0000A6F44 /* NotificationRouter.swift */,
+				62E79C562638AF7500414164 /* assets */,
+				A71289E527F380A500DADDF3 /* Router.swift */,
+				0F83E884285A332D006C43CB /* AppUUID.swift */,
+			);
+			path = Jigra;
+			sourceTree = "<group>";
+		};
+		62959AEA2524DA7700A3D7F1 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				62959AEF2524DA7700A3D7F1 /* Console.swift */,
+				62959AFD2524DA7700A3D7F1 /* DefaultPlugins.m */,
+				62959AF32524DA7700A3D7F1 /* WebView.swift */,
+			);
+			path = Plugins;
+			sourceTree = "<group>";
+		};
+		62959B9C2526474300A3D7F1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				62959BA02526474300A3D7F1 /* Cordova.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6296A77C253A2E49005A202A /* TestsHostApp */ = {
+			isa = PBXGroup;
+			children = (
+				6296A77D253A2E49005A202A /* AppDelegate.swift */,
+				6296A781253A2E49005A202A /* ViewController.swift */,
+				62E0735125535E6500BAAADB /* configurations */,
+				6296A783253A2E49005A202A /* Main.storyboard */,
+				6296A786253A2E49005A202A /* Assets.xcassets */,
+				6296A788253A2E49005A202A /* LaunchScreen.storyboard */,
+				6296A78B253A2E49005A202A /* Info.plist */,
+			);
+			path = TestsHostApp;
+			sourceTree = "<group>";
+		};
+		62E0735125535E6500BAAADB /* configurations */ = {
+			isa = PBXGroup;
+			children = (
+				62E0735225535E6500BAAADB /* server.json */,
+				62E0735325535E6500BAAADB /* bad.json */,
+				62E0735425535E6500BAAADB /* flat.json */,
+				626D2D902613B4BB0046CE81 /* hidinglogs.json */,
+				62E0735525535E6500BAAADB /* hierarchy.json */,
+				62A91C392553710300861508 /* nonjson.json */,
+			);
+			path = configurations;
+			sourceTree = "<group>";
+		};
+		62E79C562638AF7500414164 /* assets */ = {
+			isa = PBXGroup;
+			children = (
+				62E79C572638AF7500414164 /* native-bridge.js */,
+			);
+			path = assets;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		50503EDC1FC08594003606DC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62959B412524DA7800A3D7F1 /* Jigra.h in Headers */,
+				62959B452524DA7800A3D7F1 /* JIGPlugin.h in Headers */,
+				62959B162524DA7800A3D7F1 /* JIGPluginCall.h in Headers */,
+				62959B3B2524DA7800A3D7F1 /* JIGPluginMethod.h in Headers */,
+				623D691D254C7462002D01D1 /* JIGInstanceConfiguration.h in Headers */,
+				623D6909254C6FDF002D01D1 /* JIGInstanceDescriptor.h in Headers */,
+				62959B192524DA7800A3D7F1 /* JIGBridgedPlugin.h in Headers */,
+				621ECCB82542045900D3D615 /* JIGBridgedJSTypes.h in Headers */,
+				2F81F5C926FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		50503EDE1FC08594003606DC /* Jigra */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50503EF31FC08595003606DC /* Build configuration list for PBXNativeTarget "Jigra" */;
+			buildPhases = (
+				50503EDA1FC08594003606DC /* Sources */,
+				50503EDB1FC08594003606DC /* Frameworks */,
+				50503EDC1FC08594003606DC /* Headers */,
+				50503EDD1FC08594003606DC /* Resources */,
+				62959BA72526475A00A3D7F1 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Jigra;
+			productName = Avocado;
+			productReference = 50503EDF1FC08594003606DC /* Jigra.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		50503EE71FC08595003606DC /* JigraTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 50503EF61FC08595003606DC /* Build configuration list for PBXNativeTarget "JigraTests" */;
+			buildPhases = (
+				50503EE41FC08595003606DC /* Sources */,
+				50503EE51FC08595003606DC /* Frameworks */,
+				50503EE61FC08595003606DC /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				50503EEB1FC08595003606DC /* PBXTargetDependency */,
+				6296A797253A2EAE005A202A /* PBXTargetDependency */,
+			);
+			name = JigraTests;
+			productName = AvocadoTests;
+			productReference = 50503EE81FC08595003606DC /* JigraTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		6296A77A253A2E49005A202A /* TestsHostApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6296A78F253A2E49005A202A /* Build configuration list for PBXNativeTarget "TestsHostApp" */;
+			buildPhases = (
+				6296A777253A2E49005A202A /* Sources */,
+				6296A778253A2E49005A202A /* Frameworks */,
+				6296A779253A2E49005A202A /* Resources */,
+				622BB9C32541FE1900A5DBCA /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TestsHostApp;
+			productName = TestsHostApp;
+			productReference = 6296A77B253A2E49005A202A /* TestsHostApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		50503ED61FC08594003606DC /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1200;
+				LastUpgradeCheck = 1240;
+				ORGANIZATIONNAME = "Drifty Co.";
+				TargetAttributes = {
+					50503EDE1FC08594003606DC = {
+						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 0940;
+						ProvisioningStyle = Automatic;
+					};
+					50503EE71FC08595003606DC = {
+						CreatedOnToolsVersion = 9.0;
+						LastSwiftMigration = 1200;
+						ProvisioningStyle = Automatic;
+						TestTargetID = 6296A77A253A2E49005A202A;
+					};
+					6296A77A253A2E49005A202A = {
+						CreatedOnToolsVersion = 12.0;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 50503ED91FC08594003606DC /* Build configuration list for PBXProject "Jigra" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 50503ED51FC08594003606DC;
+			productRefGroup = 50503EE01FC08594003606DC /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 62959B9C2526474300A3D7F1 /* Products */;
+					ProjectRef = 62959B9B2526474300A3D7F1 /* JigraCordova.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				50503EDE1FC08594003606DC /* Jigra */,
+				50503EE71FC08595003606DC /* JigraTests */,
+				6296A77A253A2E49005A202A /* TestsHostApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		62959BA02526474300A3D7F1 /* Cordova.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Cordova.framework;
+			remoteRef = 62959B9F2526474300A3D7F1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		50503EDD1FC08594003606DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62E79CD7263A178B00414164 /* native-bridge.js in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50503EE61FC08595003606DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6296A779253A2E49005A202A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6296A78A253A2E49005A202A /* LaunchScreen.storyboard in Resources */,
+				6296A787253A2E49005A202A /* Assets.xcassets in Resources */,
+				6296A785253A2E49005A202A /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		50503EDA1FC08594003606DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				55F6736A26C371E6001E7AB9 /* JIGWebView.swift in Sources */,
+				A71289E627F380A500DADDF3 /* Router.swift in Sources */,
+				62959B362524DA7800A3D7F1 /* JIGBridgeViewController.swift in Sources */,
+				621ECCB72542045900D3D615 /* JIGBridgedJSTypes.m in Sources */,
+				62959B402524DA7800A3D7F1 /* TmpViewController.swift in Sources */,
+				621ECCD6254205BD00D3D615 /* JIGBridgeProtocol.swift in Sources */,
+				62D43AF02581817500673C24 /* WKWebView+Jigra.swift in Sources */,
+				62959B432524DA7800A3D7F1 /* Data+Jigra.swift in Sources */,
+				62E207AE2588234500A78983 /* WebViewDelegationHandler.swift in Sources */,
+				621ECCBC2542046400D3D615 /* JSTypes.swift in Sources */,
+				621ECCDA254205C400D3D615 /* JigraBridge.swift in Sources */,
+				62959B382524DA7800A3D7F1 /* JIGPluginCall.m in Sources */,
+				623D690A254C6FDF002D01D1 /* JIGInstanceDescriptor.m in Sources */,
+				62959B1B2524DA7800A3D7F1 /* JIGFile.swift in Sources */,
+				62959B462524DA7800A3D7F1 /* JIGBridge.swift in Sources */,
+				62959B1D2524DA7800A3D7F1 /* UIColor.swift in Sources */,
+				62959B332524DA7800A3D7F1 /* JIGPlugin.m in Sources */,
+				62959B1C2524DA7800A3D7F1 /* JIGPluginMethod.m in Sources */,
+				2F81F5CA26FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m in Sources */,
+				62ADC0CA25CB678000E914DE /* PluginCallResult.swift in Sources */,
+				62959B472524DA7800A3D7F1 /* JIGNotifications.swift in Sources */,
+				62D43B652582A13D00673C24 /* WKWebView+Jigra.m in Sources */,
+				62959B312524DA7800A3D7F1 /* JS.swift in Sources */,
+				373A69F2255C95D0000A6F44 /* NotificationRouter.swift in Sources */,
+				62959B1A2524DA7800A3D7F1 /* JIGPluginCall.swift in Sources */,
+				62959B302524DA7800A3D7F1 /* UIStatusBarManager+JIGHandleTapAction.m in Sources */,
+				62959B392524DA7800A3D7F1 /* JigraExtension.swift in Sources */,
+				62959B422524DA7800A3D7F1 /* DocLinks.swift in Sources */,
+				62FABD1A25AE5C01007B3814 /* Array+Jigra.swift in Sources */,
+				62959B172524DA7800A3D7F1 /* JSExport.swift in Sources */,
+				373A69C1255C9360000A6F44 /* NotificationHandlerProtocol.swift in Sources */,
+				0F83E885285A332E006C43CB /* AppUUID.swift in Sources */,
+				625AF1ED258963C700869675 /* WebViewAssetHandler.swift in Sources */,
+				62959B3C2524DA7800A3D7F1 /* JIGBridgeDelegate.swift in Sources */,
+				62959B2F2524DA7800A3D7F1 /* DefaultPlugins.m in Sources */,
+				623D691E254C7462002D01D1 /* JIGInstanceConfiguration.m in Sources */,
+				623D68FA254C5037002D01D1 /* KeyPath.swift in Sources */,
+				62959B222524DA7800A3D7F1 /* Console.swift in Sources */,
+				62959B3A2524DA7800A3D7F1 /* JIGLog.swift in Sources */,
+				6214934725509C3F006C36F9 /* JIGInstanceConfiguration.swift in Sources */,
+				623D6914254C7030002D01D1 /* JIGInstanceDescriptor.swift in Sources */,
+				621ECCE3254206A600D3D615 /* JIGApplicationDelegateProxy.swift in Sources */,
+				62959B262524DA7800A3D7F1 /* WebView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		50503EE41FC08595003606DC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				62E79C722638B23300414164 /* JSExportTests.swift in Sources */,
+				50503EEE1FC08595003606DC /* JigraTests.swift in Sources */,
+				62FABD2B25AE6182007B3814 /* BridgedTypesHelper.swift in Sources */,
+				621ECCC8254204BE00D3D615 /* JSONSerializationWrapper.m in Sources */,
+				62A91C3425535F5700861508 /* ConfigurationTests.swift in Sources */,
+				62FABD2325AE60BA007B3814 /* BridgedTypesTests.m in Sources */,
+				621ECCC3254204B700D3D615 /* BridgedTypesTests.swift in Sources */,
+				A71289EB27F380FD00DADDF3 /* RouterTests.swift in Sources */,
+				6263686025F6EC0100576C1C /* PluginCallAccessorTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6296A777253A2E49005A202A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6296A782253A2E49005A202A /* ViewController.swift in Sources */,
+				6296A77E253A2E49005A202A /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		50503EEB1FC08595003606DC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50503EDE1FC08594003606DC /* Jigra */;
+			targetProxy = 50503EEA1FC08595003606DC /* PBXContainerItemProxy */;
+		};
+		6296A797253A2EAE005A202A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6296A77A253A2E49005A202A /* TestsHostApp */;
+			targetProxy = 6296A796253A2EAE005A202A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		6296A783253A2E49005A202A /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6296A784253A2E49005A202A /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		6296A788253A2E49005A202A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6296A789253A2E49005A202A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		50503EF11FC08595003606DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		50503EF21FC08595003606DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		50503EF41FC08595003606DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Jigra/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = Jigra/Jigra.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.Jigra;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		50503EF51FC08595003606DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = "";
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
+				INFOPLIST_FILE = Jigra/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = Jigra/Jigra.modulemap;
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.Jigra;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SUPPORTS_MACCATALYST = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		50503EF71FC08595003606DC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = JigraTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.JigraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "JigraTests/JigraTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestsHostApp.app/TestsHostApp";
+			};
+			name = Debug;
+		};
+		50503EF81FC08595003606DC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = JigraTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.JigraTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "JigraTests/JigraTests-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TestsHostApp.app/TestsHostApp";
+			};
+			name = Release;
+		};
+		6296A78C253A2E49005A202A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TestsHostApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.TestsHostApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		6296A78D253A2E49005A202A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = TestsHostApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = app.web.jigrajs.ios.TestsHostApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		50503ED91FC08594003606DC /* Build configuration list for PBXProject "Jigra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50503EF11FC08595003606DC /* Debug */,
+				50503EF21FC08595003606DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50503EF31FC08595003606DC /* Build configuration list for PBXNativeTarget "Jigra" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50503EF41FC08595003606DC /* Debug */,
+				50503EF51FC08595003606DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		50503EF61FC08595003606DC /* Build configuration list for PBXNativeTarget "JigraTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				50503EF71FC08595003606DC /* Debug */,
+				50503EF81FC08595003606DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6296A78F253A2E49005A202A /* Build configuration list for PBXNativeTarget "TestsHostApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6296A78C253A2E49005A202A /* Debug */,
+				6296A78D253A2E49005A202A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 50503ED61FC08594003606DC /* Project object */;
+}

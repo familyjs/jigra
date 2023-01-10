@@ -258,16 +258,10 @@ extension JIGBridgeViewController {
     }
 
     @objc public func setServerBasePath(path: String) {
-        let url = URL(fileURLWithPath: path, isDirectory: true)
-        guard let jigBridge = jigraBridge, FileManager.default.fileExists(atPath: url.path) else {
-            return
-        }
-        jigBridge.config = jigBridge.config.updatingAppLocation(url)
-        jigBridge.webViewAssetHandler.setAssetPath(url.path)
-        if let url = jigraBridge?.config.serverURL {
-            DispatchQueue.main.async { [weak self] in
-                _ = self?.webView?.load(URLRequest(url: url))
-            }
+        guard let jigBridge = jigraBridge else { return }
+        jigBridge.setServerBasePath(path)
+        DispatchQueue.main.async { [weak self] in
+            _ = self?.webView?.load(URLRequest(url: jigBridge.config.serverURL))
         }
     }
 }

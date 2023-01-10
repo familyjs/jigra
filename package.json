@@ -29,7 +29,7 @@
     "@navify/prettier-config": "~1.0.1",
     "@navify/swiftlint": "^1.0.1-beta.0",
     "@navify/swiftlint-config": "^1.1.2",
-    "@types/tar": "^4.0.4",
+    "@types/tar": "^6.1.2",
     "eslint": "~7.27.0",
     "lerna": "^3.22.1",
     "prettier": "~2.3.0",

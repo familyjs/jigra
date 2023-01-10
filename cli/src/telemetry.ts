@@ -69,9 +69,7 @@ export function telemetryAction(
 
     // Only collect packages in the jigra org:
     // https://www.npmjs.com/org/jigra
-    const jigraPackages = packages.filter(([k]) =>
-      k.startsWith('@jigra/'),
-    );
+    const jigraPackages = packages.filter(([k]) => k.startsWith('@jigra/'));
 
     const versions = jigraPackages.map(([k, v]) => [
       `${k.replace(/^@jigra\//, '').replace(/-/g, '_')}_version`,

@@ -170,8 +170,7 @@ async function loadCLIConfig(rootDir: string): Promise<CLIConfig> {
   const assetsDir = 'assets';
   const assetsDirAbs = join(rootDir, assetsDir);
   const iosPlatformTemplateArchive = 'ios-template.tar.gz';
-  const iosCordovaPluginsTemplateArchive =
-    'jigra-cordova-ios-plugins.tar.gz';
+  const iosCordovaPluginsTemplateArchive = 'jigra-cordova-ios-plugins.tar.gz';
   const androidPlatformTemplateArchive = 'android-template.tar.gz';
   const androidCordovaPluginsTemplateArchive =
     'jigra-cordova-android-plugins.tar.gz';

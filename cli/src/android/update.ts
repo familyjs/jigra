@@ -121,8 +121,7 @@ async function findAndroidPluginClassesInPlugin(
       ['.java', '.kt'].includes(extname(entry.path)),
   });
 
-  const classRegex =
-    /^@(?:JigraPlugin|NativePlugin)[\s\S]+?class ([\w]+)/gm;
+  const classRegex = /^@(?:JigraPlugin|NativePlugin)[\s\S]+?class ([\w]+)/gm;
   const packageRegex = /^package ([\w.]+);?$/gm;
 
   debug(
@@ -188,10 +187,7 @@ export async function installGradlePlugins(
     );
   }
 
-  const jigraAndroidPath = resolve(
-    dirname(jigraAndroidPackagePath),
-    'jigra',
-  );
+  const jigraAndroidPath = resolve(dirname(jigraAndroidPackagePath), 'jigra');
 
   const settingsPath = config.android.platformDirAbs;
   const dependencyPath = config.android.appDirAbs;
@@ -275,14 +271,8 @@ if (hasProperty('postBuildExtras')) {
 }
 `;
 
-  await writeFile(
-    join(settingsPath, 'jigra.settings.gradle'),
-    settingsLines,
-  );
-  await writeFile(
-    join(dependencyPath, 'jigra.build.gradle'),
-    dependencyLines,
-  );
+  await writeFile(join(settingsPath, 'jigra.settings.gradle'), settingsLines);
+  await writeFile(join(dependencyPath, 'jigra.build.gradle'), dependencyLines);
 }
 
 export async function handleCordovaPluginsGradle(

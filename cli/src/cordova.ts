@@ -185,9 +185,8 @@ export async function copyCordovaJS(
   );
   if (!cordovaPath) {
     fatal(
-      `Unable to find ${c.strong(
-        'node_modules/@jigra/core/cordova.js',
-      )}.\n` + `Are you sure ${c.strong('@jigra/core')} is installed?`,
+      `Unable to find ${c.strong('node_modules/@jigra/core/cordova.js')}.\n` +
+        `Are you sure ${c.strong('@jigra/core')} is installed?`,
     );
   }
 

@@ -34,13 +34,10 @@ const initBridge = (w: any): void => {
       if (filePath.startsWith('/')) {
         return webviewServerUrl + '/_jigra_file_' + filePath;
       } else if (filePath.startsWith('file://')) {
-        return (
-          webviewServerUrl + filePath.replace('file://', '/_jigra_file_')
-        );
+        return webviewServerUrl + filePath.replace('file://', '/_jigra_file_');
       } else if (filePath.startsWith('content://')) {
         return (
-          webviewServerUrl +
-          filePath.replace('content:/', '/_jigra_content_')
+          webviewServerUrl + filePath.replace('content:/', '/_jigra_content_')
         );
       }
     }

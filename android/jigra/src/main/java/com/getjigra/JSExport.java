@@ -155,13 +155,7 @@ public class JSExport {
         switch (returnType) {
             case PluginMethod.RETURN_NONE:
                 lines.add(
-                    "return w.Jigra.nativeCallback('" +
-                    plugin.getId() +
-                    "', '" +
-                    method.getName() +
-                    "', " +
-                    CATCHALL_OPTIONS_PARAM +
-                    ")"
+                    "return w.Jigra.nativeCallback('" + plugin.getId() + "', '" + method.getName() + "', " + CATCHALL_OPTIONS_PARAM + ")"
                 );
                 break;
             case PluginMethod.RETURN_PROMISE:

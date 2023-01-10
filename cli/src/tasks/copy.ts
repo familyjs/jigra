@@ -1,4 +1,9 @@
-import { copy as fsCopy, pathExists, remove, writeJSON } from '@navify/utils-fs';
+import {
+  copy as fsCopy,
+  pathExists,
+  remove,
+  writeJSON,
+} from '@navify/utils-fs';
 import { basename, join, relative, resolve } from 'path';
 
 import c from '../colors';
@@ -111,9 +116,7 @@ export async function copy(
       await writeCordovaAndroidManifest(cordovaPlugins, config, platformName);
     } else if (platformName === config.web.name) {
       if (usesJigraPortals) {
-        logger.info(
-          'Jigra Portals Plugin installed, skipping web bundling...',
-        );
+        logger.info('Jigra Portals Plugin installed, skipping web bundling...');
       } else {
         await copyWeb(config);
       }

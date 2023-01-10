@@ -85,10 +85,7 @@ export async function editProjectSettingsAndroid(
 
   let manifestContent = await readFile(manifestPath, { encoding: 'utf-8' });
 
-  manifestContent = manifestContent.replace(
-    /com.getjigra.myapp/g,
-    `${appId}`,
-  );
+  manifestContent = manifestContent.replace(/com.getjigra.myapp/g, `${appId}`);
   await writeFile(manifestPath, manifestContent, { encoding: 'utf-8' });
 
   const domainPath = appId.split('.').join('/');
@@ -111,9 +108,7 @@ export async function editProjectSettingsAndroid(
   );
 
   if (appId.split('.')[1] !== 'getjigra') {
-    await remove(
-      resolve(config.android.srcMainDirAbs, 'java/com/getjigra'),
-    );
+    await remove(resolve(config.android.srcMainDirAbs, 'java/com/getjigra'));
   }
 
   // Remove our template 'com' folder if their ID doesn't have it

@@ -89,8 +89,8 @@ export async function copy(
 
     let usesLiveUpdates = false;
     if (
-      allPlugins.filter(plugin => plugin.id === '@jigra/live-updates')
-        .length > 0
+      allPlugins.filter(plugin => plugin.id === '@jigra/live-updates').length >
+      0
     ) {
       usesLiveUpdates = true;
     }
@@ -261,7 +261,7 @@ async function copySecureLiveUpdatesKey(
       `Cannot copy Secure Live Updates signature file from ${c.strong(
         keyAbsFromPath,
       )} to ${keyRelToDir}\n` +
-      `Signature file does not exist at specified key path.`,
+        `Signature file does not exist at specified key path.`,
     );
 
     return;

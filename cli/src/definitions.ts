@@ -128,10 +128,10 @@ export interface FrameworkConfig {
   webDir: string;
   /**
    * Specific UI libraries (Navify) and higher-level frameworks (NextJs/Gatsby)
-   * should be prioritorized over a more generic framework like Kdu.
+   * should be prioritorized over a more generic framework like React/Kdu.
    * Lower the priorty number the more important it is (1 has more priority over 2).
    * This helps to make sure a specific framework like "NextJs" is chosen before
-   * the more generic "Kdu".
+   * the more generic "React".
    */
   priority: number;
 }

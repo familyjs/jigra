@@ -44,10 +44,10 @@
     "watch": "npm run assets && tsc -w"
   },
   "dependencies": {
-    "@navify/cli-framework-output": "^2.2.5-beta.0",
-    "@navify/utils-fs": "^3.1.6-beta.0",
-    "@navify/utils-subprocess": "^2.1.11-beta.0",
-    "@navify/utils-terminal": "^2.3.3-beta.0",
+    "@navify/cli-framework-output": "^2.2.6",
+    "@navify/utils-fs": "^3.1.6",
+    "@navify/utils-subprocess": "^2.1.11",
+    "@navify/utils-terminal": "^2.3.3",
     "commander": "^6.0.0",
     "debug": "^4.2.0",
     "env-paths": "^2.2.0",

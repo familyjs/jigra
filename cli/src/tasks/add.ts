@@ -126,7 +126,7 @@ function printNextSteps(platformName: string) {
   logSuccess(`${c.strong(platformName)} platform added!`);
   output.write(
     `Follow the Developer Workflow guide to get building:\n${c.strong(
-      `https://jigrajs.web,app/docs/basics/workflow`,
+      `https://jigrajs.web.app/docs/basics/workflow`,
     )}\n`,
   );
 }
@@ -164,7 +164,7 @@ async function editPlatforms(config: Config, platformName: string) {
 function webWarning() {
   logger.error(
     `Not adding platform ${c.strong('web')}.\n` +
-      `In Jigra, the web platform is just your web app! For example, if you have a Kdu project, the web platform is that project.\n` +
+      `In Jigra, the web platform is just your web app! For example, if you have a React or Kdu project, the web platform is that project.\n` +
       `To add Jigra functionality to your web app, follow the Web Getting Started Guide: ${c.strong(
         'https://jigrajs.web.app/docs/web',
       )}`,

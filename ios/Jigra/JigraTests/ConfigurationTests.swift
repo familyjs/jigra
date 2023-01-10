@@ -12,7 +12,7 @@ class ConfigurationTests: XCTestCase {
         case nonparsable = "nonjson"
     }
     static var files: [ConfigFile: URL] = [:]
-    
+
     override class func setUp() {
         for file in ConfigFile.allCases {
             if let url = Bundle.main.url(forResource: file.rawValue, withExtension: "json", subdirectory: "configurations") {
@@ -20,7 +20,7 @@ class ConfigurationTests: XCTestCase {
             }
         }
     }
-    
+
     override func setUpWithError() throws {
         XCTAssert(ConfigurationTests.files.count == ConfigFile.allCases.count, "Not all configuration files were located")
     }
@@ -28,27 +28,27 @@ class ConfigurationTests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
-    
+
     func testDefaultErrors() throws {
         let descriptor = InstanceDescriptor.init()
         XCTAssertTrue(descriptor.warnings.contains(.missingAppDir))
         XCTAssertTrue(descriptor.warnings.contains(.missingFile))
         XCTAssertTrue(descriptor.warnings.contains(.missingCordovaFile))
     }
-    
+
     func testMissingAppDetection() throws {
         var url = Bundle.main.resourceURL!
         url.appendPathComponent("app", isDirectory: true)
         let descriptor = InstanceDescriptor.init(at: url, configuration: nil, cordovaConfiguration: nil)
         XCTAssertTrue(descriptor.warnings.contains(.missingAppDir), "A missing app directory was ignored")
     }
-    
+
     func testFailedParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.nonparsable], cordovaConfiguration: nil)
         XCTAssertTrue(descriptor.warnings.contains(.invalidFile))
     }
-    
+
     func testDefaults() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: nil, cordovaConfiguration: nil)
@@ -61,19 +61,19 @@ class ConfigurationTests: XCTestCase {
         XCTAssertTrue(descriptor.allowLinkPreviews)
         XCTAssertEqual(descriptor.contentInsetAdjustmentBehavior, .never)
     }
-    
+
     func testDeprecatedParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.deprecated], cordovaConfiguration: nil)
         XCTAssertEqual(descriptor.loggingBehavior, .none)
     }
-    
+
     func testDeprecatedOverrideParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.server], cordovaConfiguration: nil)
         XCTAssertEqual(descriptor.loggingBehavior, .production)
     }
-    
+
     func testTopLevelParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.flat], cordovaConfiguration: nil)
@@ -82,7 +82,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertEqual(descriptor.appendedUserAgentString, "level 1 append")
         XCTAssertEqual(descriptor.loggingBehavior, .debug)
     }
-    
+
     func testNestedParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.nested], cordovaConfiguration: nil)
@@ -93,7 +93,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertFalse(descriptor.scrollingEnabled)
         XCTAssertEqual(descriptor.contentInsetAdjustmentBehavior, .scrollableAxes)
     }
-    
+
     func testServerParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.server], cordovaConfiguration: nil)
@@ -101,7 +101,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertEqual(descriptor.urlHostname, "myhost")
         XCTAssertEqual(descriptor.serverURL, "http://192.168.100.1:2057")
     }
-    
+
     func testBadDataParsing() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.invalid], cordovaConfiguration: nil)
@@ -109,14 +109,14 @@ class ConfigurationTests: XCTestCase {
         XCTAssertEqual(descriptor.loggingBehavior, .debug)
         XCTAssertEqual(descriptor.contentInsetAdjustmentBehavior, .never)
     }
-    
+
     func testBadDataTransformation() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.invalid], cordovaConfiguration: nil)
         let configuration = InstanceConfiguration(with: descriptor, isDebug: true)
         XCTAssertEqual(configuration.serverURL, URL(string: "jigra://myhost"), "Invalid server.url and invalid ioScheme were not ignored")
     }
-    
+
     func testServerTransformation() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.server], cordovaConfiguration: nil)
@@ -124,7 +124,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertEqual(configuration.serverURL, URL(string: "http://192.168.100.1:2057"))
         XCTAssertEqual(configuration.localURL, URL(string: "override://myhost"))
     }
-    
+
     func testPluginConfig() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.flat], cordovaConfiguration: nil)
@@ -133,7 +133,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertNotNil(value)
         XCTAssertTrue(value == 1)
     }
-    
+
     func testLegacyConfig() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.nested], cordovaConfiguration: nil)
@@ -143,7 +143,7 @@ class ConfigurationTests: XCTestCase {
         value = configuration.getValue("ios.overrideUserAgent") as? String
         XCTAssertEqual(value, "level 2 override")
     }
-    
+
     func testNavigationRules() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.server], cordovaConfiguration: nil)
@@ -159,7 +159,7 @@ class ConfigurationTests: XCTestCase {
         XCTAssertFalse(configuration.shouldAllowNavigation(to: "192.168.0.2"))
         XCTAssertFalse(configuration.shouldAllowNavigation(to: "navifyframework.web.app"))
     }
-    
+
     func testNoLoggingTransformation() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: nil, cordovaConfiguration: nil)
@@ -169,7 +169,7 @@ class ConfigurationTests: XCTestCase {
         configuration = InstanceConfiguration(with: descriptor, isDebug: true)
         XCTAssertFalse(configuration.loggingEnabled)
     }
-    
+
     func testDebugLoggingTransformation() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: nil, cordovaConfiguration: nil)
@@ -179,7 +179,7 @@ class ConfigurationTests: XCTestCase {
         configuration = InstanceConfiguration(with: descriptor, isDebug: true)
         XCTAssertTrue(configuration.loggingEnabled)
     }
-    
+
     func testProductionLoggingTransformation() throws {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: nil, cordovaConfiguration: nil)

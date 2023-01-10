@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
   s.summary      = "Jigra Cordova Compatibility Layer"
   s.homepage     = "https://jigrajs.web.app"
   s.license      = 'MIT'
-  s.authors      = { 'Navify Team' }
+  s.authors      = 'Navify Team'
   s.source       = { :git => 'https://github.com/navify/jigra', :tag => s.version.to_s }
   s.platform     = :ios, 12.0
   s.source_files = 'JigraCordova/JigraCordova/**/*.{h,m}'

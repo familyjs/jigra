@@ -10,7 +10,10 @@
       "hoist": true
     },
     "version": {
-      "allowBranch": "main",
+      "allowBranch": [
+        "main",
+        "3.x"
+      ],
       "conventionalCommits": true,
       "createRelease": "github",
       "message": "Release %s",

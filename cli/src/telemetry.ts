@@ -12,7 +12,11 @@ import { isInteractive } from './util/term';
 
 const debug = Debug('jigra:telemetry');
 
-export const THANK_YOU = `\nThank you for helping to make Jigra better! 💖`;
+export const THANK_YOU =
+  `\nThank you for helping to make Jigra better! 💖` +
+  `\nInformation about the data we collect is available on our website: ${c.strong(
+    'https://jigrajs.web.app/telemetry',
+  )}\n`;
 
 export interface CommandMetricData {
   app_id: string;

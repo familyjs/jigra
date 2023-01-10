@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.license = 'MIT'
   s.homepage = 'https://jigrajs.web.app/'
   s.ios.deployment_target  = '12.0'
-  s.authors = { 'Navify Team' }
+  s.authors = 'Navify Team'
   s.source = { :git => 'https://github.com/navify/jigra.git', :branch => "portals-dev" }
   s.source_files = 'Jigra/Jigra/*.{swift,h,m}', 'Jigra/Jigra/Plugins/*.{swift,h,m}', 'Jigra/Jigra/Plugins/**/*.{swift,h,m}'
   s.module_map = 'Jigra/Jigra/Jigra.modulemap'

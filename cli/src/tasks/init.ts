@@ -12,7 +12,6 @@ import type { Config, ExternalConfig } from '../definitions';
 import { fatal, isFatal } from '../errors';
 import { detectFramework } from '../framework-configs';
 import { output, logSuccess, logPrompt } from '../log';
-import { readConfig, writeConfig as sysWriteConfig } from '../sysconfig';
 import { resolveNode } from '../util/node';
 import { checkInteractive, isInteractive } from '../util/term';
 
@@ -157,13 +156,6 @@ async function runMergeConfig(
   );
 
   printNextSteps(basename(newConfigPath));
-  if (isInteractive()) {
-    let sysconfig = await readConfig();
-    if (typeof sysconfig.signup === 'undefined') {
-      sysconfig = { ...sysconfig };
-      await sysWriteConfig(sysconfig);
-    }
-  }
 }
 
 async function mergeConfig(

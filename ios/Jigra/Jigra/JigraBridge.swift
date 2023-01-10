@@ -84,7 +84,7 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
 
     var tmpWindow: UIWindow?
     static let tmpVCAppeared = Notification(name: Notification.Name(rawValue: "tmpViewControllerAppeared"))
-    public static let jigraSite = "https://Jigrajs.web.app/"
+    public static let jigraSite = "https://jigrajs.web.app/"
     public static let fileStartIdentifier = "/_jigra_file_"
     public static let defaultScheme = "jigra"
 

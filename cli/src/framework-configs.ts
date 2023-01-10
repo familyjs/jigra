@@ -2,16 +2,59 @@ import type { Config, FrameworkConfig } from './definitions';
 
 const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
   {
-    name: 'Rindo',
-    isMatch: config => hasDependency(config, '@rindo/core'),
-    webDir: 'www',
+    name: 'Create React App',
+    isMatch: config => hasDependency(config, 'react-scripts'),
+    webDir: 'build',
     priority: 3,
+  },
+  {
+    name: 'Ember',
+    isMatch: config => hasDependency(config, 'ember-cli'),
+    webDir: 'dist',
+    priority: 3,
+  },
+  {
+    name: 'Gatsby',
+    isMatch: config => hasDependency(config, 'gatsby'),
+    webDir: 'public',
+    priority: 2,
+  },
+  {
+    name: 'Navify React',
+    isMatch: config => hasDependency(config, '@navify/react'),
+    webDir: 'build',
+    priority: 1,
   },
   {
     name: 'Navify Kdu',
     isMatch: config => hasDependency(config, '@navify/kdu'),
     webDir: 'public',
     priority: 1,
+  },
+  {
+    name: 'Next',
+    isMatch: config => hasDependency(config, 'next'),
+    webDir: 'public',
+    priority: 2,
+  },
+  {
+    name: 'Preact',
+    isMatch: config => hasDependency(config, 'preact-cli'),
+    webDir: 'build',
+    priority: 3,
+  },
+  {
+    name: 'Rindo',
+    isMatch: config => hasDependency(config, '@rindo/core'),
+    webDir: 'www',
+    priority: 3,
+  },
+  {
+    name: 'Svelte',
+    isMatch: config =>
+      hasDependency(config, 'svelte') && hasDependency(config, 'sirv-cli'),
+    webDir: 'public',
+    priority: 3,
   },
   {
     name: 'Kdu',

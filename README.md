@@ -41,6 +41,20 @@ To begin, install the [Navify CLI](https://navifyframework.web.app/docs/cli/) (`
 navify start --jigra
 ```
 
+## FAQ
+
+#### What are the differences between Jigra and Cordova?
+
+In spirit, Jigra and Cordova are very similar. Jigra offers backward compatibility with a vast majority of Cordova plugins.
+
+Jigra and Cordova differ in that Jigra:
+
+- takes a more modern approach to tooling and plugin development
+- treats native projects as source artifacts as opposed to build artifacts
+- is maintained by the Navify Team 💙😊
+
+See [the docs](https://jigrajs.web.app/docs/cordova#differences-between-jigra-and-cordova) for more details.
+
 #### Do I need to use Navify Framework with Jigra?
 
 No, you do not need to use Navify Framework with Jigra. Without the Navify Framework, you may need to implement Native UI yourself. Without the Navify CLI, you may need to configure tooling yourself to enable features such as [livereload](https://navifyframework.web.app/docs/cli/livereload). See [the docs](https://jigrajs.web.app/docs/getting-started/with-navify) for more details.

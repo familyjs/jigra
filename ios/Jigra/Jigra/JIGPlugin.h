@@ -42,7 +42,7 @@
 // need to override init()
 -(void)load;
 -(NSString* _Nonnull)getId;
--(BOOL)getBool:(JIGPluginCall* _Nonnull) call field:(NSString* _Nonnull)field defaultValue:(BOOL)defaultValue DEPRECATED_MSG_ATTRIBUTE("Use accessors on JIGPluginCall instead. SeeJIGPBridgedJSTypes.h for Obj-C implementations.");
+-(BOOL)getBool:(JIGPluginCall* _Nonnull) call field:(NSString* _Nonnull)field defaultValue:(BOOL)defaultValue DEPRECATED_MSG_ATTRIBUTE("Use accessors on JIGPluginCall instead. See JIGBridgedJSTypes.h for Obj-C implementations.");
 -(NSString* _Nullable)getString:(JIGPluginCall* _Nonnull)call field:(NSString* _Nonnull)field defaultValue:(NSString* _Nonnull)defaultValue DEPRECATED_MSG_ATTRIBUTE("Use accessors on JIGPluginCall instead. See JIGBridgedJSTypes.h for Obj-C implementations.");
 -(id _Nullable)getConfigValue:(NSString* _Nonnull)key;
 -(void)setCenteredPopover:(UIViewController* _Nonnull)vc;

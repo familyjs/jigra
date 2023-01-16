@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [4.0.0](https://github.com/navify/jigra/compare/3.8.0...4.0.0) (2023-01-16)
+
+
+### Bug Fixes
+
+* **android:** added ServerPath object and building options for setting initial load from portals ([5049599](https://github.com/navify/jigra/commit/5049599b17ecc8a8cc0a87bb4fa49330e2363987))
+
+
+
+
+
 # [3.9.0](https://github.com/navify/jigra/compare/3.8.0...3.9.0) (2023-01-10)
 
 

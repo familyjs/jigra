@@ -211,6 +211,16 @@ export interface JigraConfig {
      * @default true
      */
     initialFocus?: boolean;
+
+    /**
+     * The minimum supported webview version on Android supported by your app.
+     *
+     * The minimum supported cannot be lower than version `55`, which is required for Jigra.
+     *
+     * @since 4.0.0
+     * @default 60
+     */
+    minWebViewVersion?: number;
   };
 
   ios?: {
@@ -354,6 +364,18 @@ export interface JigraConfig {
      * @default false
      */
     limitsNavigationsToAppBoundDomains?: boolean;
+
+    /**
+     * The content mode for the web view to use when it loads and renders web content.
+     *
+     * - 'recommended': The content mode that is appropriate for the current device.
+     * - 'desktop': The content mode that represents a desktop experience.
+     * - 'mobile': The content mode that represents a mobile experience.
+     *
+     * @since 4.0.0
+     * @default recommended
+     */
+    preferredContentMode?: 'recommended' | 'desktop' | 'mobile';
   };
 
   server?: {
@@ -431,6 +453,14 @@ export interface JigraConfig {
      * @default []
      */
     allowNavigation?: string[];
+
+    /**
+     * Specify path to a local html page to display in case of errors.
+     *
+     * @since 4.0.0
+     * @default null
+     */
+    errorPath?: string;
   };
 
   cordova?: {
@@ -493,7 +523,6 @@ export interface LiveUpdateConfig {
   channel: string;
   autoUpdateMethod: AutoUpdateMethod;
   maxVersions?: number;
-  key?: string;
 }
 
 export type AutoUpdateMethod = 'none' | 'background';
@@ -518,13 +547,5 @@ export interface PluginsConfig {
   Portals?: {
     shell: Portal;
     apps: Portal[];
-    liveUpdatesKey?: string;
   };
-
-  /**
-   * Jigra Live Updates plugin configuration
-   *
-   * @since 4.2.0
-   */
-  LiveUpdates?: LiveUpdateConfig;
 }

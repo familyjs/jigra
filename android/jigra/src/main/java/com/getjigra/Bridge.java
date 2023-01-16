@@ -11,6 +11,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -23,6 +24,7 @@ import androidx.activity.result.contract.ActivityResultContract;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
 import com.getjigra.android.R;
 import com.getjigra.annotation.JigraPlugin;
@@ -38,9 +40,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.cordova.ConfigXmlParser;
 import org.apache.cordova.CordovaPreferences;
 import org.apache.cordova.CordovaWebView;
@@ -73,6 +77,7 @@ public class Bridge {
     private static final String BUNDLE_PLUGIN_CALL_BUNDLE_KEY = "jigraLastPluginCallBundle";
     private static final String LAST_BINARY_VERSION_CODE = "lastBinaryVersionCode";
     private static final String LAST_BINARY_VERSION_NAME = "lastBinaryVersionName";
+    private static final String MINIMUM_ANDROID_WEBVIEW_ERROR = "System WebView is not supported";
 
     // The name of the directory we use to look for index.html and the rest of our web assets
     public static final String DEFAULT_WEB_ASSET_DIR = "public";
@@ -80,6 +85,8 @@ public class Bridge {
     public static final String JIGRA_HTTPS_SCHEME = "https";
     public static final String JIGRA_FILE_START = "/_jigra_file_";
     public static final String JIGRA_CONTENT_START = "/_jigra_content_";
+    public static final int DEFAULT_ANDROID_WEBVIEW_VERSION = 60;
+    public static final int MINIMUM_ANDROID_WEBVIEW_VERSION = 55;
 
     // Loaded Jigra config
     private JigConfig config;
@@ -93,6 +100,7 @@ public class Bridge {
     private String appUrl;
     private String appUrlConfig;
     private HostMask appAllowNavigationMask;
+    private Set<String> allowedOriginRules = new HashSet<String>();
     // A reference to the main WebView for the app
     private final WebView webView;
     public final MockCordovaInterfaceImpl cordovaInterface;
@@ -134,9 +142,6 @@ public class Bridge {
     // An interface to manipulate route resolving
     private RouteProcessor routeProcessor;
 
-    // A pre-determined path to load the bridge
-    private ServerPath serverPath;
-
     /**
      * Create the Bridge with a reference to the main {@link Activity} for the
      * app, and a reference to the {@link WebView} our app will use.
@@ -154,12 +159,11 @@ public class Bridge {
         CordovaPreferences preferences,
         JigConfig config
     ) {
-        this(context, null, null, webView, initialPlugins, cordovaInterface, pluginManager, preferences, config);
+        this(context, null, webView, initialPlugins, cordovaInterface, pluginManager, preferences, config);
     }
 
     private Bridge(
         AppCompatActivity context,
-        ServerPath serverPath,
         Fragment fragment,
         WebView webView,
         List<Class<? extends Plugin>> initialPlugins,
@@ -169,7 +173,6 @@ public class Bridge {
         JigConfig config
     ) {
         this.app = new App();
-        this.serverPath = serverPath;
         this.context = context;
         this.fragment = fragment;
         this.webView = webView;
@@ -187,6 +190,7 @@ public class Bridge {
 
         // Initialize web view and message handler for it
         this.initWebView();
+        this.setAllowedOriginRules();
         this.msgHandler = new MessageHandler(this, webView, pluginManager);
 
         // Grab any intent info that our app was launched with
@@ -199,6 +203,25 @@ public class Bridge {
         this.loadWebView();
     }
 
+    private void setAllowedOriginRules() {
+        String[] appAllowNavigationConfig = this.config.getAllowNavigation();
+        String authority = this.getHost();
+        String scheme = this.getScheme();
+        allowedOriginRules.add(scheme + "://" + authority);
+        if (this.getServerUrl() != null) {
+            allowedOriginRules.add(this.getServerUrl());
+        }
+        if (appAllowNavigationConfig != null) {
+            for (String allowNavigation : appAllowNavigationConfig) {
+                if (!allowNavigation.startsWith("http")) {
+                    allowedOriginRules.add("https://" + allowNavigation);
+                } else {
+                    allowedOriginRules.add(allowNavigation);
+                }
+            }
+        }
+    }
+
     public App getApp() {
         return app;
     }
@@ -208,14 +231,13 @@ public class Bridge {
         String[] appAllowNavigationConfig = this.config.getAllowNavigation();
 
         ArrayList<String> authorities = new ArrayList<>();
+
         if (appAllowNavigationConfig != null) {
             authorities.addAll(Arrays.asList(appAllowNavigationConfig));
         }
         this.appAllowNavigationMask = HostMask.Parser.parse(appAllowNavigationConfig);
-
         String authority = this.getHost();
         authorities.add(authority);
-
         String scheme = this.getScheme();
 
         localUrl = scheme + "://" + authority;
@@ -224,7 +246,10 @@ public class Bridge {
             try {
                 URL appUrlObject = new URL(appUrlConfig);
                 authorities.add(appUrlObject.getAuthority());
-            } catch (Exception ex) {}
+            } catch (Exception ex) {
+                Logger.error("Provided server url is invalid: " + ex.getMessage());
+                return;
+            }
             localUrl = appUrlConfig;
             appUrl = appUrlConfig;
         } else {
@@ -239,7 +264,6 @@ public class Bridge {
         if (appUrlPath != null && !appUrlPath.trim().isEmpty()) {
             appUrl += appUrlPath;
         }
-
         final boolean html5mode = this.config.isHTML5Mode();
 
         // Start the local web server
@@ -260,16 +284,57 @@ public class Bridge {
             }
         }
 
-        // If serverPath configured, start server based on provided path
-        if (serverPath != null) {
-            if (serverPath.getType() == ServerPath.PathType.ASSET_PATH) {
-                setServerAssetPath(serverPath.getPath());
+        if (!this.isMinimumWebViewInstalled()) {
+            String errorUrl = this.getErrorUrl();
+            if (errorUrl != null) {
+                webView.loadUrl(errorUrl);
+                return;
             } else {
-                setServerBasePath(serverPath.getPath());
+                Logger.error(MINIMUM_ANDROID_WEBVIEW_ERROR);
             }
-        } else {
-            webView.loadUrl(appUrl);
         }
+
+        // Get to work
+        webView.loadUrl(appUrl);
+    }
+
+    @SuppressLint("WebViewApiAvailability")
+    public boolean isMinimumWebViewInstalled() {
+        PackageManager pm = getContext().getPackageManager();
+
+        // Check getCurrentWebViewPackage() directly if above Android 8
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            PackageInfo info = WebView.getCurrentWebViewPackage();
+            String majorVersionStr = info.versionName.split("\\.")[0];
+            int majorVersion = Integer.parseInt(majorVersionStr);
+            return majorVersion >= config.getMinWebViewVersion();
+        }
+
+        // Otherwise manually check WebView versions
+        try {
+            String webViewPackage = "com.google.android.webview";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                webViewPackage = "com.android.chrome";
+            }
+            PackageInfo info = pm.getPackageInfo(webViewPackage, 0);
+            String majorVersionStr = info.versionName.split("\\.")[0];
+            int majorVersion = Integer.parseInt(majorVersionStr);
+            return majorVersion >= config.getMinWebViewVersion();
+        } catch (Exception ex) {
+            Logger.warn("Unable to get package info for 'com.google.android.webview'" + ex.toString());
+        }
+
+        try {
+            PackageInfo info = pm.getPackageInfo("com.android.webview", 0);
+            String majorVersionStr = info.versionName.split("\\.")[0];
+            int majorVersion = Integer.parseInt(majorVersionStr);
+            return majorVersion >= config.getMinWebViewVersion();
+        } catch (Exception ex) {
+            Logger.warn("Unable to get package info for 'com.android.webview'" + ex.toString());
+        }
+
+        // Could not detect any webview, return false
+        return false;
     }
 
     public boolean launchIntent(Uri url) {
@@ -307,7 +372,7 @@ public class Bridge {
 
         try {
             PackageInfo pInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            versionCode = Integer.toString(pInfo.versionCode);
+            versionCode = Integer.toString((int) PackageInfoCompat.getLongVersionCode(pInfo));
             versionName = pInfo.versionName;
         } catch (Exception ex) {
             Logger.error("Unable to get package info", ex);
@@ -418,6 +483,25 @@ public class Bridge {
         return this.config.getServerUrl();
     }
 
+    public String getErrorUrl() {
+        String errorPath = this.config.getErrorPath();
+
+        if (errorPath != null && !errorPath.trim().isEmpty()) {
+            String authority = this.getHost();
+            String scheme = this.getScheme();
+
+            String localUrl = scheme + "://" + authority;
+
+            return localUrl + "/" + errorPath;
+        }
+
+        return null;
+    }
+
+    public String getAppUrl() {
+        return appUrl;
+    }
+
     public JigConfig getConfig() {
         return this.config;
     }
@@ -429,14 +513,12 @@ public class Bridge {
     /**
      * Initialize the WebView, setting required flags
      */
-    @SuppressLint("SetJavaScriptEnabled")
     private void initWebView() {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setGeolocationEnabled(true);
         settings.setDatabaseEnabled(true);
-        settings.setAppCacheEnabled(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
         if (this.config.isMixedContentAllowed()) {
@@ -490,6 +572,17 @@ public class Bridge {
         }
     }
 
+    @SuppressWarnings("deprecation")
+    private String getLegacyPluginName(Class<? extends Plugin> pluginClass) {
+        NativePlugin legacyPluginAnnotation = pluginClass.getAnnotation(NativePlugin.class);
+        if (legacyPluginAnnotation == null) {
+            Logger.error("Plugin doesn't have the @JigraPlugin annotation. Please add it");
+            return null;
+        }
+
+        return legacyPluginAnnotation.name();
+    }
+
     /**
      * Register a plugin class
      * @param pluginClass a class inheriting from Plugin
@@ -499,14 +592,10 @@ public class Bridge {
 
         JigraPlugin pluginAnnotation = pluginClass.getAnnotation(JigraPlugin.class);
         if (pluginAnnotation == null) {
-            NativePlugin legacyPluginAnnotation = pluginClass.getAnnotation(NativePlugin.class);
-
-            if (legacyPluginAnnotation == null) {
-                Logger.error("Plugin doesn't have the @JigraPlugin annotation. Please add it");
+            pluginName = this.getLegacyPluginName(pluginClass);
+            if (pluginName == null) {
                 return;
             }
-
-            pluginName = legacyPluginAnnotation.name();
         } else {
             pluginName = pluginAnnotation.name();
         }
@@ -545,6 +634,7 @@ public class Bridge {
      * @return
      */
     @Deprecated
+    @SuppressWarnings("deprecation")
     public PluginHandle getPluginWithRequestCode(int requestCode) {
         for (PluginHandle handle : this.plugins.values()) {
             int[] requestCodes;
@@ -860,6 +950,7 @@ public class Bridge {
     }
 
     @Deprecated
+    @SuppressWarnings("deprecation")
     public void startActivityForPluginWithResult(PluginCall call, Intent intent, int requestCode) {
         Logger.debug("Starting activity for result");
 
@@ -877,6 +968,7 @@ public class Bridge {
      * @param grantResults the set of granted/denied permissions
      * @return true if permission code was handled by a plugin explicitly, false if not
      */
+    @SuppressWarnings("deprecation")
     boolean onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         PluginHandle plugin = getPluginWithRequestCode(requestCode);
 
@@ -1016,6 +1108,7 @@ public class Bridge {
      * @param resultCode
      * @param data
      */
+    @SuppressWarnings("deprecation")
     boolean onActivityResult(int requestCode, int resultCode, Intent data) {
         PluginHandle plugin = getPluginWithRequestCode(requestCode);
 
@@ -1195,6 +1288,10 @@ public class Bridge {
         return appAllowNavigationMask;
     }
 
+    public Set<String> getAllowedOriginRules() {
+        return allowedOriginRules;
+    }
+
     public BridgeWebViewClient getWebViewClient() {
         return this.webViewClient;
     }
@@ -1217,10 +1314,6 @@ public class Bridge {
 
     void setRouteProcessor(RouteProcessor routeProcessor) {
         this.routeProcessor = routeProcessor;
-    }
-
-    ServerPath getServerPath() {
-        return serverPath;
     }
 
     /**
@@ -1248,7 +1341,6 @@ public class Bridge {
         private Fragment fragment;
         private RouteProcessor routeProcessor;
         private final List<WebViewListener> webViewListeners = new ArrayList<>();
-        private ServerPath serverPath;
 
         public Builder(AppCompatActivity activity) {
             this.activity = activity;
@@ -1305,11 +1397,6 @@ public class Bridge {
             return this;
         }
 
-        public Builder setServerPath(ServerPath serverPath) {
-            this.serverPath = serverPath;
-            return this;
-        }
-
         public Bridge create() {
             // Cordova initialization
             ConfigXmlParser parser = new ConfigXmlParser();
@@ -1330,17 +1417,7 @@ public class Bridge {
             cordovaInterface.onCordovaInit(pluginManager);
 
             // Bridge initialization
-            Bridge bridge = new Bridge(
-                activity,
-                serverPath,
-                fragment,
-                webView,
-                plugins,
-                cordovaInterface,
-                pluginManager,
-                preferences,
-                config
-            );
+            Bridge bridge = new Bridge(activity, fragment, webView, plugins, cordovaInterface, pluginManager, preferences, config);
             bridge.setCordovaWebView(mockWebView);
             bridge.setWebViewListeners(webViewListeners);
             bridge.setRouteProcessor(routeProcessor);

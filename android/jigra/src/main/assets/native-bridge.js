@@ -384,10 +384,18 @@ var nativeBridge = (function (exports) {
                 }
                 return null;
             };
+            if (win === null || win === void 0 ? void 0 : win.androidBridge) {
+                win.androidBridge.onmessage = function (event) {
+                    returnResult(JSON.parse(event.data));
+                };
+            }
             /**
              * Process a response from the native layer.
              */
             jig.fromNative = result => {
+                returnResult(result);
+            };
+            const returnResult = (result) => {
                 var _a, _b;
                 if (jig.isLoggingEnabled && result.pluginId !== 'Console') {
                     jig.logFromNative(result);

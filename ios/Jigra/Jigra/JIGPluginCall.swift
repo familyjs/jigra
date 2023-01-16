@@ -57,7 +57,7 @@ extension JIGPluginCall: JSValueContainer {
         errorHandler(JIGPluginCallError(message: message, code: nil, error: error, data: data))
     }
 
-    func reject(_ message: String, _ code: String? = nil, _ error: Error? = nil, _ data: PluginCallResultData = [:]) {
+    func reject(_ message: String, _ code: String? = nil, _ error: Error? = nil, _ data: PluginCallResultData? = nil) {
         errorHandler(JIGPluginCallError(message: message, code: code, error: error, data: data))
     }
 

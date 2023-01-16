@@ -12,7 +12,6 @@ class JigraCordovaCookieManager implements ICordovaCookieManager {
     public JigraCordovaCookieManager(WebView webview) {
         webView = webview;
         cookieManager = CookieManager.getInstance();
-        CookieManager.setAcceptFileSchemeCookies(true);
         cookieManager.setAcceptThirdPartyCookies(webView, true);
     }
 
@@ -33,7 +32,7 @@ class JigraCordovaCookieManager implements ICordovaCookieManager {
 
     @Override
     public void clearCookies() {
-        cookieManager.removeAllCookie();
+        cookieManager.removeAllCookies(null);
     }
 
     @Override

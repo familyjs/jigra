@@ -91,7 +91,7 @@ import Cordova
     }
 
     open func router() -> Router {
-       return _Router()
+        return _Router()
     }
 
     /**
@@ -118,6 +118,15 @@ import Cordova
             } else {
                 webViewConfiguration.applicationNameForUserAgent = appendUserAgent
             }
+        }
+        if let preferredContentMode = instanceConfiguration.preferredContentMode {
+            var mode = WKWebpagePreferences.ContentMode.recommended
+            if preferredContentMode == "mobile" {
+                mode = WKWebpagePreferences.ContentMode.mobile
+            } else if preferredContentMode == "desktop" {
+                mode = WKWebpagePreferences.ContentMode.desktop
+            }
+            webViewConfiguration.defaultWebpagePreferences.preferredContentMode = mode
         }
         return webViewConfiguration
     }
@@ -166,11 +175,7 @@ import Cordova
             }
             if let statusBarStyle = plist["UIStatusBarStyle"] as? String {
                 if statusBarStyle == "UIStatusBarStyleDarkContent" {
-                    if #available(iOS 13.0, *) {
-                        self.statusBarStyle = .darkContent
-                    } else {
-                        self.statusBarStyle = .default
-                    }
+                    self.statusBarStyle = .darkContent
                 } else if statusBarStyle != "UIStatusBarStyleDefault" {
                     self.statusBarStyle = .lightContent
                 }
@@ -258,10 +263,16 @@ extension JIGBridgeViewController {
     }
 
     @objc public func setServerBasePath(path: String) {
-        guard let jigBridge = jigraBridge else { return }
-        jigBridge.setServerBasePath(path)
-        DispatchQueue.main.async { [weak self] in
-            _ = self?.webView?.load(URLRequest(url: jigBridge.config.serverURL))
+        let url = URL(fileURLWithPath: path, isDirectory: true)
+        guard let jigBridge = jigraBridge, FileManager.default.fileExists(atPath: url.path) else {
+            return
+        }
+        jigBridge.config = jigBridge.config.updatingAppLocation(url)
+        jigBridge.webViewAssetHandler.setAssetPath(url.path)
+        if let url = jigraBridge?.config.serverURL {
+            DispatchQueue.main.async { [weak self] in
+                _ = self?.webView?.load(URLRequest(url: url))
+            }
         }
     }
 }
@@ -289,7 +300,7 @@ extension JIGBridgeViewController {
         if let backgroundColor = configuration.backgroundColor {
             aWebView.backgroundColor = backgroundColor
             aWebView.scrollView.backgroundColor = backgroundColor
-        } else if #available(iOS 13, *) {
+        } else {
             // Use the system background colors if background is not set by user
             aWebView.backgroundColor = UIColor.systemBackground
             aWebView.scrollView.backgroundColor = UIColor.systemBackground
@@ -352,7 +363,7 @@ extension JIGBridgeViewController {
     }
 }
 
-extension JIGBridgeViewController: JIGBridgeDelegate {
+extension CAPBridgeViewController: CAPBridgeDelegate {
     internal var bridgedWebView: WKWebView? {
         return webView
     }

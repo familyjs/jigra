@@ -94,3 +94,8 @@ jigra-cordova-android-plugins
 
 # Copied web assets
 app/src/main/assets/public
+
+# Generated Config files
+app/src/main/assets/jigra.config.json
+app/src/main/assets/jigra.plugins.json
+app/src/main/res/xml/config.xml

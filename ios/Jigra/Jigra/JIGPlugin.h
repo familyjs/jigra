@@ -4,6 +4,8 @@
 @protocol JIGBridgeProtocol;
 @class JIGPluginCall;
 
+@class PluginConfig;
+
 @interface JIGPlugin : NSObject
 
 @property (nonatomic, weak, nullable) WKWebView *webView;
@@ -44,8 +46,10 @@
 -(NSString* _Nonnull)getId;
 -(BOOL)getBool:(JIGPluginCall* _Nonnull) call field:(NSString* _Nonnull)field defaultValue:(BOOL)defaultValue DEPRECATED_MSG_ATTRIBUTE("Use accessors on JIGPluginCall instead. See JIGBridgedJSTypes.h for Obj-C implementations.");
 -(NSString* _Nullable)getString:(JIGPluginCall* _Nonnull)call field:(NSString* _Nonnull)field defaultValue:(NSString* _Nonnull)defaultValue DEPRECATED_MSG_ATTRIBUTE("Use accessors on JIGPluginCall instead. See JIGBridgedJSTypes.h for Obj-C implementations.");
--(id _Nullable)getConfigValue:(NSString* _Nonnull)key;
--(void)setCenteredPopover:(UIViewController* _Nonnull)vc;
--(BOOL)supportsPopover;
+-(id _Nullable)getConfigValue:(NSString* _Nonnull)key __deprecated_msg("use getConfig() and access config values using the methods available depending on the type.");
+-(PluginConfig* _Nonnull)getConfig;
+-(void)setCenteredPopover:(UIViewController* _Nonnull) vc;
+-(void)setCenteredPopover:(UIViewController* _Nonnull) vc size:(CGSize) size;
+-(BOOL)supportsPopover DEPRECATED_MSG_ATTRIBUTE("All iOS 13+ devices support popover");
 
 @end

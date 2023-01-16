@@ -87,36 +87,14 @@ export async function copy(
       usesJigraPortals = true;
     }
 
-    let usesLiveUpdates = false;
-    if (
-      allPlugins.filter(plugin => plugin.id === '@jigra/live-updates').length >
-      0
-    ) {
-      usesLiveUpdates = true;
-    }
-
     if (platformName === config.ios.name) {
       if (usesJigraPortals) {
         await copyFederatedWebDirs(config, await config.ios.webDirAbs);
-        if (config.app.extConfig?.plugins?.Portals?.liveUpdatesKey) {
-          await copySecureLiveUpdatesKey(
-            config.app.extConfig.plugins.Portals.liveUpdatesKey,
-            config.app.rootDir,
-            config.ios.nativeTargetDirAbs,
-          );
-        }
       } else {
         await copyWebDir(
           config,
           await config.ios.webDirAbs,
           config.app.webDirAbs,
-        );
-      }
-      if (usesLiveUpdates && config.app.extConfig?.plugins?.LiveUpdates?.key) {
-        await copySecureLiveUpdatesKey(
-          config.app.extConfig.plugins.LiveUpdates.key,
-          config.app.rootDir,
-          config.ios.nativeTargetDirAbs,
         );
       }
       await copyJigraConfig(config, config.ios.nativeTargetDirAbs);
@@ -125,25 +103,11 @@ export async function copy(
     } else if (platformName === config.android.name) {
       if (usesJigraPortals) {
         await copyFederatedWebDirs(config, config.android.webDirAbs);
-        if (config.app.extConfig?.plugins?.Portals?.liveUpdatesKey) {
-          await copySecureLiveUpdatesKey(
-            config.app.extConfig.plugins.Portals.liveUpdatesKey,
-            config.app.rootDir,
-            config.android.assetsDirAbs,
-          );
-        }
       } else {
         await copyWebDir(
           config,
           config.android.webDirAbs,
           config.app.webDirAbs,
-        );
-      }
-      if (usesLiveUpdates && config.app.extConfig?.plugins?.LiveUpdates?.key) {
-        await copySecureLiveUpdatesKey(
-          config.app.extConfig.plugins.LiveUpdates.key,
-          config.app.rootDir,
-          config.android.assetsDirAbs,
         );
       }
       await copyJigraConfig(config, config.android.assetsDirAbs);
@@ -244,35 +208,5 @@ function isPortal(config: any): config is Portal {
   return (
     (config as Portal).webDir !== undefined &&
     (config as Portal).name !== undefined
-  );
-}
-
-async function copySecureLiveUpdatesKey(
-  secureLiveUpdatesKeyFile: string,
-  rootDir: string,
-  nativeAbsDir: string,
-) {
-  const keyAbsFromPath = join(rootDir, secureLiveUpdatesKeyFile);
-  const keyAbsToPath = join(nativeAbsDir, basename(keyAbsFromPath));
-  const keyRelToDir = relative(rootDir, nativeAbsDir);
-
-  if (!(await pathExists(keyAbsFromPath))) {
-    logger.warn(
-      `Cannot copy Secure Live Updates signature file from ${c.strong(
-        keyAbsFromPath,
-      )} to ${keyRelToDir}\n` +
-        `Signature file does not exist at specified key path.`,
-    );
-
-    return;
-  }
-
-  await runTask(
-    `Copying Secure Live Updates key from ${c.strong(
-      secureLiveUpdatesKeyFile,
-    )} to ${keyRelToDir}`,
-    async () => {
-      return fsCopy(keyAbsFromPath, keyAbsToPath);
-    },
   );
 }

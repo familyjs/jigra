@@ -156,13 +156,6 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         statusBarAnimation = animation
     }
 
-    public func setServerBasePath(_ path: String) {
-        let url = URL(fileURLWithPath: path, isDirectory: true)
-        guard FileManager.default.fileExists(atPath: url.path) else { return }
-        config = config.updatingAppLocation(url)
-        webViewAssetHandler.setAssetPath(url.path)
-    }
-
     // MARK: - Static Methods
 
     /**

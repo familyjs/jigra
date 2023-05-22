@@ -1,6 +1,6 @@
 {
   "name": "@jigra/android",
-  "version": "5.0.0-0",
+  "version": "5.0.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Family Team",
@@ -23,7 +23,7 @@
     "verify": "./gradlew clean lint build test -b jigra/build.gradle"
   },
   "peerDependencies": {
-    "@jigra/core": "^5.0.0-0"
+    "@jigra/core": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"

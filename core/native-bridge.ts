@@ -28,22 +28,14 @@ const initBridge = (w: any): void => {
     }
   };
 
-  const convertFileSrcServerUrl = (
-    webviewServerUrl: string,
-    filePath: string,
-  ): string => {
+  const convertFileSrcServerUrl = (webviewServerUrl: string, filePath: string): string => {
     if (typeof filePath === 'string') {
       if (filePath.startsWith('/')) {
         return webviewServerUrl + '/_jigra_file_' + filePath;
       } else if (filePath.startsWith('file://')) {
-        return (
-          webviewServerUrl + filePath.replace('file://', '/_jigra_file_')
-        );
+        return webviewServerUrl + filePath.replace('file://', '/_jigra_file_');
       } else if (filePath.startsWith('content://')) {
-        return (
-          webviewServerUrl +
-          filePath.replace('content:/', '/_jigra_content_')
-        );
+        return webviewServerUrl + filePath.replace('content:/', '/_jigra_content_');
       }
     }
     return filePath;
@@ -57,7 +49,7 @@ const initBridge = (w: any): void => {
         {
           eventName: eventName,
         },
-        callback,
+        callback
       );
       return {
         remove: async () => {
@@ -75,7 +67,7 @@ const initBridge = (w: any): void => {
           callbackId: callbackId,
           eventName: eventName,
         },
-        callback,
+        callback
       );
     };
 
@@ -199,81 +191,56 @@ const initBridge = (w: any): void => {
   };
 
   const initLogger = (win: WindowJigra, jig: JigraInstance) => {
-    const BRIDGED_CONSOLE_METHODS: (keyof Console)[] = [
-      'debug',
-      'error',
-      'info',
-      'log',
-      'trace',
-      'warn',
-    ];
+    const BRIDGED_CONSOLE_METHODS: (keyof Console)[] = ['debug', 'error', 'info', 'log', 'trace', 'warn'];
 
-    const createLogFromNative =
-      (c: Partial<Console>) => (result: PluginResult) => {
-        if (isFullConsole(c)) {
-          const success = result.success === true;
+    const createLogFromNative = (c: Partial<Console>) => (result: PluginResult) => {
+      if (isFullConsole(c)) {
+        const success = result.success === true;
 
-          const tagStyles = success
-            ? 'font-style: italic; font-weight: lighter; color: gray'
-            : 'font-style: italic; font-weight: lighter; color: red';
+        const tagStyles = success
+          ? 'font-style: italic; font-weight: lighter; color: gray'
+          : 'font-style: italic; font-weight: lighter; color: red';
 
-          c.groupCollapsed(
-            '%cresult %c' +
-              result.pluginId +
-              '.' +
-              result.methodName +
-              ' (#' +
-              result.callbackId +
-              ')',
-            tagStyles,
-            'font-style: italic; font-weight: bold; color: #444',
-          );
-          if (result.success === false) {
-            c.error(result.error);
-          } else {
-            c.dir(result.data);
-          }
-          c.groupEnd();
+        c.groupCollapsed(
+          '%cresult %c' + result.pluginId + '.' + result.methodName + ' (#' + result.callbackId + ')',
+          tagStyles,
+          'font-style: italic; font-weight: bold; color: #444'
+        );
+        if (result.success === false) {
+          c.error(result.error);
         } else {
-          if (result.success === false) {
-            c.error('LOG FROM NATIVE', result.error);
-          } else {
-            c.log('LOG FROM NATIVE', result.data);
-          }
+          c.dir(result.data);
         }
-      };
-
-    const createLogToNative =
-      (c: Partial<Console>) => (call: MessageCallData) => {
-        if (isFullConsole(c)) {
-          c.groupCollapsed(
-            '%cnative %c' +
-              call.pluginId +
-              '.' +
-              call.methodName +
-              ' (#' +
-              call.callbackId +
-              ')',
-            'font-weight: lighter; color: gray',
-            'font-weight: bold; color: #000',
-          );
-          c.dir(call);
-          c.groupEnd();
+        c.groupEnd();
+      } else {
+        if (result.success === false) {
+          c.error('LOG FROM NATIVE', result.error);
         } else {
-          c.log('LOG TO NATIVE: ', call);
+          c.log('LOG FROM NATIVE', result.data);
         }
-      };
+      }
+    };
+
+    const createLogToNative = (c: Partial<Console>) => (call: MessageCallData) => {
+      if (isFullConsole(c)) {
+        c.groupCollapsed(
+          '%cnative %c' + call.pluginId + '.' + call.methodName + ' (#' + call.callbackId + ')',
+          'font-weight: lighter; color: gray',
+          'font-weight: bold; color: #000'
+        );
+        c.dir(call);
+        c.groupEnd();
+      } else {
+        c.log('LOG TO NATIVE: ', call);
+      }
+    };
 
     const isFullConsole = (c: Partial<Console>): c is Console => {
       if (!c) {
         return false;
       }
 
-      return (
-        typeof c.groupCollapsed === 'function' ||
-        typeof c.groupEnd === 'function' ||
-        typeof c.dir === 'function'
-      );
+      return typeof c.groupCollapsed === 'function' || typeof c.groupEnd === 'function' || typeof c.dir === 'function';
     };
 
     const serializeConsoleMessage = (msg: any): string => {
@@ -312,8 +279,7 @@ const initBridge = (w: any): void => {
           doPatchCookies = true;
         }
       } else if (typeof win.JigraCookiesAndroidInterface !== 'undefined') {
-        const isCookiesEnabled =
-          win.JigraCookiesAndroidInterface.isEnabled();
+        const isCookiesEnabled = win.JigraCookiesAndroidInterface.isEnabled();
         if (isCookiesEnabled === true) {
           doPatchCookies = true;
         }
@@ -332,9 +298,7 @@ const initBridge = (w: any): void => {
 
               const res = prompt(JSON.stringify(payload));
               return res;
-            } else if (
-              typeof win.JigraCookiesAndroidInterface !== 'undefined'
-            ) {
+            } else if (typeof win.JigraCookiesAndroidInterface !== 'undefined') {
               return win.JigraCookiesAndroidInterface.getCookies();
             }
           },
@@ -342,9 +306,7 @@ const initBridge = (w: any): void => {
             const cookiePairs = val.split(';');
             const domainSection = val.toLowerCase().split('domain=')[1];
             const domain =
-              cookiePairs.length > 1 &&
-              domainSection != null &&
-              domainSection.length > 0
+              cookiePairs.length > 1 && domainSection != null && domainSection.length > 0
                 ? domainSection.split(';')[0].trim()
                 : '';
 
@@ -359,9 +321,7 @@ const initBridge = (w: any): void => {
               };
 
               prompt(JSON.stringify(payload));
-            } else if (
-              typeof win.JigraCookiesAndroidInterface !== 'undefined'
-            ) {
+            } else if (typeof win.JigraCookiesAndroidInterface !== 'undefined') {
               win.JigraCookiesAndroidInterface.setCookie(domain, val);
             }
           },
@@ -373,8 +333,7 @@ const initBridge = (w: any): void => {
       win.JigraWebFetch = window.fetch;
       win.JigraWebXMLHttpRequest = {
         abort: window.XMLHttpRequest.prototype.abort,
-        getAllResponseHeaders:
-          window.XMLHttpRequest.prototype.getAllResponseHeaders,
+        getAllResponseHeaders: window.XMLHttpRequest.prototype.getAllResponseHeaders,
         getResponseHeader: window.XMLHttpRequest.prototype.getResponseHeader,
         open: window.XMLHttpRequest.prototype.open,
         send: window.XMLHttpRequest.prototype.send,
@@ -405,16 +364,8 @@ const initBridge = (w: any): void => {
 
       if (doPatchHttp) {
         // fetch patch
-        window.fetch = async (
-          resource: RequestInfo | URL,
-          options?: RequestInit,
-        ) => {
-          if (
-            !(
-              resource.toString().startsWith('http:') ||
-              resource.toString().startsWith('https:')
-            )
-          ) {
+        window.fetch = async (resource: RequestInfo | URL, options?: RequestInit) => {
+          if (!(resource.toString().startsWith('http:') || resource.toString().startsWith('https:'))) {
             return win.JigraWebFetch(resource, options);
           }
 
@@ -426,20 +377,14 @@ const initBridge = (w: any): void => {
             if (options?.headers instanceof Headers) {
               headers = Object.fromEntries((options.headers as any).entries());
             }
-            const nativeResponse: HttpResponse = await jig.nativePromise(
-              'JigraHttp',
-              'request',
-              {
-                url: resource,
-                method: options?.method ? options.method : undefined,
-                data: options?.body ? options.body : undefined,
-                headers: headers,
-              },
-            );
+            const nativeResponse: HttpResponse = await jig.nativePromise('JigraHttp', 'request', {
+              url: resource,
+              method: options?.method ? options.method : undefined,
+              data: options?.body ? options.body : undefined,
+              headers: headers,
+            });
 
-            let data = !nativeResponse.headers['Content-Type'].startsWith(
-              'application/json',
-            )
+            let data = !nativeResponse.headers['Content-Type'].startsWith('application/json')
               ? nativeResponse.data
               : JSON.stringify(nativeResponse.data);
 
@@ -494,8 +439,7 @@ const initBridge = (w: any): void => {
           });
 
           this.addEventListener('readystatechange', function () {
-            if (typeof this.onreadystatechange === 'function')
-              this.onreadystatechange();
+            if (typeof this.onreadystatechange === 'function') this.onreadystatechange();
           });
 
           this.addEventListener('timeout', function () {
@@ -505,10 +449,7 @@ const initBridge = (w: any): void => {
 
         // XHR patch abort
         window.XMLHttpRequest.prototype.abort = function () {
-          if (
-            this._url == null ||
-            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
-          ) {
+          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
             return win.JigraWebXMLHttpRequest.abort.call(this);
           }
           this.readyState = 0;
@@ -517,15 +458,10 @@ const initBridge = (w: any): void => {
         };
 
         // XHR patch open
-        window.XMLHttpRequest.prototype.open = function (
-          method: string,
-          url: string,
-        ) {
+        window.XMLHttpRequest.prototype.open = function (method: string, url: string) {
           this._url = url;
 
-          if (
-            !(url.startsWith('http:') || url.toString().startsWith('https:'))
-          ) {
+          if (!(url.startsWith('http:') || url.toString().startsWith('https:'))) {
             return win.JigraWebXMLHttpRequest.open.call(this, method, url);
           }
 
@@ -570,31 +506,16 @@ const initBridge = (w: any): void => {
         };
 
         // XHR patch set request header
-        window.XMLHttpRequest.prototype.setRequestHeader = function (
-          header: string,
-          value: string,
-        ) {
-          if (
-            this._url == null ||
-            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
-          ) {
-            return win.JigraWebXMLHttpRequest.setRequestHeader.call(
-              this,
-              header,
-              value,
-            );
+        window.XMLHttpRequest.prototype.setRequestHeader = function (header: string, value: string) {
+          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+            return win.JigraWebXMLHttpRequest.setRequestHeader.call(this, header, value);
           }
           this._headers[header] = value;
         };
 
         // XHR patch send
-        window.XMLHttpRequest.prototype.send = function (
-          body?: Document | XMLHttpRequestBodyInit,
-        ) {
-          if (
-            this._url == null ||
-            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
-          ) {
+        window.XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit) {
+          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
             return win.JigraWebXMLHttpRequest.send.call(this, body);
           }
 
@@ -610,10 +531,7 @@ const initBridge = (w: any): void => {
                 url: this._url,
                 method: this._method,
                 data: body !== null ? body : undefined,
-                headers:
-                  this._headers != null && Object.keys(this._headers).length > 0
-                    ? this._headers
-                    : undefined,
+                headers: this._headers != null && Object.keys(this._headers).length > 0 ? this._headers : undefined,
               })
               .then((nativeResponse: any) => {
                 // intercept & parse response before returning
@@ -622,9 +540,7 @@ const initBridge = (w: any): void => {
                   this._headers = nativeResponse.headers;
                   this.status = nativeResponse.status;
                   this.response = nativeResponse.data;
-                  this.responseText = !nativeResponse.headers[
-                    'Content-Type'
-                  ].startsWith('application/json')
+                  this.responseText = !nativeResponse.headers['Content-Type'].startsWith('application/json')
                     ? nativeResponse.data
                     : JSON.stringify(nativeResponse.data);
                   this.responseURL = nativeResponse.url;
@@ -662,13 +578,8 @@ const initBridge = (w: any): void => {
 
         // XHR patch getAllResponseHeaders
         window.XMLHttpRequest.prototype.getAllResponseHeaders = function () {
-          if (
-            this._url == null ||
-            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
-          ) {
-            return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(
-              this,
-            );
+          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+            return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(this);
           }
 
           let returnString = '';
@@ -682,14 +593,8 @@ const initBridge = (w: any): void => {
 
         // XHR patch getResponseHeader
         window.XMLHttpRequest.prototype.getResponseHeader = function (name) {
-          if (
-            this._url == null ||
-            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
-          ) {
-            return win.JigraWebXMLHttpRequest.getResponseHeader.call(
-              this,
-              name,
-            );
+          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+            return win.JigraWebXMLHttpRequest.getResponseHeader.call(this, name);
           }
           return this._headers[name];
         };
@@ -714,7 +619,7 @@ const initBridge = (w: any): void => {
             },
           };
           return props;
-        }, {}),
+        }, {})
       );
     }
 
@@ -737,7 +642,7 @@ const initBridge = (w: any): void => {
     jig.logToNative = createLogToNative(win.console);
     jig.logFromNative = createLogFromNative(win.console);
 
-    jig.handleError = err => win.console.error(err);
+    jig.handleError = (err) => win.console.error(err);
 
     win.Jigra = jig;
   };
@@ -748,11 +653,9 @@ const initBridge = (w: any): void => {
     // keep a collection of callbacks for native response data
     const callbacks = new Map();
 
-    const webviewServerUrl =
-      typeof win.WEBVIEW_SERVER_URL === 'string' ? win.WEBVIEW_SERVER_URL : '';
+    const webviewServerUrl = typeof win.WEBVIEW_SERVER_URL === 'string' ? win.WEBVIEW_SERVER_URL : '';
     jig.getServerUrl = () => webviewServerUrl;
-    jig.convertFileSrc = filePath =>
-      convertFileSrcServerUrl(webviewServerUrl, filePath);
+    jig.convertFileSrc = (filePath) => convertFileSrcServerUrl(webviewServerUrl, filePath);
 
     // Counter of callback ids, randomized to avoid
     // any issues during reloads if a call comes back with
@@ -765,14 +668,13 @@ const initBridge = (w: any): void => {
     const getPlatform = () => getPlatformId(win);
 
     jig.getPlatform = getPlatform;
-    jig.isPluginAvailable = name =>
-      Object.prototype.hasOwnProperty.call(jig.Plugins, name);
+    jig.isPluginAvailable = (name) => Object.prototype.hasOwnProperty.call(jig.Plugins, name);
     jig.isNativePlatform = isNativePlatform;
 
     // create the postToNative() fn if needed
     if (getPlatformId(win) === 'android') {
       // android platform
-      postToNative = data => {
+      postToNative = (data) => {
         try {
           win.androidBridge.postMessage(JSON.stringify(data));
         } catch (e) {
@@ -781,7 +683,7 @@ const initBridge = (w: any): void => {
       };
     } else if (getPlatformId(win) === 'ios') {
       // ios platform
-      postToNative = data => {
+      postToNative = (data) => {
         try {
           data.type = data.type ? data.type : 'message';
           win.webkit.messageHandlers.bridge.postMessage(data);
@@ -834,8 +736,7 @@ const initBridge = (w: any): void => {
 
           if (
             storedCallback &&
-            (typeof storedCallback.callback === 'function' ||
-              typeof storedCallback.resolve === 'function')
+            (typeof storedCallback.callback === 'function' || typeof storedCallback.resolve === 'function')
           ) {
             // store the call for later lookup
             callbackId = String(++callbackIdCount);
@@ -876,7 +777,7 @@ const initBridge = (w: any): void => {
     /**
      * Process a response from the native layer.
      */
-    jig.fromNative = result => {
+    jig.fromNative = (result) => {
       returnResult(result);
     };
 
@@ -940,9 +841,7 @@ const initBridge = (w: any): void => {
 
     jig.nativeCallback = (pluginName, methodName, options, callback) => {
       if (typeof options === 'function') {
-        console.warn(
-          `Using a callback as the 'options' parameter of 'nativeCallback()' is deprecated.`,
-        );
+        console.warn(`Using a callback as the 'options' parameter of 'nativeCallback()' is deprecated.`);
 
         callback = options as any;
         options = null;
@@ -983,7 +882,7 @@ initBridge(
     ? (window as WindowJigra)
     : typeof global !== 'undefined'
     ? (global as WindowJigra)
-    : ({} as WindowJigra),
+    : ({} as WindowJigra)
 );
 
 // Export only for tests

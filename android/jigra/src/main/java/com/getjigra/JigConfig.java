@@ -1,8 +1,8 @@
 package com.getjigra;
 
-import static com.getjigra.Bridge.JIGRA_HTTP_SCHEME;
 import static com.getjigra.Bridge.DEFAULT_ANDROID_WEBVIEW_VERSION;
 import static com.getjigra.Bridge.DEFAULT_HUAWEI_WEBVIEW_VERSION;
+import static com.getjigra.Bridge.JIGRA_HTTP_SCHEME;
 import static com.getjigra.Bridge.MINIMUM_ANDROID_WEBVIEW_VERSION;
 import static com.getjigra.Bridge.MINIMUM_HUAWEI_WEBVIEW_VERSION;
 import static com.getjigra.FileUtils.readFileFromAssets;

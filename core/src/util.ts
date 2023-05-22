@@ -24,18 +24,12 @@ export interface ExceptionData {
 }
 
 export class JigraException extends Error {
-  constructor(
-    readonly message: string,
-    readonly code?: ExceptionCode,
-    readonly data?: ExceptionData,
-  ) {
+  constructor(readonly message: string, readonly code?: ExceptionCode, readonly data?: ExceptionData) {
     super(message);
   }
 }
 
-export const getPlatformId = (
-  win: WindowJigra,
-): 'android' | 'ios' | 'web' => {
+export const getPlatformId = (win: WindowJigra): 'android' | 'ios' | 'web' => {
   if (win?.androidBridge) {
     return 'android';
   } else if (win?.webkit?.messageHandlers?.bridge) {

@@ -1,11 +1,4 @@
-import {
-  check,
-  checkPackage,
-  checkWebDir,
-  selectPlatforms,
-  isValidPlatform,
-  runPlatformHook,
-} from '../common';
+import { check, checkPackage, checkWebDir, selectPlatforms, isValidPlatform, runPlatformHook } from '../common';
 import type { Config } from '../definitions';
 import { fatal, isFatal } from '../errors';
 import { logger } from '../log';
@@ -21,7 +14,7 @@ export async function syncCommand(
   config: Config,
   selectedPlatformName: string,
   deployment: boolean,
-  inline = false,
+  inline = false
 ): Promise<void> {
   if (selectedPlatformName && !(await isValidPlatform(selectedPlatformName))) {
     try {
@@ -34,16 +27,8 @@ export async function syncCommand(
     const then = +new Date();
     const platforms = await selectPlatforms(config, selectedPlatformName);
     try {
-      await check([
-        () => checkPackage(),
-        () => checkWebDir(config),
-        ...updateChecks(config, platforms),
-      ]);
-      await allSerial(
-        platforms.map(
-          platformName => () => sync(config, platformName, deployment, inline),
-        ),
-      );
+      await check([() => checkPackage(), () => checkWebDir(config), ...updateChecks(config, platforms)]);
+      await allSerial(platforms.map((platformName) => () => sync(config, platformName, deployment, inline)));
       const now = +new Date();
       const diff = (now - then) / 1000;
       logger.info(`Sync finished in ${diff}s`);
@@ -57,18 +42,8 @@ export async function syncCommand(
   }
 }
 
-export async function sync(
-  config: Config,
-  platformName: string,
-  deployment: boolean,
-  inline = false,
-): Promise<void> {
-  await runPlatformHook(
-    config,
-    platformName,
-    config.app.rootDir,
-    'jigra:sync:before',
-  );
+export async function sync(config: Config, platformName: string, deployment: boolean, inline = false): Promise<void> {
+  await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:sync:before');
 
   try {
     await copy(config, platformName, inline);
@@ -77,10 +52,5 @@ export async function sync(
   }
   await update(config, platformName, deployment);
 
-  await runPlatformHook(
-    config,
-    platformName,
-    config.app.rootDir,
-    'jigra:sync:after',
-  );
+  await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:sync:after');
 }

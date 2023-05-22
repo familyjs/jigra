@@ -2,8 +2,8 @@ package com.getjigra.plugin;
 
 import android.Manifest;
 import android.webkit.JavascriptInterface;
-import com.getjigra.JigConfig;
 import com.getjigra.JSObject;
+import com.getjigra.JigConfig;
 import com.getjigra.Plugin;
 import com.getjigra.PluginCall;
 import com.getjigra.PluginConfig;

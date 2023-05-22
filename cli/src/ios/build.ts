@@ -8,10 +8,7 @@ import { logSuccess } from '../log';
 import type { BuildCommandOptions } from '../tasks/build';
 import { runCommand } from '../util/subprocess';
 
-export async function buildiOS(
-  config: Config,
-  buildOptions: BuildCommandOptions,
-): Promise<void> {
+export async function buildiOS(config: Config, buildOptions: BuildCommandOptions): Promise<void> {
   const theScheme = buildOptions.scheme ?? 'App';
 
   await runTask('Building xArchive', async () =>
@@ -30,8 +27,8 @@ export async function buildiOS(
       ],
       {
         cwd: config.ios.nativeProjectDirAbs,
-      },
-    ),
+      }
+    )
   );
 
   const archivePlistContents = `<?xml version="1.0" encoding="UTF-8"?>
@@ -43,10 +40,7 @@ export async function buildiOS(
 </dict>
 </plist>`;
 
-  const archivePlistPath = join(
-    `${config.ios.nativeProjectDirAbs}`,
-    'archive.plist',
-  );
+  const archivePlistPath = join(`${config.ios.nativeProjectDirAbs}`, 'archive.plist');
 
   writeFileSync(archivePlistPath, archivePlistContents);
 
@@ -66,8 +60,8 @@ export async function buildiOS(
       ],
       {
         cwd: config.ios.nativeProjectDirAbs,
-      },
-    ),
+      }
+    )
   );
 
   await runTask('Cleaning up', async () => {
@@ -75,10 +69,5 @@ export async function buildiOS(
     rimraf.sync(join(config.ios.nativeProjectDirAbs, `${theScheme}.xcarchive`));
   });
 
-  logSuccess(
-    `Successfully generated an IPA at: ${join(
-      config.ios.nativeProjectDirAbs,
-      'output',
-    )}`,
-  );
+  logSuccess(`Successfully generated an IPA at: ${join(config.ios.nativeProjectDirAbs, 'output')}`);
 }

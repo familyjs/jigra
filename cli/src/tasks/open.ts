@@ -13,19 +13,11 @@ import { fatal, isFatal } from '../errors';
 import { openIOS } from '../ios/open';
 import { logger } from '../log';
 
-export async function openCommand(
-  config: Config,
-  selectedPlatformName: string,
-): Promise<void> {
+export async function openCommand(config: Config, selectedPlatformName: string): Promise<void> {
   if (selectedPlatformName && !(await isValidPlatform(selectedPlatformName))) {
     const platformDir = resolvePlatform(config, selectedPlatformName);
     if (platformDir) {
-      await runPlatformHook(
-        config,
-        selectedPlatformName,
-        platformDir,
-        'jigra:open',
-      );
+      await runPlatformHook(config, selectedPlatformName, platformDir, 'jigra:open');
     } else {
       logger.error(`Platform ${c.input(selectedPlatformName)} not found.`);
     }
@@ -37,7 +29,7 @@ export async function openCommand(
     } else {
       platformName = await promptForPlatform(
         platforms.filter(createOpenablePlatformFilter(config)),
-        `Please choose a platform to open:`,
+        `Please choose a platform to open:`
       );
     }
 
@@ -53,17 +45,11 @@ export async function openCommand(
   }
 }
 
-function createOpenablePlatformFilter(
-  config: Config,
-): (platform: string) => boolean {
-  return platform =>
-    platform === config.ios.name || platform === config.android.name;
+function createOpenablePlatformFilter(config: Config): (platform: string) => boolean {
+  return (platform) => platform === config.ios.name || platform === config.android.name;
 }
 
-export async function open(
-  config: Config,
-  platformName: string,
-): Promise<void> {
+export async function open(config: Config, platformName: string): Promise<void> {
   if (platformName === config.ios.name) {
     await runTask('Opening the Xcode workspace...', () => {
       return openIOS(config);

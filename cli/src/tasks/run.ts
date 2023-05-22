@@ -30,17 +30,12 @@ export interface RunCommandOptions {
 export async function runCommand(
   config: Config,
   selectedPlatformName: string,
-  options: RunCommandOptions,
+  options: RunCommandOptions
 ): Promise<void> {
   if (selectedPlatformName && !(await isValidPlatform(selectedPlatformName))) {
     const platformDir = resolvePlatform(config, selectedPlatformName);
     if (platformDir) {
-      await runPlatformHook(
-        config,
-        selectedPlatformName,
-        platformDir,
-        'jigra:run',
-      );
+      await runPlatformHook(config, selectedPlatformName, platformDir, 'jigra:run');
     } else {
       logger.error(`Platform ${c.input(selectedPlatformName)} not found.`);
     }
@@ -52,13 +47,13 @@ export async function runCommand(
     } else {
       platformName = await promptForPlatform(
         platforms.filter(createRunnablePlatformFilter(config)),
-        `Please choose a platform to run:`,
+        `Please choose a platform to run:`
       );
     }
 
     if (options.list) {
       const targets = await getPlatformTargets(platformName);
-      const outputTargets = targets.map(t => ({
+      const outputTargets = targets.map((t) => ({
         name: getPlatformTargetName(t),
         api: `${t.platform === 'ios' ? 'iOS' : 'API'} ${t.sdkVersion}`,
         id: t.id ?? '?',
@@ -68,13 +63,13 @@ export async function runCommand(
       if (process.argv.includes('--json')) {
         process.stdout.write(`${JSON.stringify(outputTargets)}\n`);
       } else {
-        const rows = outputTargets.map(t => [t.name, t.api, t.id]);
+        const rows = outputTargets.map((t) => [t.name, t.api, t.id]);
 
         output.write(
           `${columnar(rows, {
             headers: ['Name', 'API', 'Target ID'],
             vsep: ' ',
-          })}\n`,
+          })}\n`
         );
       }
 
@@ -97,11 +92,7 @@ export async function runCommand(
   }
 }
 
-export async function run(
-  config: Config,
-  platformName: string,
-  options: RunCommandOptions,
-): Promise<void> {
+export async function run(config: Config, platformName: string, options: RunCommandOptions): Promise<void> {
   if (platformName == config.ios.name) {
     await runIOS(config, options);
   } else if (platformName === config.android.name) {
@@ -113,9 +104,6 @@ export async function run(
   }
 }
 
-function createRunnablePlatformFilter(
-  config: Config,
-): (platform: string) => boolean {
-  return platform =>
-    platform === config.ios.name || platform === config.android.name;
+function createRunnablePlatformFilter(config: Config): (platform: string) => boolean {
+  return (platform) => platform === config.ios.name || platform === config.android.name;
 }

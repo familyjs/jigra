@@ -17,7 +17,7 @@ export interface BuildCommandOptions {
 export async function buildCommand(
   config: Config,
   selectedPlatformName: string,
-  buildOptions: BuildCommandOptions,
+  buildOptions: BuildCommandOptions
 ): Promise<void> {
   const platforms = await selectPlatforms(config, selectedPlatformName);
   let platformName: string;
@@ -26,26 +26,18 @@ export async function buildCommand(
   } else {
     platformName = await promptForPlatform(
       platforms.filter(createBuildablePlatformFilter(config)),
-      `Please choose a platform to build for:`,
+      `Please choose a platform to build for:`
     );
   }
 
   const buildCommandOptions: BuildCommandOptions = {
     scheme: buildOptions.scheme || config.ios.scheme,
     flavor: buildOptions.flavor || config.android.flavor,
-    keystorepath:
-      buildOptions.keystorepath || config.android.buildOptions.keystorePath,
-    keystorepass:
-      buildOptions.keystorepass || config.android.buildOptions.keystorePassword,
-    keystorealias:
-      buildOptions.keystorealias || config.android.buildOptions.keystoreAlias,
-    keystorealiaspass:
-      buildOptions.keystorealiaspass ||
-      config.android.buildOptions.keystoreAliasPassword,
-    androidreleasetype:
-      buildOptions.androidreleasetype ||
-      config.android.buildOptions.releaseType ||
-      'AAB',
+    keystorepath: buildOptions.keystorepath || config.android.buildOptions.keystorePath,
+    keystorepass: buildOptions.keystorepass || config.android.buildOptions.keystorePassword,
+    keystorealias: buildOptions.keystorealias || config.android.buildOptions.keystoreAlias,
+    keystorealiaspass: buildOptions.keystorealiaspass || config.android.buildOptions.keystoreAliasPassword,
+    androidreleasetype: buildOptions.androidreleasetype || config.android.buildOptions.releaseType || 'AAB',
   };
 
   try {
@@ -58,11 +50,7 @@ export async function buildCommand(
   }
 }
 
-export async function build(
-  config: Config,
-  platformName: string,
-  buildOptions: BuildCommandOptions,
-): Promise<void> {
+export async function build(config: Config, platformName: string, buildOptions: BuildCommandOptions): Promise<void> {
   if (platformName == config.ios.name) {
     await buildiOS(config, buildOptions);
   } else if (platformName === config.android.name) {
@@ -74,9 +62,6 @@ export async function build(
   }
 }
 
-function createBuildablePlatformFilter(
-  config: Config,
-): (platform: string) => boolean {
-  return platform =>
-    platform === config.ios.name || platform === config.android.name;
+function createBuildablePlatformFilter(config: Config): (platform: string) => boolean {
+  return (platform) => platform === config.ios.name || platform === config.android.name;
 }

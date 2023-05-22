@@ -6,10 +6,7 @@ export interface JigraPlatform {
   getPlatform?(): string;
   isPluginAvailable?(pluginName: string): boolean;
   getPluginHeader?(pluginName: string): PluginHeader | undefined;
-  registerPlugin?(
-    pluginName: string,
-    jsImplementations: PluginImplementations,
-  ): any;
+  registerPlugin?(pluginName: string, jsImplementations: PluginImplementations): any;
   isNativePlatform?(): boolean;
 }
 
@@ -45,8 +42,7 @@ const createJigraPlatforms = (win: any): JigraPlatformsInstance => {
   return jigPlatforms;
 };
 
-const initPlatforms = (win: any) =>
-  (win.JigraPlatforms = createJigraPlatforms(win));
+const initPlatforms = (win: any) => (win.JigraPlatforms = createJigraPlatforms(win));
 
 /**
  * @deprecated Set `JigraCustomPlatform` on the window object prior to runtime executing in the web app instead
@@ -60,7 +56,7 @@ export const JigraPlatforms = /*#__PURE__*/ initPlatforms(
     ? window
     : typeof global !== 'undefined'
     ? global
-    : {}) as any,
+    : {}) as any
 );
 /**
  * @deprecated Set `JigraCustomPlatform` on the window object prior to runtime executing in the web app instead

@@ -12,20 +12,13 @@ const debug = Debug('jigra:ios:run');
 
 export async function runIOS(
   config: Config,
-  { target: selectedTarget, scheme: selectedScheme }: RunCommandOptions,
+  { target: selectedTarget, scheme: selectedScheme }: RunCommandOptions
 ): Promise<void> {
-  const target = await promptForPlatformTarget(
-    await getPlatformTargets('ios'),
-    selectedTarget,
-  );
+  const target = await promptForPlatformTarget(await getPlatformTargets('ios'), selectedTarget);
 
   const runScheme = selectedScheme || config.ios.scheme;
 
-  const derivedDataPath = resolve(
-    config.ios.platformDirAbs,
-    'DerivedData',
-    target.id,
-  );
+  const derivedDataPath = resolve(config.ios.platformDirAbs, 'DerivedData', target.id);
 
   const xcodebuildArgs = [
     '-workspace',
@@ -45,7 +38,7 @@ export async function runIOS(
   await runTask('Running xcodebuild', async () =>
     runCommand('xcrun', ['xcodebuild', ...xcodebuildArgs], {
       cwd: config.ios.nativeProjectDirAbs,
-    }),
+    })
   );
 
   const appName = `${runScheme}.app`;
@@ -53,15 +46,12 @@ export async function runIOS(
     derivedDataPath,
     'Build/Products',
     target.virtual ? 'Debug-iphonesimulator' : 'Debug-iphoneos',
-    appName,
+    appName
   );
 
   const nativeRunArgs = ['ios', '--app', appPath, '--target', target.id];
 
   debug('Invoking native-run with args: %O', nativeRunArgs);
 
-  await runTask(
-    `Deploying ${c.strong(appName)} to ${c.input(target.id)}`,
-    async () => runNativeRun(nativeRunArgs),
-  );
+  await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () => runNativeRun(nativeRunArgs));
 }

@@ -10,5 +10,5 @@ jobs:
   publish-npm-latest:
     uses: ./.github/workflows/publish-npm-latest.yml
     secrets:
-      CAP_GH_RELEASE_TOKEN: ${{ secrets.JIG_GH_RELEASE_TOKEN }}
+      JIG_GH_RELEASE_TOKEN: ${{ secrets.JIG_GH_RELEASE_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

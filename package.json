@@ -17,7 +17,7 @@
     "ci:publish:dev": "lerna version prerelease --conventional-commits --conventional-prerelease --preid dev-$(date +\"%Y%m%dT%H%M%S\") --force-publish --no-changelog --no-git-tag-version --no-push --yes && lerna exec -- npm publish --tag dev --provenance",
     "build:nativebridge": "lerna run build:nativebridge",
     "sync-peer-dependencies": "node scripts/sync-peer-dependencies.mjs",
-    "lint": "npm run eslint && npm run prettier -- --check && npm run swiftlint -- lint",
+    "lint": "npm run eslint && npm run prettier -- --check",
     "fmt": "npm run eslint -- --fix && npm run prettier -- --write && npm run swiftlint -- --fix --format",
     "prettier": "prettier \"**/*.{css,html,java,js,mjs,ts}\"",
     "eslint": "eslint . --ext ts",

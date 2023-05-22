@@ -33,7 +33,9 @@ export class JigraException extends Error {
   }
 }
 
-export const getPlatformId = (win: WindowJigra): 'android' | 'ios' | 'web' => {
+export const getPlatformId = (
+  win: WindowJigra,
+): 'android' | 'ios' | 'web' => {
   if (win?.androidBridge) {
     return 'android';
   } else if (win?.webkit?.messageHandlers?.bridge) {

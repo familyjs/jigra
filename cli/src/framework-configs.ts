@@ -20,14 +20,14 @@ const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
     priority: 2,
   },
   {
-    name: 'Navify React',
-    isMatch: config => hasDependency(config, '@navify/react'),
+    name: 'Family React',
+    isMatch: config => hasDependency(config, '@familyjs/react'),
     webDir: 'build',
     priority: 1,
   },
   {
-    name: 'Navify Kdu',
-    isMatch: config => hasDependency(config, '@navify/kdu'),
+    name: 'Family Kdu',
+    isMatch: config => hasDependency(config, '@familyjs/vue'),
     webDir: 'public',
     priority: 1,
   },
@@ -55,6 +55,12 @@ const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
       hasDependency(config, 'svelte') && hasDependency(config, 'sirv-cli'),
     webDir: 'public',
     priority: 3,
+  },
+  {
+    name: 'Wite',
+    isMatch: config => hasDependency(config, 'wite'),
+    webDir: 'dist',
+    priority: 2,
   },
   {
     name: 'Kdu',

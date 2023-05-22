@@ -1,22 +1,23 @@
 {
   "name": "@jigra/ios",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
-  "author": "Navify Team",
+  "author": "Family Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/navify/jigra.git"
+    "url": "git+https://github.com/familyjs/jigra.git"
   },
   "bugs": {
-    "url": "https://github.com/navify/jigra/issues"
+    "url": "https://github.com/familyjs/jigra/issues"
   },
   "files": [
     "Jigra/Jigra/",
     "JigraCordova/JigraCordova/",
     "Jigra.podspec",
-    "JigraCordova.podspec"
+    "JigraCordova.podspec",
+    "scripts/pods_helpers.rb"
   ],
   "scripts": {
     "verify": "npm run xc:build:Jigra && npm run xc:build:JigraCordova",
@@ -24,7 +25,7 @@
     "xc:build:JigraCordova": "cd JigraCordova && xcodebuild && cd .."
   },
   "peerDependencies": {
-    "@jigra/core": "4.0.0-0"
+    "@jigra/core": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"

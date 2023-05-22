@@ -1,4 +1,4 @@
-import { copy } from '@navify/utils-fs';
+import { copy } from '@familyjs/utils-fs';
 import { join } from 'path';
 
 import c from '../colors';

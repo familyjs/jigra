@@ -20,10 +20,21 @@ export { Jigra, registerPlugin } from './global';
 export { WebPlugin, WebPluginConfig, ListenerCallback } from './web-plugin';
 
 // Core Plugins APIs
-export { WebView } from './core-plugins';
+export { JigraCookies, JigraHttp, WebView } from './core-plugins';
 
 // Core Plugin definitions
-export type { WebViewPath, WebViewPlugin } from './core-plugins';
+export type {
+  ClearCookieOptions,
+  DeleteCookieOptions,
+  SetCookieOptions,
+  HttpHeaders,
+  HttpOptions,
+  HttpParams,
+  HttpResponse,
+  HttpResponseType,
+  WebViewPath,
+  WebViewPlugin,
+} from './core-plugins';
 
 // Constants
 export { JigraException, ExceptionCode } from './util';

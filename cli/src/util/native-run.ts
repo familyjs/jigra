@@ -45,7 +45,7 @@ export async function getPlatformTargets(
         errors.push(e);
       });
     }
-  } catch (e) {
+  } catch (e: any) {
     const err = JSON.parse(e);
     errors.push(err);
   }
@@ -57,7 +57,7 @@ export async function getPlatformTargets(
     })
     .join('\n')}
   \n\tMore details for this error${plural} may be available online: ${c.strong(
-    'https://github.com/navify/native-run/wiki/Android-Errors',
+    'https://github.com/familyjs/native-run/wiki/Android-Errors',
   )}
   `;
   throw errMsg;

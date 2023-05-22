@@ -1,4 +1,4 @@
-import type { Colors } from '@navify/cli-framework-output';
+import type { Colors } from '@familyjs/cli-framework-output';
 import kleur from 'kleur';
 
 export const strong = kleur.bold;

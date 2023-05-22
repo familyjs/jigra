@@ -1,16 +1,16 @@
 {
   "name": "@jigra/cli",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
-  "author": "Navify Team",
+  "author": "Family Team",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/navify/jigra.git"
+    "url": "https://github.com/familyjs/jigra.git"
   },
   "bugs": {
-    "url": "https://github.com/navify/jigra/issues"
+    "url": "https://github.com/familyjs/jigra/issues"
   },
   "files": [
     "assets/",
@@ -19,15 +19,15 @@
     "dist/declarations.d.ts"
   ],
   "keywords": [
-    "navify",
-    "navify framework",
+    "family",
+    "family framework",
     "jigra",
     "universal app",
     "progressive web apps",
     "cross platform"
   ],
   "engines": {
-    "node": ">=12.4.0"
+    "node": ">=16.0.0"
   },
   "main": "dist/index.js",
   "types": "dist/declarations.d.ts",
@@ -40,45 +40,37 @@
     "clean": "rimraf ./dist",
     "assets": "node ../scripts/pack-cli-assets.mjs",
     "prepublishOnly": "npm run build",
-    "test": "jest -i",
     "watch": "npm run assets && tsc -w"
   },
   "dependencies": {
-    "@navify/cli-framework-output": "^2.2.6",
-    "@navify/utils-fs": "^3.1.6",
-    "@navify/utils-subprocess": "^2.1.11",
-    "@navify/utils-terminal": "^2.3.3",
+    "@familyjs/cli-framework-output": "^2.2.6",
+    "@familyjs/native-run": "^1.7.2",
+    "@familyjs/utils-fs": "^3.1.7",
+    "@familyjs/utils-subprocess": "^2.1.12",
+    "@familyjs/utils-terminal": "^2.3.4",
     "commander": "^9.3.0",
     "debug": "^4.3.4",
     "env-paths": "^2.2.0",
     "kleur": "^4.1.4",
-    "native-run": "^1.6.0",
     "open": "^8.4.0",
     "plist": "^3.0.5",
     "prompts": "^2.4.2",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.4.1",
     "semver": "^7.3.7",
     "tar": "^6.1.11",
     "tslib": "^2.4.0",
-    "xml2js": "^0.4.23"
+    "xml2js": "^0.5.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/jest": "^26.0.4",
     "@types/plist": "^3.0.2",
     "@types/prompts": "^2.0.14",
-    "@types/rimraf": "^3.0.2",
     "@types/semver": "^7.3.10",
     "@types/tar": "^6.1.1",
     "@types/tmp": "^0.2.3",
     "@types/xml2js": "0.4.5",
-    "jest": "^26.1.0",
     "tmp": "^0.2.1",
-    "ts-jest": "^26.1.3",
-    "typescript": "~4.1.2"
-  },
-  "jest": {
-    "preset": "ts-jest"
+    "typescript": "~5.0.2"
   },
   "publishConfig": {
     "access": "public"

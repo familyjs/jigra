@@ -172,12 +172,17 @@ export interface JigraCustomPlatformInstance {
 
 export interface WindowJigra {
   Jigra?: JigraInstance;
+  JigraCookiesAndroidInterface?: any;
+  JigraCookiesDescriptor?: PropertyDescriptor;
+  JigraHttpAndroidInterface?: any;
+  JigraWebFetch?: any;
+  JigraWebXMLHttpRequest?: any;
   /**
    * @deprecated Use `JigraCustomPlatform` instead
    */
   JigraPlatforms?: JigraPlatformsInstance;
   JigraCustomPlatform?: JigraCustomPlatformInstance;
-  Navify?: {
+  Family?: {
     WebView?: {
       getServerBasePath?: any;
       setServerBasePath?: any;

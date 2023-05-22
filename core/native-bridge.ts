@@ -2,6 +2,7 @@
  * Note: When making changes to this file, run `npm run build:nativebridge`
  * afterwards to build the nativebridge.js files to the android and iOS projects.
  */
+import type { HttpResponse } from './src/core-plugins';
 import type {
   CallData,
   JigraInstance,
@@ -10,6 +11,7 @@ import type {
   PluginResult,
   WindowJigra,
 } from './src/definitions-internal';
+import { JigraException } from './src/util';
 
 // For removing exports for iOS/Android, keep let for reassignment
 // eslint-disable-next-line
@@ -34,10 +36,13 @@ const initBridge = (w: any): void => {
       if (filePath.startsWith('/')) {
         return webviewServerUrl + '/_jigra_file_' + filePath;
       } else if (filePath.startsWith('file://')) {
-        return webviewServerUrl + filePath.replace('file://', '/_jigra_file_');
+        return (
+          webviewServerUrl + filePath.replace('file://', '/_jigra_file_')
+        );
       } else if (filePath.startsWith('content://')) {
         return (
-          webviewServerUrl + filePath.replace('content:/', '/_jigra_content_')
+          webviewServerUrl +
+          filePath.replace('content:/', '/_jigra_content_')
         );
       }
     }
@@ -131,7 +136,7 @@ const initBridge = (w: any): void => {
     if (nav) {
       nav.app = nav.app || {};
       nav.app.exitApp = () => {
-        if (!jig.Plugins || !jig.Plugins.App) {
+        if (!jig.Plugins?.App) {
           win.console.warn('App plugin not installed');
         } else {
           jig.nativeCallback('App', 'exitApp', {});
@@ -149,7 +154,7 @@ const initBridge = (w: any): void => {
         } else if (eventName === 'backbutton' && jig.Plugins.App) {
           // Add a dummy listener so Jigra doesn't do the default
           // back button action
-          if (!jig.Plugins || !jig.Plugins.App) {
+          if (!jig.Plugins?.App) {
             win.console.warn('App plugin not installed');
           } else {
             jig.Plugins.App.addListener('backButton', () => {
@@ -169,28 +174,28 @@ const initBridge = (w: any): void => {
   };
 
   const initVendor = (win: WindowJigra, jig: JigraInstance) => {
-    const Navify = (win.Navify = win.Navify || {});
-    const NavifyWebView = (Navify.WebView = Navify.WebView || {});
+    const Family = (win.Family = win.Family || {});
+    const FamilyWebView = (Family.WebView = Family.WebView || {});
     const Plugins = jig.Plugins;
 
-    NavifyWebView.getServerBasePath = (callback: (path: string) => void) => {
+    FamilyWebView.getServerBasePath = (callback: (path: string) => void) => {
       Plugins?.WebView?.getServerBasePath().then((result: any) => {
         callback(result.path);
       });
     };
 
-    NavifyWebView.setServerBasePath = (path: any) => {
+    FamilyWebView.setServerBasePath = (path: any) => {
       Plugins?.WebView?.setServerBasePath({ path });
     };
 
-    NavifyWebView.persistServerBasePath = () => {
+    FamilyWebView.persistServerBasePath = () => {
       Plugins?.WebView?.persistServerBasePath();
     };
 
-    NavifyWebView.convertFileSrc = (url: string) => jig.convertFileSrc(url);
+    FamilyWebView.convertFileSrc = (url: string) => jig.convertFileSrc(url);
 
     win.Jigra = jig;
-    win.Navify.WebView = NavifyWebView;
+    win.Family.WebView = FamilyWebView;
   };
 
   const initLogger = (win: WindowJigra, jig: JigraInstance) => {
@@ -282,6 +287,414 @@ const initBridge = (w: any): void => {
 
       return String(msg);
     };
+
+    const platform = getPlatformId(win);
+
+    if (platform == 'android' || platform == 'ios') {
+      // patch document.cookie on Android/iOS
+      win.JigraCookiesDescriptor =
+        Object.getOwnPropertyDescriptor(Document.prototype, 'cookie') ||
+        Object.getOwnPropertyDescriptor(HTMLDocument.prototype, 'cookie');
+
+      let doPatchCookies = false;
+
+      // check if jigra cookies is disabled before patching
+      if (platform === 'ios') {
+        // Use prompt to synchronously get jigra cookies config.
+        // https://stackoverflow.com/questions/29249132/wkwebview-complex-communication-between-javascript-native-code/49474323#49474323
+
+        const payload = {
+          type: 'JigraCookies.isEnabled',
+        };
+
+        const isCookiesEnabled = prompt(JSON.stringify(payload));
+        if (isCookiesEnabled === 'true') {
+          doPatchCookies = true;
+        }
+      } else if (typeof win.JigraCookiesAndroidInterface !== 'undefined') {
+        const isCookiesEnabled =
+          win.JigraCookiesAndroidInterface.isEnabled();
+        if (isCookiesEnabled === true) {
+          doPatchCookies = true;
+        }
+      }
+
+      if (doPatchCookies) {
+        Object.defineProperty(document, 'cookie', {
+          get: function () {
+            if (platform === 'ios') {
+              // Use prompt to synchronously get cookies.
+              // https://stackoverflow.com/questions/29249132/wkwebview-complex-communication-between-javascript-native-code/49474323#49474323
+
+              const payload = {
+                type: 'JigraCookies.get',
+              };
+
+              const res = prompt(JSON.stringify(payload));
+              return res;
+            } else if (
+              typeof win.JigraCookiesAndroidInterface !== 'undefined'
+            ) {
+              return win.JigraCookiesAndroidInterface.getCookies();
+            }
+          },
+          set: function (val) {
+            const cookiePairs = val.split(';');
+            const domainSection = val.toLowerCase().split('domain=')[1];
+            const domain =
+              cookiePairs.length > 1 &&
+              domainSection != null &&
+              domainSection.length > 0
+                ? domainSection.split(';')[0].trim()
+                : '';
+
+            if (platform === 'ios') {
+              // Use prompt to synchronously set cookies.
+              // https://stackoverflow.com/questions/29249132/wkwebview-complex-communication-between-javascript-native-code/49474323#49474323
+
+              const payload = {
+                type: 'JigraCookies.set',
+                action: val,
+                domain,
+              };
+
+              prompt(JSON.stringify(payload));
+            } else if (
+              typeof win.JigraCookiesAndroidInterface !== 'undefined'
+            ) {
+              win.JigraCookiesAndroidInterface.setCookie(domain, val);
+            }
+          },
+        });
+      }
+
+      // patch fetch / XHR on Android/iOS
+      // store original fetch & XHR functions
+      win.JigraWebFetch = window.fetch;
+      win.JigraWebXMLHttpRequest = {
+        abort: window.XMLHttpRequest.prototype.abort,
+        getAllResponseHeaders:
+          window.XMLHttpRequest.prototype.getAllResponseHeaders,
+        getResponseHeader: window.XMLHttpRequest.prototype.getResponseHeader,
+        open: window.XMLHttpRequest.prototype.open,
+        send: window.XMLHttpRequest.prototype.send,
+        setRequestHeader: window.XMLHttpRequest.prototype.setRequestHeader,
+      };
+
+      let doPatchHttp = false;
+
+      // check if jigra http is disabled before patching
+      if (platform === 'ios') {
+        // Use prompt to synchronously get jigra http config.
+        // https://stackoverflow.com/questions/29249132/wkwebview-complex-communication-between-javascript-native-code/49474323#49474323
+
+        const payload = {
+          type: 'JigraHttp',
+        };
+
+        const isHttpEnabled = prompt(JSON.stringify(payload));
+        if (isHttpEnabled === 'true') {
+          doPatchHttp = true;
+        }
+      } else if (typeof win.JigraHttpAndroidInterface !== 'undefined') {
+        const isHttpEnabled = win.JigraHttpAndroidInterface.isEnabled();
+        if (isHttpEnabled === true) {
+          doPatchHttp = true;
+        }
+      }
+
+      if (doPatchHttp) {
+        // fetch patch
+        window.fetch = async (
+          resource: RequestInfo | URL,
+          options?: RequestInit,
+        ) => {
+          if (
+            !(
+              resource.toString().startsWith('http:') ||
+              resource.toString().startsWith('https:')
+            )
+          ) {
+            return win.JigraWebFetch(resource, options);
+          }
+
+          const tag = `JigraHttp fetch ${Date.now()} ${resource}`;
+          console.time(tag);
+          try {
+            // intercept request & pass to the bridge
+            let headers = options?.headers;
+            if (options?.headers instanceof Headers) {
+              headers = Object.fromEntries((options.headers as any).entries());
+            }
+            const nativeResponse: HttpResponse = await jig.nativePromise(
+              'JigraHttp',
+              'request',
+              {
+                url: resource,
+                method: options?.method ? options.method : undefined,
+                data: options?.body ? options.body : undefined,
+                headers: headers,
+              },
+            );
+
+            let data = !nativeResponse.headers['Content-Type'].startsWith(
+              'application/json',
+            )
+              ? nativeResponse.data
+              : JSON.stringify(nativeResponse.data);
+
+            // use null data for 204 No Content HTTP response
+            if (nativeResponse.status === 204) {
+              data = null;
+            }
+
+            // intercept & parse response before returning
+            const response = new Response(data, {
+              headers: nativeResponse.headers,
+              status: nativeResponse.status,
+            });
+
+            /*
+             * copy url to response, `cordova-plugin-family` uses this url from the response
+             * we need `Object.defineProperty` because url is an inherited getter on the Response
+             * see: https://stackoverflow.com/a/57382543
+             * */
+            Object.defineProperty(response, 'url', {
+              value: nativeResponse.url,
+            });
+
+            console.timeEnd(tag);
+            return response;
+          } catch (error) {
+            console.timeEnd(tag);
+            return Promise.reject(error);
+          }
+        };
+
+        // XHR event listeners
+        const addEventListeners = function () {
+          this.addEventListener('abort', function () {
+            if (typeof this.onabort === 'function') this.onabort();
+          });
+
+          this.addEventListener('error', function () {
+            if (typeof this.onerror === 'function') this.onerror();
+          });
+
+          this.addEventListener('load', function () {
+            if (typeof this.onload === 'function') this.onload();
+          });
+
+          this.addEventListener('loadend', function () {
+            if (typeof this.onloadend === 'function') this.onloadend();
+          });
+
+          this.addEventListener('loadstart', function () {
+            if (typeof this.onloadstart === 'function') this.onloadstart();
+          });
+
+          this.addEventListener('readystatechange', function () {
+            if (typeof this.onreadystatechange === 'function')
+              this.onreadystatechange();
+          });
+
+          this.addEventListener('timeout', function () {
+            if (typeof this.ontimeout === 'function') this.ontimeout();
+          });
+        };
+
+        // XHR patch abort
+        window.XMLHttpRequest.prototype.abort = function () {
+          if (
+            this._url == null ||
+            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.abort.call(this);
+          }
+          this.readyState = 0;
+          this.dispatchEvent(new Event('abort'));
+          this.dispatchEvent(new Event('loadend'));
+        };
+
+        // XHR patch open
+        window.XMLHttpRequest.prototype.open = function (
+          method: string,
+          url: string,
+        ) {
+          this._url = url;
+
+          if (
+            !(url.startsWith('http:') || url.toString().startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.open.call(this, method, url);
+          }
+
+          Object.defineProperties(this, {
+            _headers: {
+              value: {},
+              writable: true,
+            },
+            _method: {
+              value: method,
+              writable: true,
+            },
+            readyState: {
+              get: function () {
+                return this._readyState ?? 0;
+              },
+              set: function (val: number) {
+                this._readyState = val;
+                this.dispatchEvent(new Event('readystatechange'));
+              },
+            },
+            response: {
+              value: '',
+              writable: true,
+            },
+            responseText: {
+              value: '',
+              writable: true,
+            },
+            responseURL: {
+              value: '',
+              writable: true,
+            },
+            status: {
+              value: 0,
+              writable: true,
+            },
+          });
+
+          addEventListeners.call(this);
+          this.readyState = 1;
+        };
+
+        // XHR patch set request header
+        window.XMLHttpRequest.prototype.setRequestHeader = function (
+          header: string,
+          value: string,
+        ) {
+          if (
+            this._url == null ||
+            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.setRequestHeader.call(
+              this,
+              header,
+              value,
+            );
+          }
+          this._headers[header] = value;
+        };
+
+        // XHR patch send
+        window.XMLHttpRequest.prototype.send = function (
+          body?: Document | XMLHttpRequestBodyInit,
+        ) {
+          if (
+            this._url == null ||
+            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.send.call(this, body);
+          }
+
+          const tag = `JigraHttp XMLHttpRequest ${Date.now()} ${this._url}`;
+          console.time(tag);
+
+          try {
+            this.readyState = 2;
+
+            // intercept request & pass to the bridge
+            jig
+              .nativePromise('JigraHttp', 'request', {
+                url: this._url,
+                method: this._method,
+                data: body !== null ? body : undefined,
+                headers:
+                  this._headers != null && Object.keys(this._headers).length > 0
+                    ? this._headers
+                    : undefined,
+              })
+              .then((nativeResponse: any) => {
+                // intercept & parse response before returning
+                if (this.readyState == 2) {
+                  this.dispatchEvent(new Event('loadstart'));
+                  this._headers = nativeResponse.headers;
+                  this.status = nativeResponse.status;
+                  this.response = nativeResponse.data;
+                  this.responseText = !nativeResponse.headers[
+                    'Content-Type'
+                  ].startsWith('application/json')
+                    ? nativeResponse.data
+                    : JSON.stringify(nativeResponse.data);
+                  this.responseURL = nativeResponse.url;
+                  this.readyState = 4;
+                  this.dispatchEvent(new Event('load'));
+                  this.dispatchEvent(new Event('loadend'));
+                }
+                console.timeEnd(tag);
+              })
+              .catch((error: any) => {
+                this.dispatchEvent(new Event('loadstart'));
+                this.status = error.status;
+                this._headers = error.headers;
+                this.response = error.data;
+                this.responseText = JSON.stringify(error.data);
+                this.responseURL = error.url;
+                this.readyState = 4;
+                this.dispatchEvent(new Event('error'));
+                this.dispatchEvent(new Event('loadend'));
+                console.timeEnd(tag);
+              });
+          } catch (error) {
+            this.dispatchEvent(new Event('loadstart'));
+            this.status = 500;
+            this._headers = {};
+            this.response = error;
+            this.responseText = error.toString();
+            this.responseURL = this._url;
+            this.readyState = 4;
+            this.dispatchEvent(new Event('error'));
+            this.dispatchEvent(new Event('loadend'));
+            console.timeEnd(tag);
+          }
+        };
+
+        // XHR patch getAllResponseHeaders
+        window.XMLHttpRequest.prototype.getAllResponseHeaders = function () {
+          if (
+            this._url == null ||
+            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(
+              this,
+            );
+          }
+
+          let returnString = '';
+          for (const key in this._headers) {
+            if (key != 'Set-Cookie') {
+              returnString += key + ': ' + this._headers[key] + '\r\n';
+            }
+          }
+          return returnString;
+        };
+
+        // XHR patch getResponseHeader
+        window.XMLHttpRequest.prototype.getResponseHeader = function (name) {
+          if (
+            this._url == null ||
+            !(this._url.startsWith('http:') || this._url.startsWith('https:'))
+          ) {
+            return win.JigraWebXMLHttpRequest.getResponseHeader.call(
+              this,
+              name,
+            );
+          }
+          return this._headers[name];
+        };
+      }
+    }
 
     // patch window.console on iOS and store original console fns
     const isIos = getPlatformId(win) === 'ios';
@@ -548,6 +961,8 @@ const initBridge = (w: any): void => {
     };
 
     jig.withPlugin = (_pluginId, _fn) => dummy;
+
+    jig.Exception = JigraException;
 
     initEvents(win, jig);
     initLegacyHandlers(win, jig);

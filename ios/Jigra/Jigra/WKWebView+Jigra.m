@@ -13,3 +13,16 @@
     [self _swizzleKeyboardMethods];
 }
 @end
+
+// TODO: Remove this after Xcode 14.3 is required
+@implementation WKWebView (JigraInspectablity)
+
+- (void)setInspectableIfRequired: (BOOL)shouldInspect {
+    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 160400
+    if (@available(iOS 16.4, *)) {
+        self.inspectable = shouldInspect;
+    }
+    #endif
+}
+
+@end

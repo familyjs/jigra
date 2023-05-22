@@ -5,7 +5,7 @@ import {
   readFile,
   realpath,
   writeFile,
-} from '@navify/utils-fs';
+} from '@familyjs/utils-fs';
 import { basename, dirname, join, relative } from 'path';
 
 import c from '../colors';
@@ -81,7 +81,7 @@ export async function installCocoaPodsPlugins(
 ): Promise<void> {
   await runTask(
     `Updating iOS native dependencies with ${c.input(
-      `${config.ios.podPath} install`,
+      `${await config.ios.podPath} install`,
     )}`,
     () => {
       return updatePodfile(config, plugins, deployment);
@@ -96,7 +96,6 @@ async function updatePodfile(
 ): Promise<void> {
   const dependenciesContent = await generatePodFile(config, plugins);
   const podfilePath = join(config.ios.nativeProjectDirAbs, 'Podfile');
-  const podfileLockPath = join(config.ios.nativeProjectDirAbs, 'Podfile.lock');
   let podfileContent = await readFile(podfilePath, { encoding: 'utf-8' });
   podfileContent = podfileContent.replace(
     /(def jigra_pods)[\s\S]+?(\nend)/,
@@ -104,16 +103,23 @@ async function updatePodfile(
   );
   await writeFile(podfilePath, podfileContent, { encoding: 'utf-8' });
 
+  const podPath = await config.ios.podPath;
+  const useBundler = podPath.startsWith('bundle');
   const podCommandExists = await isInstalled('pod');
-  if (podCommandExists) {
-    if (!deployment) {
-      await remove(podfileLockPath);
+  if (useBundler || podCommandExists) {
+    if (useBundler) {
+      await runCommand(
+        'bundle',
+        ['exec', 'pod', 'install', ...(deployment ? ['--deployment'] : [])],
+        { cwd: config.ios.nativeProjectDirAbs },
+      );
+    } else {
+      await runCommand(
+        podPath,
+        ['install', ...(deployment ? ['--deployment'] : [])],
+        { cwd: config.ios.nativeProjectDirAbs },
+      );
     }
-    await runCommand(
-      config.ios.podPath,
-      ['install', ...(deployment ? ['--deployment'] : [])],
-      { cwd: config.ios.nativeProjectDirAbs },
-    );
   } else {
     logger.warn('Skipping pod install because CocoaPods is not installed');
   }
@@ -164,9 +170,8 @@ async function generatePodFile(
         return '';
       }
 
-      return `  pod '${p.ios.name}', :path => '${relative(
-        podfilePath,
-        await realpath(p.rootPath),
+      return `  pod '${p.ios.name}', :path => '${convertToUnixPath(
+        relative(podfilePath, await realpath(p.rootPath)),
       )}'\n`;
     }),
   );
@@ -357,7 +362,7 @@ async function generateCordovaPodspec(
       `s.vendored_frameworks = '${customFrameworks.join(`', '`)}'`,
     );
     frameworkDeps.push(
-      `s.exclude_files = 'sources/**/*.framework/Headers/*.h'`,
+      `s.exclude_files = 'sources/**/*.framework/Headers/*.h', 'sources/**/*.framework/PrivateHeaders/*.h'`,
     );
   }
   if (sourceFrameworks.length > 0) {
@@ -389,7 +394,7 @@ async function generateCordovaPodspec(
     s.license = 'Unknown'
     s.homepage = 'https://example.com'
     s.authors = { 'Jigra Generator' => 'hi@example.com' }
-    s.source = { :git => 'https://github.com/navify/does-not-exist.git', :tag => '${
+    s.source = { :git => 'https://github.com/familyjs/does-not-exist.git', :tag => '${
       config.cli.package.version
     }' }
     s.source_files = '${sourcesFolderName}/**/*.{swift,h,m,c,cc,mm,cpp}'

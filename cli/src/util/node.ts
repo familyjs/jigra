@@ -1,4 +1,4 @@
-import { readFileSync } from '@navify/utils-fs';
+import { readFileSync } from '@familyjs/utils-fs';
 import { resolve } from 'path';
 import type typescript from 'typescript';
 
@@ -7,7 +7,7 @@ interface NodeModuleWithCompile extends NodeJS.Module {
 }
 
 /**
- * @see https://github.com/navify/rindo/blob/HEAD/src/compiler/sys/node-require.ts
+ * @see https://github.com/familyjs/rindo/blob/HEAD/src/compiler/sys/node-require.ts
  */
 export const requireTS = (ts: typeof typescript, p: string): unknown => {
   const id = resolve(p);

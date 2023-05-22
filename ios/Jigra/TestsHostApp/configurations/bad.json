@@ -1,7 +1,6 @@
 {
-  "appId": "app.web.jigrajs.testshostapp",
+  "appId": "app.jigrajs.testshostapp",
   "appName": "testshostapp",
-  "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
   "overrideUserAgent": "level 1 override",
@@ -15,7 +14,7 @@
   },
   "server": {
   	"iosScheme": "http",
-  	"allowNavigation": ["jigrajs.web.app", "navify.web.app", "192.168.0.1"],
+  	"allowNavigation": ["jigrajs.web.app", "family-io.web.app", "192.168.0.1"],
   	"hostname": "myhost",
   	"url": "not a real domain"
   },

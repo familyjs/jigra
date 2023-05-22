@@ -1,4 +1,4 @@
-import { Subprocess, SubprocessError, which } from '@navify/utils-subprocess';
+import { Subprocess, SubprocessError, which } from '@familyjs/utils-subprocess';
 
 export interface RunCommandOptions {
   cwd?: string;

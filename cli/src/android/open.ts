@@ -1,4 +1,4 @@
-import { pathExists } from '@navify/utils-fs';
+import { pathExists } from '@familyjs/utils-fs';
 import Debug from 'debug';
 import open from 'open';
 

@@ -1,6 +1,6 @@
 package com.getjigra;
 
-import static com.getjigra.FileUtils.readFile;
+import static com.getjigra.FileUtils.readFileFromAssets;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -24,7 +24,7 @@ public class JSExport {
     public static String getCordovaJS(Context context) {
         String fileContent = "";
         try {
-            fileContent = readFile(context.getAssets(), "public/cordova.js");
+            fileContent = readFileFromAssets(context.getAssets(), "public/cordova.js");
         } catch (IOException ex) {
             Logger.error("Unable to read public/cordova.js file, Cordova plugins will not work");
         }
@@ -34,7 +34,7 @@ public class JSExport {
     public static String getCordovaPluginsFileJS(Context context) {
         String fileContent = "";
         try {
-            fileContent = readFile(context.getAssets(), "public/cordova_plugins.js");
+            fileContent = readFileFromAssets(context.getAssets(), "public/cordova_plugins.js");
         } catch (IOException ex) {
             Logger.error("Unable to read public/cordova_plugins.js file, Cordova plugins will not work");
         }
@@ -91,7 +91,7 @@ public class JSExport {
                     }
                 }
             } else {
-                return readFile(context.getAssets(), path);
+                return readFileFromAssets(context.getAssets(), path);
             }
         } catch (IOException ex) {
             Logger.warn("Unable to read file at path " + path);
@@ -155,7 +155,13 @@ public class JSExport {
         switch (returnType) {
             case PluginMethod.RETURN_NONE:
                 lines.add(
-                    "return w.Jigra.nativeCallback('" + plugin.getId() + "', '" + method.getName() + "', " + CATCHALL_OPTIONS_PARAM + ")"
+                    "return w.Jigra.nativeCallback('" +
+                    plugin.getId() +
+                    "', '" +
+                    method.getName() +
+                    "', " +
+                    CATCHALL_OPTIONS_PARAM +
+                    ")"
                 );
                 break;
             case PluginMethod.RETURN_PROMISE:

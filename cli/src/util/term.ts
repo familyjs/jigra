@@ -1,4 +1,4 @@
-import { TERMINAL_INFO } from '@navify/utils-terminal';
+import { TERMINAL_INFO } from '@familyjs/utils-terminal';
 
 import c from '../colors';
 import { logger } from '../log';

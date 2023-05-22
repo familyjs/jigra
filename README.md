@@ -33,12 +33,12 @@ npx jig add ios
 
 ### New App?
 
-For new apps, we recommend trying the [Navify Framework](https://navifyframework.web.app/) with Jigra.
+For new apps, we recommend trying the [Family Framework](https://family-js.web.app/) with Jigra.
 
-To begin, install the [Navify CLI](https://navifyframework.web.app/docs/cli/) (`npm install -g @navify/cli`) and start a new app:
+To begin, install the [Family CLI](https://family-js.web.app/docs/cli/) (`npm install -g @familyjs/cli`) and start a new app:
 
 ```
-navify start --jigra
+family start --jigra
 ```
 
 ## FAQ
@@ -51,10 +51,10 @@ Jigra and Cordova differ in that Jigra:
 
 - takes a more modern approach to tooling and plugin development
 - treats native projects as source artifacts as opposed to build artifacts
-- is maintained by the Navify Team 💙😊
+- is maintained by the Famiy Team 💙
 
 See [the docs](https://jigrajs.web.app/docs/cordova#differences-between-jigra-and-cordova) for more details.
 
-#### Do I need to use Navify Framework with Jigra?
+#### Do I need to use Family Framework with Jigra?
 
-No, you do not need to use Navify Framework with Jigra. Without the Navify Framework, you may need to implement Native UI yourself. Without the Navify CLI, you may need to configure tooling yourself to enable features such as [livereload](https://navifyframework.web.app/docs/cli/livereload). See [the docs](https://jigrajs.web.app/docs/getting-started/with-navify) for more details.
+No, you do not need to use Family Framework with Jigra. Without the Family Framework, you may need to implement Native UI yourself. Without the Family CLI, you may need to configure tooling yourself to enable features such as [livereload](https://family-js.web.app/docs/cli/livereload). See [the docs](https://jigrajs.web.app/docs/getting-started/with-family) for more details.

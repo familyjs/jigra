@@ -6,7 +6,7 @@ import {
   readFile,
   writeFile,
   writeJSON,
-} from '@navify/utils-fs';
+} from '@familyjs/utils-fs';
 import Debug from 'debug';
 import { dirname, extname, join, relative, resolve } from 'path';
 
@@ -121,7 +121,8 @@ async function findAndroidPluginClassesInPlugin(
       ['.java', '.kt'].includes(extname(entry.path)),
   });
 
-  const classRegex = /^@(?:JigraPlugin|NativePlugin)[\s\S]+?class ([\w]+)/gm;
+  const classRegex =
+    /^@(?:JigraPlugin|NativePlugin)[\s\S]+?class ([\w]+)/gm;
   const packageRegex = /^package ([\w.]+);?$/gm;
 
   debug(
@@ -187,7 +188,10 @@ export async function installGradlePlugins(
     );
   }
 
-  const jigraAndroidPath = resolve(dirname(jigraAndroidPackagePath), 'jigra');
+  const jigraAndroidPath = resolve(
+    dirname(jigraAndroidPackagePath),
+    'jigra',
+  );
 
   const settingsPath = config.android.platformDirAbs;
   const dependencyPath = config.android.appDirAbs;
@@ -235,7 +239,11 @@ project(':${getGradlePackageName(
           `apply from: "${relativePluginPath}/${framework.$.src}"`,
         );
       } else if (!framework.$.type && !framework.$.custom) {
-        frameworksArray.push(`    implementation "${framework.$.src}"`);
+        if (framework.$.src.startsWith('platform(')) {
+          frameworksArray.push(`    implementation ${framework.$.src}`);
+        } else {
+          frameworksArray.push(`    implementation "${framework.$.src}"`);
+        }
       }
     });
     prefsArray = prefsArray.concat(getAllElements(p, platform, 'preference'));
@@ -250,8 +258,8 @@ project(':${getGradlePackageName(
 
 android {
   compileOptions {
-      sourceCompatibility JavaVersion.VERSION_11
-      targetCompatibility JavaVersion.VERSION_11
+      sourceCompatibility JavaVersion.VERSION_17
+      targetCompatibility JavaVersion.VERSION_17
   }
 }
 
@@ -271,8 +279,14 @@ if (hasProperty('postBuildExtras')) {
 }
 `;
 
-  await writeFile(join(settingsPath, 'jigra.settings.gradle'), settingsLines);
-  await writeFile(join(dependencyPath, 'jigra.build.gradle'), dependencyLines);
+  await writeFile(
+    join(settingsPath, 'jigra.settings.gradle'),
+    settingsLines,
+  );
+  await writeFile(
+    join(dependencyPath, 'jigra.build.gradle'),
+    dependencyLines,
+  );
 }
 
 export async function handleCordovaPluginsGradle(
@@ -286,7 +300,7 @@ export async function handleCordovaPluginsGradle(
   const kotlinNeeded = await kotlinNeededCheck(config, cordovaPlugins);
   const kotlinVersionString =
     config.app.extConfig.cordova?.preferences?.GradlePluginKotlinVersion ??
-    '1.7.0';
+    '1.8.20';
   const frameworksArray: any[] = [];
   let prefsArray: any[] = [];
   const applyArray: any[] = [];
@@ -314,7 +328,11 @@ export async function handleCordovaPluginsGradle(
   });
   let frameworkString = frameworksArray
     .map(f => {
-      return `    implementation "${f}"`;
+      if (f.startsWith('platform(')) {
+        return `    implementation ${f}`;
+      } else {
+        return `    implementation "${f}"`;
+      }
     })
     .join('\n');
   frameworkString = await replaceFrameworkVariables(

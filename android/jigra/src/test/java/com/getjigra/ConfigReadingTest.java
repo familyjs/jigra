@@ -93,7 +93,7 @@ public class ConfigReadingTest {
 
             try (MockedStatic<Logger> logger = mockStatic(Logger.class)) {
                 JigConfig config = JigConfig.loadDefault(context);
-                logger.verify(times(1), () -> Logger.error(eq(errText), any()));
+                logger.verify(() -> Logger.error(eq(errText), any()), times(1));
             }
         } catch (IOException e) {
             fail();

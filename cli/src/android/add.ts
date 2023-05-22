@@ -1,4 +1,4 @@
-import { pathExists, writeFile } from '@navify/utils-fs';
+import { pathExists, writeFile } from '@familyjs/utils-fs';
 import { homedir } from 'os';
 import { join } from 'path';
 

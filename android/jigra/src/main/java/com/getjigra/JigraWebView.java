@@ -11,14 +11,25 @@ import android.webkit.WebView;
 public class JigraWebView extends WebView {
 
     private BaseInputConnection jigInputConnection;
+    private Bridge bridge;
 
     public JigraWebView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
+    public void setBridge(Bridge bridge) {
+        this.bridge = bridge;
+    }
+
     @Override
     public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-        JigConfig config = JigConfig.loadDefault(getContext());
+        JigConfig config;
+        if (bridge != null) {
+            config = bridge.getConfig();
+        } else {
+            config = JigConfig.loadDefault(getContext());
+        }
+
         boolean captureInput = config.isInputCaptured();
         if (captureInput) {
             if (jigInputConnection == null) {

@@ -1,5 +1,5 @@
-import { pathExists } from '@navify/utils-fs';
-import { prettyPath } from '@navify/utils-terminal';
+import { pathExists } from '@familyjs/utils-fs';
+import { prettyPath } from '@familyjs/utils-terminal';
 
 import { addAndroid, createLocalProperties } from '../android/add';
 import {
@@ -26,8 +26,9 @@ import { fatal, isFatal } from '../errors';
 import { addIOS } from '../ios/add';
 import {
   editProjectSettingsIOS,
-  checkIOSPackage,
+  checkBundler,
   checkCocoaPods,
+  checkIOSPackage,
 } from '../ios/common';
 import { logger, logSuccess, output } from '../log';
 
@@ -97,7 +98,7 @@ export async function addCommand(
       await editPlatforms(config, platformName);
 
       if (await pathExists(config.app.webDirAbs)) {
-        await sync(config, platformName, false);
+        await sync(config, platformName, false, false);
         if (platformName === config.android.name) {
           await runTask('Syncing Gradle', async () => {
             return createLocalProperties(config.android.platformDirAbs);
@@ -112,7 +113,7 @@ export async function addCommand(
       }
 
       printNextSteps(platformName);
-    } catch (e) {
+    } catch (e: any) {
       if (!isFatal(e)) {
         fatal(e.stack ?? e);
       }
@@ -133,7 +134,10 @@ function printNextSteps(platformName: string) {
 
 function addChecks(config: Config, platformName: string): CheckFunction[] {
   if (platformName === config.ios.name) {
-    return [() => checkIOSPackage(config), () => checkCocoaPods(config)];
+    return [
+      () => checkIOSPackage(config),
+      () => checkBundler(config) || checkCocoaPods(config),
+    ];
   } else if (platformName === config.android.name) {
     return [() => checkAndroidPackage(config)];
   } else if (platformName === config.web.name) {

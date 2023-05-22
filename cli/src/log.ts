@@ -3,8 +3,8 @@ import {
   StreamOutputStrategy,
   TTYOutputStrategy,
   createDefaultLogger,
-} from '@navify/cli-framework-output';
-import type { LoggerLevelWeight } from '@navify/cli-framework-output';
+} from '@familyjs/cli-framework-output';
+import type { LoggerLevelWeight } from '@familyjs/cli-framework-output';
 import type { Answers, PromptObject } from 'prompts';
 
 import c from './colors';
@@ -36,7 +36,7 @@ export async function logPrompt<T extends string>(
   msg: string,
   promptObject: PromptObject<T>,
 ): Promise<Answers<T>> {
-  const { wordWrap } = await import('@navify/cli-framework-output');
+  const { wordWrap } = await import('@familyjs/cli-framework-output');
   const { prompt } = await import('prompts');
 
   logger.log({

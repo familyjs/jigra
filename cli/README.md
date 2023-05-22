@@ -12,4 +12,4 @@ Consult the Getting Started guide for information on using the CLI and Jigra scr
 
 ### License
 
-* [MIT](https://github.com/navify/jigra/blob/HEAD/LICENSE)
+* [MIT](https://github.com/familyjs/jigra/blob/HEAD/LICENSE)

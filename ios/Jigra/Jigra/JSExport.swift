@@ -56,28 +56,27 @@ internal class JSExport {
     /**
      Export the JS required to implement the given plugin.
      */
-    static func exportJS(userContentController: WKUserContentController, pluginClassName: String, pluginType: JIGPlugin.Type) {
+    static func exportJS(for plugin: JigraPlugin, in userContentController: WKUserContentController) {
         var lines = [String]()
 
         lines.append("""
                     (function(w) {
                     var a = (w.Jigra = w.Jigra || {});
                     var p = (a.Plugins = a.Plugins || {});
-                    var t = (p['\(pluginClassName)'] = {});
+                    var t = (p['\(plugin.jsName)'] = {});
                     t.addListener = function(eventName, callback) {
-                    return w.Jigra.addListener('\(pluginClassName)', eventName, callback);
+                    return w.Jigra.addListener('\(plugin.jsName)', eventName, callback);
                     }
                     """)
-        if let bridgeType = pluginType as? JIGBridgedPlugin.Type, let methods = bridgeType.pluginMethods() as? [JIGPluginMethod] {
-            for method in methods {
-                lines.append(generateMethod(pluginClassName: pluginClassName, method: method))
-            }
+
+        for method in plugin.pluginMethods {
+            lines.append(generateMethod(pluginClassName: plugin.jsName, method: method))
         }
 
         lines.append("""
             })(window);
             """)
-        if let data = try? JSONEncoder().encode(createPluginHeader(pluginClassName: pluginClassName, pluginType: pluginType)),
+        if let data = try? JSONEncoder().encode(createPluginHeader(for: plugin)),
            let header = String(data: data, encoding: .utf8) {
             lines.append("""
                 (function(w) {
@@ -92,19 +91,20 @@ internal class JSExport {
         userContentController.addUserScript(userScript)
     }
 
-    private static func createPluginHeader(pluginClassName: String, pluginType: JIGPlugin.Type) -> PluginHeader? {
-        if let bridgeType = pluginType as? JIGBridgedPlugin.Type, let pluginMethods = bridgeType.pluginMethods() as? [JIGPluginMethod] {
-            let methods = [
-                PluginHeaderMethod(name: "addListener", rtype: nil),
-                PluginHeaderMethod(name: "removeListener", rtype: nil),
-                PluginHeaderMethod(name: "removeAllListeners", rtype: "promise"),
-                PluginHeaderMethod(name: "checkPermissions", rtype: "promise"),
-                PluginHeaderMethod(name: "requestPermissions", rtype: "promise")
-            ]
-            return PluginHeader(name: pluginClassName, methods: methods + pluginMethods.map { createPluginHeaderMethod(method: $0) })
-        }
+    private static func createPluginHeader(for plugin: JigraPlugin) -> PluginHeader? {
+        let methods = [
+            PluginHeaderMethod(name: "addListener", rtype: nil),
+            PluginHeaderMethod(name: "removeListener", rtype: nil),
+            PluginHeaderMethod(name: "removeAllListeners", rtype: "promise"),
+            PluginHeaderMethod(name: "checkPermissions", rtype: "promise"),
+            PluginHeaderMethod(name: "requestPermissions", rtype: "promise")
+        ]
 
-        return nil
+        return PluginHeader(
+            name: plugin.jsName,
+            methods: methods + plugin.pluginMethods.map(createPluginHeaderMethod)
+        )
+
     }
 
     private static func createPluginHeaderMethod(method: JIGPluginMethod) -> PluginHeaderMethod {

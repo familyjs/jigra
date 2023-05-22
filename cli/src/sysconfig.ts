@@ -1,4 +1,4 @@
-import { readJSON, writeJSON, mkdirp } from '@navify/utils-fs';
+import { readJSON, writeJSON, mkdirp } from '@familyjs/utils-fs';
 import Debug from 'debug';
 import { dirname, resolve } from 'path';
 
@@ -36,7 +36,7 @@ export async function readConfig(): Promise<SystemConfig> {
 
   try {
     return await readJSON(SYSCONFIG_PATH);
-  } catch (e) {
+  } catch (e: any) {
     if (e.code !== 'ENOENT') {
       throw e;
     }

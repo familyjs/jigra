@@ -4,7 +4,7 @@ import {
   readdirSync,
   rmdirSync,
   unlinkSync,
-} from '@navify/utils-fs';
+} from '@familyjs/utils-fs';
 import { join } from 'path';
 
 export const convertToUnixPath = (path: string): string => {

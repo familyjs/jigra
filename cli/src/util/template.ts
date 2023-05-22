@@ -1,4 +1,4 @@
-import { mkdirp } from '@navify/utils-fs';
+import { mkdirp } from '@familyjs/utils-fs';
 import tar from 'tar';
 
 export async function extractTemplate(src: string, dir: string): Promise<void> {

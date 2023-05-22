@@ -14,7 +14,8 @@ open class JIGWebView: UIView {
         delegate: self,
         cordovaConfiguration: configDescriptor.cordovaConfiguration,
         assetHandler: assetHandler,
-        delegationHandler: delegationHandler
+        delegationHandler: delegationHandler,
+        autoRegisterPlugins: autoRegisterPlugins
     )
 
     public final var bridge: JIGBridgeProtocol {
@@ -31,15 +32,18 @@ open class JIGWebView: UIView {
     }()
 
     private lazy var delegationHandler = WebViewDelegationHandler()
+    private let autoRegisterPlugins: Bool
 
     open var router: Router { _Router() }
 
     public required init?(coder: NSCoder) {
+        autoRegisterPlugins = true
         super.init(coder: coder)
         setup()
     }
 
-    public init() {
+    public init(autoRegisterPlugins: Bool = true) {
+        self.autoRegisterPlugins = autoRegisterPlugins
         super.init(frame: .zero)
         setup()
     }
@@ -86,7 +90,7 @@ open class JIGWebView: UIView {
                 if let libPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first {
                     descriptor.appLocation = URL(fileURLWithPath: libPath, isDirectory: true)
                         .appendingPathComponent("NoCloud")
-                        .appendingPathComponent("navify_built_snapshots")
+                        .appendingPathComponent("family_built_snapshots")
                         .appendingPathComponent(URL(fileURLWithPath: persistedPath, isDirectory: true).lastPathComponent)
                 }
             }
@@ -123,8 +127,9 @@ open class JIGWebView: UIView {
 
 extension JIGWebView {
 
-    open func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {
+    public func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {
         let webViewConfiguration = WKWebViewConfiguration()
+        webViewConfiguration.websiteDataStore.httpCookieStore.add(JigraWKCookieObserver())
         webViewConfiguration.allowsInlineMediaPlayback = true
         webViewConfiguration.suppressesIncrementalRendering = false
         webViewConfiguration.allowsAirPlayForMediaPlayback = true
@@ -152,7 +157,6 @@ extension JIGWebView {
         webView.scrollView.bounces = false
         webView.scrollView.contentInsetAdjustmentBehavior = configuration.contentInsetAdjustmentBehavior
         webView.allowsLinkPreview = configuration.allowLinkPreviews
-        webView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         webView.scrollView.isScrollEnabled = configuration.scrollingEnabled
 
         if let overrideUserAgent = configuration.overridenUserAgentString {

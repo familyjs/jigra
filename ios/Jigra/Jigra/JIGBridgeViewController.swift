@@ -12,7 +12,7 @@ import Cordova
 
     public var isStatusBarVisible = true
     public var statusBarStyle: UIStatusBarStyle = .default
-    public var statusBarAnimation: UIStatusBarAnimation = .slide
+    public var statusBarAnimation: UIStatusBarAnimation = .fade
     @objc public var supportedOrientations: [Int] = []
 
     public lazy final var isNewBinary: Bool = {
@@ -82,7 +82,7 @@ import Cordova
                 if let libPath = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first {
                     descriptor.appLocation = URL(fileURLWithPath: libPath, isDirectory: true)
                         .appendingPathComponent("NoCloud")
-                        .appendingPathComponent("navify_built_snapshots")
+                        .appendingPathComponent("family_built_snapshots")
                         .appendingPathComponent(URL(fileURLWithPath: persistedPath, isDirectory: true).lastPathComponent)
                 }
             }
@@ -105,6 +105,7 @@ import Cordova
      */
     open func webViewConfiguration(for instanceConfiguration: InstanceConfiguration) -> WKWebViewConfiguration {
         let webViewConfiguration = WKWebViewConfiguration()
+        webViewConfiguration.websiteDataStore.httpCookieStore.add(JigraWKCookieObserver())
         webViewConfiguration.allowsInlineMediaPlayback = true
         webViewConfiguration.suppressesIncrementalRendering = false
         webViewConfiguration.allowsAirPlayForMediaPlayback = true
@@ -263,16 +264,10 @@ extension JIGBridgeViewController {
     }
 
     @objc public func setServerBasePath(path: String) {
-        let url = URL(fileURLWithPath: path, isDirectory: true)
-        guard let jigBridge = jigraBridge, FileManager.default.fileExists(atPath: url.path) else {
-            return
-        }
-        jigBridge.config = jigBridge.config.updatingAppLocation(url)
-        jigBridge.webViewAssetHandler.setAssetPath(url.path)
-        if let url = jigraBridge?.config.serverURL {
-            DispatchQueue.main.async { [weak self] in
-                _ = self?.webView?.load(URLRequest(url: url))
-            }
+        guard let jigBridge = jigraBridge else { return }
+        jigBridge.setServerBasePath(path)
+        DispatchQueue.main.async { [weak self] in
+            _ = self?.webView?.load(URLRequest(url: jigBridge.config.serverURL))
         }
     }
 }
@@ -292,7 +287,6 @@ extension JIGBridgeViewController {
         aWebView.scrollView.bounces = false
         aWebView.scrollView.contentInsetAdjustmentBehavior = configuration.contentInsetAdjustmentBehavior
         aWebView.allowsLinkPreview = configuration.allowLinkPreviews
-        aWebView.configuration.preferences.setValue(true, forKey: "allowFileAccessFromFileURLs")
         aWebView.scrollView.isScrollEnabled = configuration.scrollingEnabled
         if let overrideUserAgent = configuration.overridenUserAgentString {
             aWebView.customUserAgent = overrideUserAgent
@@ -363,7 +357,7 @@ extension JIGBridgeViewController {
     }
 }
 
-extension CAPBridgeViewController: CAPBridgeDelegate {
+extension JIGBridgeViewController: JIGBridgeDelegate {
     internal var bridgedWebView: WKWebView? {
         return webView
     }

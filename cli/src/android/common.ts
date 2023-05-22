@@ -5,7 +5,7 @@ import {
   readFile,
   pathExists,
   writeFile,
-} from '@navify/utils-fs';
+} from '@familyjs/utils-fs';
 import { join, resolve } from 'path';
 
 import { checkJigraPlatform } from '../common';
@@ -77,16 +77,7 @@ export async function editProjectSettingsAndroid(
     .replace(/"/g, '\\"')
     .replace(/'/g, "\\'");
 
-  const manifestPath = resolve(
-    config.android.srcMainDirAbs,
-    'AndroidManifest.xml',
-  );
   const buildGradlePath = resolve(config.android.appDirAbs, 'build.gradle');
-
-  let manifestContent = await readFile(manifestPath, { encoding: 'utf-8' });
-
-  manifestContent = manifestContent.replace(/com.getjigra.myapp/g, `${appId}`);
-  await writeFile(manifestPath, manifestContent, { encoding: 'utf-8' });
 
   const domainPath = appId.split('.').join('/');
   // Make the package source path to the new plugin Java file
@@ -108,7 +99,9 @@ export async function editProjectSettingsAndroid(
   );
 
   if (appId.split('.')[1] !== 'getjigra') {
-    await remove(resolve(config.android.srcMainDirAbs, 'java/com/getjigra'));
+    await remove(
+      resolve(config.android.srcMainDirAbs, 'java/com/getjigra'),
+    );
   }
 
   // Remove our template 'com' folder if their ID doesn't have it
@@ -131,6 +124,11 @@ export async function editProjectSettingsAndroid(
   gradleContent = gradleContent.replace(
     /applicationId "[^"]+"/,
     `applicationId "${appId}"`,
+  );
+  // Update the namespace in build.gradle
+  gradleContent = gradleContent.replace(
+    /namespace "[^"]+"/,
+    `namespace "${appId}"`,
   );
 
   await writeFile(buildGradlePath, gradleContent, { encoding: 'utf-8' });

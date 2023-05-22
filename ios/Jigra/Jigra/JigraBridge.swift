@@ -3,6 +3,8 @@ import Dispatch
 import WebKit
 import Cordova
 
+internal typealias JigraPlugin = JIGPlugin & JIGBridgedPlugin
+
 /**
  An internal class adopting a public protocol means that we have a lot of `public` methods
  but that is by design not a mistake. And since the bridge is the center of the whole project
@@ -30,6 +32,8 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
     public var webView: WKWebView? {
         return bridgeDelegate?.bridgedWebView
     }
+
+    public let autoRegisterPlugins: Bool
 
     public var notificationRouter: NotificationRouter
 
@@ -99,9 +103,7 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
 
     @objc public internal(set) var config: InstanceConfiguration
     // Map of all loaded and instantiated plugins by pluginId -> instance
-    var plugins =  [String: JIGPlugin]()
-    // List of known plugins by pluginId -> Plugin Type
-    var knownPlugins = [String: JIGPlugin.Type]()
+    var plugins =  [String: JigraPlugin]()
     // Manager for getting Cordova plugins
     var cordovaPluginManager: CDVPluginManager?
     // Calls we are storing to resolve later
@@ -156,6 +158,13 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         statusBarAnimation = animation
     }
 
+    public func setServerBasePath(_ path: String) {
+        let url = URL(fileURLWithPath: path, isDirectory: true)
+        guard FileManager.default.fileExists(atPath: url.path) else { return }
+        config = config.updatingAppLocation(url)
+        webViewAssetHandler.setAssetPath(url.path)
+    }
+
     // MARK: - Static Methods
 
     /**
@@ -181,7 +190,7 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
 
     // MARK: - Initialization
 
-    init(with configuration: InstanceConfiguration, delegate bridgeDelegate: JIGBridgeDelegate, cordovaConfiguration: CDVConfigParser, assetHandler: WebViewAssetHandler, delegationHandler: WebViewDelegationHandler) {
+    init(with configuration: InstanceConfiguration, delegate bridgeDelegate: JIGBridgeDelegate, cordovaConfiguration: CDVConfigParser, assetHandler: WebViewAssetHandler, delegationHandler: WebViewDelegationHandler, autoRegisterPlugins: Bool = true) {
         self.bridgeDelegate = bridgeDelegate
         self.webViewAssetHandler = assetHandler
         self.webViewDelegationHandler = delegationHandler
@@ -189,7 +198,7 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         self.cordovaParser = cordovaConfiguration
         self.notificationRouter = NotificationRouter()
         self.notificationRouter.handleApplicationNotifications = configuration.handleApplicationNotifications
-
+        self.autoRegisterPlugins = autoRegisterPlugins
         super.init()
 
         self.webViewDelegationHandler.bridge = self
@@ -200,6 +209,8 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         observers.append(NotificationCenter.default.addObserver(forName: type(of: self).tmpVCAppeared.name, object: .none, queue: .none) { [weak self] _ in
             self?.tmpWindow = nil
         })
+
+        self.setupWebDebugging(configuration: configuration)
     }
 
     deinit {
@@ -266,58 +277,81 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
      Register all plugins that have been declared
      */
     func registerPlugins() {
-        let classCount = objc_getClassList(nil, 0)
-        let classes = UnsafeMutablePointer<AnyClass?>.allocate(capacity: Int(classCount))
+        if autoRegisterPlugins {
+            let classCount = objc_getClassList(nil, 0)
+            let classes = UnsafeMutablePointer<AnyClass?>.allocate(capacity: Int(classCount))
 
-        let releasingClasses = AutoreleasingUnsafeMutablePointer<AnyClass>(classes)
-        let numClasses: Int32 = objc_getClassList(releasingClasses, classCount)
+            let releasingClasses = AutoreleasingUnsafeMutablePointer<AnyClass>(classes)
+            let numClasses: Int32 = objc_getClassList(releasingClasses, classCount)
 
-        for classIndex in 0..<Int(numClasses) {
-            if let aClass: AnyClass = classes[classIndex] {
-                if class_getSuperclass(aClass) == CDVPlugin.self {
-                    injectCordovaFiles = true
-                }
-                if class_conformsToProtocol(aClass, JIGBridgedPlugin.self),
-                   let pluginType = aClass as? JIGPlugin.Type,
-                   let bridgeType = aClass as? JIGBridgedPlugin.Type {
-                    let pluginClassName = NSStringFromClass(aClass)
-                    registerPlugin(pluginClassName, bridgeType.jsName(), pluginType)
+            for classIndex in 0..<Int(numClasses) {
+                if let aClass: AnyClass = classes[classIndex] {
+                    if class_getSuperclass(aClass) == CDVPlugin.self {
+                        injectCordovaFiles = true
+                    }
+                    if class_conformsToProtocol(aClass, JIGBridgedPlugin.self),
+                       let pluginType = aClass as? JigraPlugin.Type {
+                        if aClass is JIGInstancePlugin.Type { continue }
+                        registerPlugin(pluginType)
+                    }
                 }
             }
+            classes.deallocate()
+        } else {
+            // register core plugins only
+            [JIGHttpPlugin.self, JIGConsolePlugin.self, JIGWebViewPlugin.self, JIGCookiesPlugin.self]
+                .forEach { registerPluginType($0) }
         }
-        classes.deallocate()
+    }
+
+    public func registerPluginType(_ pluginType: JIGPlugin.Type) {
+        if autoRegisterPlugins { return }
+        if pluginType is JIGInstancePlugin.Type {
+            Swift.fatalError("""
+
+            ⚡️ ❌  Cannot register class \(pluginType): JIGInstancePlugin through registerPluginType(_:).
+            ⚡️ ❌  Use `registerPluginInstance(_:)` to register subclasses of JIGInstancePlugin.
+            """)
+        }
+        guard let bridgedType = pluginType as? JigraPlugin.Type else { return }
+        registerPlugin(bridgedType)
+    }
+
+    public func registerPluginInstance(_ pluginInstance: JIGPlugin) {
+        guard let pluginInstance = pluginInstance as? JigraPlugin else {
+            JIGLog.print("""
+
+            ⚡️  Plugin \(pluginInstance.classForCoder) must conform to JIGBridgedPlugin.
+            ⚡️  Not loading plugin \(pluginInstance.classForCoder)
+            """)
+            return
+        }
+
+        if plugins[pluginInstance.jsName] != nil {
+            JIGLog.print("⚡️  Overriding existing registered plugin \(pluginInstance.classForCoder)")
+        }
+        plugins[pluginInstance.jsName] = pluginInstance
+        pluginInstance.load(on: self)
+
+        JSExport.exportJS(for: pluginInstance, in: webViewDelegationHandler.contentController)
     }
 
     /**
      Register a single plugin.
      */
-    func registerPlugin(_ pluginClassName: String, _ jsName: String, _ pluginType: JIGPlugin.Type) {
-        // let bridgeType = pluginType as! JIGBridgedPlugin.Type
-        knownPlugins[jsName] = pluginType
-        JSExport.exportJS(userContentController: webViewDelegationHandler.contentController, pluginClassName: jsName, pluginType: pluginType)
-        _ = loadPlugin(pluginName: jsName)
+    func registerPlugin(_ pluginType: JigraPlugin.Type) {
+        if let plugin = loadPlugin(type: pluginType) {
+            JSExport.exportJS(for: plugin, in: webViewDelegationHandler.contentController)
+        }
     }
 
-    /**
-     - parameter pluginId: the ID of the plugin
-     - returns: the plugin, if found
-     */
-    func getOrLoadPlugin(pluginName: String) -> JIGPlugin? {
-        guard let plugin = self.plugin(withName: pluginName) ?? self.loadPlugin(pluginName: pluginName) else {
+    func loadPlugin(type: JIGPlugin.Type) -> JigraPlugin? {
+        guard let plugin = type.init() as? JigraPlugin else {
+            JIGLog.print("⚡️  Unable to load plugin \(type.classForCoder()). No such module found.")
             return nil
         }
-        return plugin
-    }
-
-    func loadPlugin(pluginName: String) -> JIGPlugin? {
-        guard let pluginType = knownPlugins[pluginName], let bridgeType = pluginType as? JIGBridgedPlugin.Type else {
-            JIGLog.print("⚡️  Unable to load plugin \(pluginName). No such module found.")
-            return nil
-        }
-
-        let plugin = pluginType.init(bridge: self, pluginId: bridgeType.pluginId(), pluginName: bridgeType.jsName())
-        plugin.load()
-        self.plugins[bridgeType.jsName()] = plugin
+        plugin.load(on: self)
+        plugins[plugin.jsName] = plugin
         return plugin
     }
 
@@ -386,6 +420,15 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         return "\(type(of: self).jigraSite)docs/\(url)"
     }
 
+    private func setupWebDebugging(configuration: InstanceConfiguration) {
+        let isWebDebuggable = configuration.isWebDebuggable
+        if isWebDebuggable, #unavailable(iOS 16.4) {
+            JIGLog.print("⚡️ Warning: isWebDebuggable only functions as intended on iOS 16.4 and above.")
+        }
+
+        self.webView?.setInspectableIfRequired(isWebDebuggable)
+    }
+
     /**
      Handle a call from JavaScript. First, find the corresponding plugin, construct a selector,
      and perform that selector on the plugin instance.
@@ -394,11 +437,14 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
      */
     // swiftlint:disable:next function_body_length
     func handleJSCall(call: JSCall) {
-        guard let plugin = self.plugin(withName: call.pluginId) ?? self.loadPlugin(pluginName: call.pluginId) else {
-            JIGLog.print("⚡️  Error loading plugin \(call.pluginId) for call. Check that the pluginId is correct")
-            return
+        let load = {
+            NSClassFromString(call.pluginId)
+                .flatMap { $0 as? JIGPlugin.Type }
+                .flatMap(self.loadPlugin(type:))
         }
-        guard let pluginType = knownPlugins[plugin.getId()] else {
+
+        guard let plugin = plugins[call.pluginId] ?? load() else {
+            JIGLog.print("⚡️  Error loading plugin \(call.pluginId) for call. Check that the pluginId is correct")
             return
         }
 
@@ -406,13 +452,11 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
         if call.method == "addListener" || call.method == "removeListener" {
             selector = NSSelectorFromString(call.method + ":")
         } else {
-            guard let bridgeType = pluginType as? JIGBridgedPlugin.Type, let method = bridgeType.getMethod(call.method) else {
+            guard let method = plugin.getMethod(named: call.method) else {
                 JIGLog.print("⚡️  Error calling method \(call.method) on plugin \(call.pluginId): No method found.")
                 JIGLog.print("⚡️  Ensure plugin method exists and uses @objc in its declaration, and has been defined")
                 return
             }
-
-            // JIGLog.print("\n⚡️  Calling method \"\(call.method)\" on plugin \"\(plugin.getId()!)\"")
 
             selector = method.selector
         }

@@ -8,7 +8,7 @@ export const legacyRegisterWebPlugin = (
   const config = webPlugin.config;
   const Plugins = jig.Plugins;
 
-  if (!config || !config.name) {
+  if (!config?.name) {
     // TODO: add link to upgrade guide
     throw new Error(
       `Jigra WebPlugin is using the deprecated "registerWebPlugin()" function, but without the config. Please use "registerPlugin()" instead to register this web plugin."`,

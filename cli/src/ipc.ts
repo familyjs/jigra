@@ -1,5 +1,5 @@
-import { open, mkdirp } from '@navify/utils-fs';
-import { fork } from '@navify/utils-subprocess';
+import { open, mkdirp } from '@familyjs/utils-fs';
+import { fork } from '@familyjs/utils-subprocess';
 import Debug from 'debug';
 import { request } from 'https';
 import { resolve } from 'path';
@@ -53,7 +53,7 @@ export async function receive(msg: IPCMessage): Promise<void> {
     // This request is only made if telemetry is on.
     const req = request(
       {
-        hostname: 'api-navifyjs.web.app',
+        hostname: 'familyjs-api.web.app',
         port: 443,
         path: '/events/metrics',
         method: 'POST',

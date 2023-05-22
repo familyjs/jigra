@@ -1,4 +1,4 @@
-import { readJSON } from '@navify/utils-fs';
+import { readJSON } from '@familyjs/utils-fs';
 
 import { doctorAndroid } from '../android/doctor';
 import c from '../colors';

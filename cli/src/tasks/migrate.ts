@@ -1,10 +1,4 @@
-import {
-  writeFileSync,
-  readFileSync,
-  readdirSync,
-  existsSync,
-  removeSync,
-} from '@familyjs/utils-fs';
+import { writeFileSync, readFileSync, readdirSync, existsSync, removeSync } from '@familyjs/utils-fs';
 import { join } from 'path';
 import rimraf from 'rimraf';
 
@@ -19,12 +13,7 @@ import { extractTemplate } from '../util/template';
 
 // eslint-disable-next-line prefer-const
 let allDependencies: { [key: string]: any } = {};
-const libs = [
-  '@jigra/core',
-  '@jigra/cli',
-  '@jigra/ios',
-  '@jigra/android',
-];
+const libs = ['@jigra/core', '@jigra/cli', '@jigra/ios', '@jigra/android'];
 const plugins = [
   '@jigra/action-sheet',
   '@jigra/app',
@@ -56,20 +45,14 @@ const coreVersion = '5.0.0';
 const pluginVersion = '5.0.0';
 const gradleVersion = '8.0.2';
 
-export async function migrateCommand(
-  config: Config,
-  noprompt: boolean,
-  packagemanager: string,
-): Promise<void> {
+export async function migrateCommand(config: Config, noprompt: boolean, packagemanager: string): Promise<void> {
   if (config === null) {
     fatal('Config data missing');
   }
 
   const jigMajor = await checkJigraMajorVersion(config);
   if (jigMajor < 4) {
-    fatal(
-      'Migrate can only be used on jigra 4 and above, please use the CLI in Jigra 4 to upgrade to 4 first',
-    );
+    fatal('Migrate can only be used on jigra 4 and above, please use the CLI in Jigra 4 to upgrade to 4 first');
   }
 
   const jdkMajor = await checkJDKMajorVersion();
@@ -80,7 +63,7 @@ export async function migrateCommand(
 
   const variablesAndClasspaths:
     | {
-        'variables': any;
+        variables: any;
         'com.android.tools.build:gradle': string;
         'com.google.gms:google-services': string;
       }
@@ -104,20 +87,14 @@ export async function migrateCommand(
 
   const { migrateconfirm } = noprompt
     ? { migrateconfirm: 'y' }
-    : await logPrompt(
-        `Jigra 5 sets a deployment target of iOS 13 and Android 13 (SDK 33). \n`,
-        {
-          type: 'text',
-          name: 'migrateconfirm',
-          message: `Are you sure you want to migrate? (Y/n)`,
-          initial: 'y',
-        },
-      );
+    : await logPrompt(`Jigra 5 sets a deployment target of iOS 13 and Android 13 (SDK 33). \n`, {
+        type: 'text',
+        name: 'migrateconfirm',
+        message: `Are you sure you want to migrate? (Y/n)`,
+        initial: 'y',
+      });
 
-  if (
-    typeof migrateconfirm === 'string' &&
-    migrateconfirm.toLowerCase() === 'y'
-  ) {
+  if (typeof migrateconfirm === 'string' && migrateconfirm.toLowerCase() === 'y') {
     try {
       const { depInstallConfirm } = noprompt
         ? { depInstallConfirm: 'y' }
@@ -128,12 +105,10 @@ export async function migrateCommand(
               name: 'depInstallConfirm',
               message: `Run Dependency Install? (Y/n)`,
               initial: 'y',
-            },
+            }
           );
 
-      const runNpmInstall =
-        typeof depInstallConfirm === 'string' &&
-        depInstallConfirm.toLowerCase() === 'y';
+      const runNpmInstall = typeof depInstallConfirm === 'string' && depInstallConfirm.toLowerCase() === 'y';
 
       let installerType = 'npm';
       if (runNpmInstall) {
@@ -154,26 +129,20 @@ export async function migrateCommand(
       }
 
       try {
-        await runTask(
-          `Installing Latest Modules using ${installerType}.`,
-          () => {
-            return installLatestLibs(installerType, runNpmInstall, config);
-          },
-        );
+        await runTask(`Installing Latest Modules using ${installerType}.`, () => {
+          return installLatestLibs(installerType, runNpmInstall, config);
+        });
       } catch (ex) {
         console.log(ex);
         logger.error(
           `${installerType} install failed. Try deleting node_modules folder and running ${c.input(
-            `${installerType} install --force`,
-          )} manually.`,
+            `${installerType} install --force`
+          )} manually.`
         );
       }
 
       // Update iOS Projects
-      if (
-        allDependencies['@jigra/ios'] &&
-        existsSync(config.ios.platformDirAbs)
-      ) {
+      if (allDependencies['@jigra/ios'] && existsSync(config.ios.platformDirAbs)) {
         //Update icon to single 1024 x 1024 icon
         await runTask('Update App Icon to only 1024 x 1024', () => {
           return updateAppIcons(config);
@@ -181,78 +150,46 @@ export async function migrateCommand(
 
         //Remove Podfile.lock from .gitignore
         await runTask('Remove Podfile.lock from iOS .gitignore', () => {
-          return updateIosGitIgnore(
-            join(config.ios.platformDirAbs, '.gitignore'),
-          );
+          return updateIosGitIgnore(join(config.ios.platformDirAbs, '.gitignore'));
         });
       }
 
-      if (
-        allDependencies['@jigra/android'] &&
-        existsSync(config.android.platformDirAbs)
-      ) {
+      if (allDependencies['@jigra/android'] && existsSync(config.android.platformDirAbs)) {
         await runTask(`Migrating build.gradle file.`, () => {
-          return updateBuildGradle(
-            join(config.android.platformDirAbs, 'build.gradle'),
-            variablesAndClasspaths,
-          );
+          return updateBuildGradle(join(config.android.platformDirAbs, 'build.gradle'), variablesAndClasspaths);
         });
 
         // Remove enableJetifier
-        await runTask(
-          'Remove android.enableJetifier=true from gradle.properties',
-          () => {
-            return updateGradleProperties(
-              join(config.android.platformDirAbs, 'gradle.properties'),
-            );
-          },
-        );
+        await runTask('Remove android.enableJetifier=true from gradle.properties', () => {
+          return updateGradleProperties(join(config.android.platformDirAbs, 'gradle.properties'));
+        });
 
         // Move package from android manifest
         await runTask('Migrating package from Manifest to build.gradle', () => {
           return movePackageFromManifestToBuildGradle(
-            join(
-              config.android.platformDirAbs,
-              'app',
-              'src',
-              'main',
-              'AndroidManifest.xml',
-            ),
-            join(config.android.platformDirAbs, 'app', 'build.gradle'),
+            join(config.android.platformDirAbs, 'app', 'src', 'main', 'AndroidManifest.xml'),
+            join(config.android.platformDirAbs, 'app', 'build.gradle')
           );
         });
 
         // Update gradle-wrapper.properties
-        await runTask(
-          `Migrating gradle-wrapper.properties by updating gradle version to ${gradleVersion}.`,
-          () => {
-            return updateGradleWrapper(
-              join(
-                config.android.platformDirAbs,
-                'gradle',
-                'wrapper',
-                'gradle-wrapper.properties',
-              ),
-            );
-          },
-        );
+        await runTask(`Migrating gradle-wrapper.properties by updating gradle version to ${gradleVersion}.`, () => {
+          return updateGradleWrapper(
+            join(config.android.platformDirAbs, 'gradle', 'wrapper', 'gradle-wrapper.properties')
+          );
+        });
 
         // Variables gradle
         await runTask(`Migrating variables.gradle file.`, () => {
           return (async (): Promise<void> => {
-            const variablesPath = join(
-              config.android.platformDirAbs,
-              'variables.gradle',
-            );
+            const variablesPath = join(config.android.platformDirAbs, 'variables.gradle');
             let txt = readFile(variablesPath);
             if (!txt) {
               return;
             }
             txt = txt.replace(/= {2}'/g, `= '`);
             writeFileSync(variablesPath, txt, { encoding: 'utf-8' });
-            for (const variable of Object.keys(
-              variablesAndClasspaths.variables,
-            )) {
+            for (const variable of Object.keys(variablesAndClasspaths.variables)) {
               if (
                 !(await updateFile(
                   config,
@@ -260,7 +197,7 @@ export async function migrateCommand(
                   `${variable} = '`,
                   `'`,
                   variablesAndClasspaths.variables[variable].toString(),
-                  true,
+                  true
                 ))
               ) {
                 const didWork = await updateFile(
@@ -269,16 +206,14 @@ export async function migrateCommand(
                   `${variable} = `,
                   `\n`,
                   variablesAndClasspaths.variables[variable].toString(),
-                  true,
+                  true
                 );
                 if (!didWork) {
                   let file = readFile(variablesPath);
                   if (file) {
                     file = file.replace(
                       '}',
-                      `    ${variable} = '${variablesAndClasspaths.variables[
-                        variable
-                      ].toString()}'\n}`,
+                      `    ${variable} = '${variablesAndClasspaths.variables[variable].toString()}'\n}`
                     );
                     writeFileSync(variablesPath, file);
                   }
@@ -299,14 +234,7 @@ export async function migrateCommand(
               kotlinxCoroutinesVersion: '1.6.4',
             };
             for (const variable of Object.keys(pluginVariables)) {
-              await updateFile(
-                config,
-                variablesPath,
-                `${variable} = '`,
-                `'`,
-                pluginVariables[variable],
-                true,
-              );
+              await updateFile(config, variablesPath, `${variable} = '`, `'`, pluginVariables[variable], true);
             }
           })();
         });
@@ -319,10 +247,7 @@ export async function migrateCommand(
         return getCommandOutput('npx', ['jig', 'sync']);
       });
 
-      if (
-        allDependencies['@jigra/android'] &&
-        existsSync(config.android.platformDirAbs)
-      ) {
+      if (allDependencies['@jigra/android'] && existsSync(config.android.platformDirAbs)) {
         try {
           await runTask(`Upgrading gradle wrapper files`, () => {
             return updateGradleWrapperFiles(config.android.platformDirAbs);
@@ -331,10 +256,10 @@ export async function migrateCommand(
           if (e.includes('EACCES')) {
             logger.error(
               `gradlew file does not have executable permissions. This can happen if the Android platform was added on a Windows machine. Please run ${c.input(
-                `chmod +x ./${config.android.platformDir}/gradlew`,
+                `chmod +x ./${config.android.platformDir}/gradlew`
               )} and ${c.input(
-                `cd ${config.android.platformDir} && ./gradlew wrapper --distribution-type all --gradle-version ${gradleVersion} --warning-mode all`,
-              )} to update the files manually`,
+                `cd ${config.android.platformDir} && ./gradlew wrapper --distribution-type all --gradle-version ${gradleVersion} --warning-mode all`
+              )} to update the files manually`
             );
           } else {
             logger.error(`gradle wrapper files were not updated`);
@@ -347,9 +272,7 @@ export async function migrateCommand(
         return writeBreakingChanges();
       });
 
-      logSuccess(
-        `Migration to Jigra ${coreVersion} is complete. Run and test your app!`,
-      );
+      logSuccess(`Migration to Jigra ${coreVersion} is complete. Run and test your app!`);
     } catch (err) {
       fatal(`Failed to migrate: ${err}`);
     }
@@ -361,17 +284,12 @@ export async function migrateCommand(
 
 async function checkJigraMajorVersion(config: Config): Promise<number> {
   const jigraVersion = await getCoreVersion(config);
-  const versionArray =
-    jigraVersion.match(/([0-9]+)\.([0-9]+)\.([0-9]+)/) ?? [];
+  const versionArray = jigraVersion.match(/([0-9]+)\.([0-9]+)\.([0-9]+)/) ?? [];
   const majorVersion = parseInt(versionArray[1]);
   return majorVersion;
 }
 
-async function installLatestLibs(
-  dependencyManager: string,
-  runInstall: boolean,
-  config: Config,
-) {
+async function installLatestLibs(dependencyManager: string, runInstall: boolean, config: Config) {
   const pkgJsonPath = join(config.app.rootDir, 'package.json');
   const pkgJsonFile = readFile(pkgJsonPath);
   if (!pkgJsonFile) {
@@ -407,19 +325,12 @@ async function installLatestLibs(
       await runCommand(dependencyManager, ['update']);
     }
   } else {
-    logger.info(
-      `Please run an install command with your package manager of choice. (ex: yarn install)`,
-    );
+    logger.info(`Please run an install command with your package manager of choice. (ex: yarn install)`);
   }
 }
 
 async function writeBreakingChanges() {
-  const breaking = [
-    '@jigra/camera',
-    '@jigra/device',
-    '@jigra/local-notifications',
-    '@jigra/push-notifications',
-  ];
+  const breaking = ['@jigra/camera', '@jigra/device', '@jigra/local-notifications', '@jigra/push-notifications'];
   const broken = [];
   for (const lib of breaking) {
     if (allDependencies[lib]) {
@@ -430,48 +341,28 @@ async function writeBreakingChanges() {
   if (broken.length > 0) {
     logger.info(
       `IMPORTANT: Review https://jigrajs.web.app/docs/next/updating/5-0#plugins for breaking changes in these plugins that you use: ${broken.join(
-        ', ',
-      )}.`,
+        ', '
+      )}.`
     );
   }
 }
 
 async function getAndroidVariablesAndClasspaths(config: Config) {
-  const tempAndroidTemplateFolder = join(
-    config.cli.assetsDirAbs,
-    'tempAndroidTemplate',
-  );
-  await extractTemplate(
-    config.cli.assets.android.platformTemplateArchiveAbs,
-    tempAndroidTemplateFolder,
-  );
-  const variablesGradleFile = readFile(
-    join(tempAndroidTemplateFolder, 'variables.gradle'),
-  );
-  const buildGradleFile = readFile(
-    join(tempAndroidTemplateFolder, 'build.gradle'),
-  );
+  const tempAndroidTemplateFolder = join(config.cli.assetsDirAbs, 'tempAndroidTemplate');
+  await extractTemplate(config.cli.assets.android.platformTemplateArchiveAbs, tempAndroidTemplateFolder);
+  const variablesGradleFile = readFile(join(tempAndroidTemplateFolder, 'variables.gradle'));
+  const buildGradleFile = readFile(join(tempAndroidTemplateFolder, 'build.gradle'));
   if (!variablesGradleFile || !buildGradleFile) {
     return;
   }
   deleteFolderRecursive(tempAndroidTemplateFolder);
 
-  const firstIndxOfCATBGV =
-    buildGradleFile.indexOf(`classpath 'com.android.tools.build:gradle:`) + 42;
-  const firstIndxOfCGGGS =
-    buildGradleFile.indexOf(`com.google.gms:google-services:`) + 31;
+  const firstIndxOfCATBGV = buildGradleFile.indexOf(`classpath 'com.android.tools.build:gradle:`) + 42;
+  const firstIndxOfCGGGS = buildGradleFile.indexOf(`com.google.gms:google-services:`) + 31;
   const comAndroidToolsBuildGradleVersion =
-    '' +
-    buildGradleFile.substring(
-      firstIndxOfCATBGV,
-      buildGradleFile.indexOf("'", firstIndxOfCATBGV),
-    );
+    '' + buildGradleFile.substring(firstIndxOfCATBGV, buildGradleFile.indexOf("'", firstIndxOfCATBGV));
   const comGoogleGmsGoogleServices =
-    '' +
-    buildGradleFile.substring(
-      firstIndxOfCGGGS,
-      buildGradleFile.indexOf("'", firstIndxOfCGGGS),
-    );
+    '' + buildGradleFile.substring(firstIndxOfCGGGS, buildGradleFile.indexOf("'", firstIndxOfCGGGS));
 
   const variablesGradleAsJSON = JSON.parse(
     variablesGradleFile
@@ -484,11 +375,11 @@ async function getAndroidVariablesAndClasspaths(config: Config) {
       .replace('{,', '{')
       .replace(',}', '}')
       .replace(/\s/g, '')
-      .replace(/'/g, '"'),
+      .replace(/'/g, '"')
   );
 
   return {
-    'variables': variablesGradleAsJSON,
+    variables: variablesGradleAsJSON,
     'com.android.tools.build:gradle': comAndroidToolsBuildGradleVersion,
     'com.google.gms:google-services': comGoogleGmsGoogleServices,
   };
@@ -502,9 +393,7 @@ function readFile(filename: string): string | undefined {
     }
     return readFileSync(filename, 'utf-8');
   } catch (err) {
-    logger.error(
-      `Unable to read ${filename}. Verify it is not already open. ${err}`,
-    );
+    logger.error(`Unable to read ${filename}. Verify it is not already open. ${err}`);
   }
 }
 
@@ -518,7 +407,7 @@ async function updateGradleWrapper(filename: string) {
     'distributionUrl=',
     '\n',
     // eslint-disable-next-line no-useless-escape
-    `https\\://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip`,
+    `https\\://services.gradle.org/distributions/gradle-${gradleVersion}-all.zip`
   );
   writeFileSync(filename, replaced, 'utf-8');
 }
@@ -526,18 +415,10 @@ async function updateGradleWrapper(filename: string) {
 async function updateGradleWrapperFiles(platformDir: string) {
   await runCommand(
     `./gradlew`,
-    [
-      'wrapper',
-      '--distribution-type',
-      'all',
-      '--gradle-version',
-      gradleVersion,
-      '--warning-mode',
-      'all',
-    ],
+    ['wrapper', '--distribution-type', 'all', '--gradle-version', gradleVersion, '--warning-mode', 'all'],
     {
       cwd: platformDir,
-    },
+    }
   );
 }
 
@@ -578,13 +459,7 @@ async function updateAppIcons(config: Config) {
     }
 }`;
 
-  const path = join(
-    config.ios.platformDirAbs,
-    'App',
-    'App',
-    'Assets.xcassets',
-    'AppIcon.appiconset',
-  );
+  const path = join(config.ios.platformDirAbs, 'App', 'App', 'Assets.xcassets', 'AppIcon.appiconset');
 
   if (!existsSync(path)) {
     logger.error(`Unable to find ${path}. Try updating it manually`);
@@ -621,12 +496,8 @@ async function updateGradleProperties(filename: string) {
   let linesToKeep = '';
   for (const line of lines) {
     // check for enableJetifier
-    const jetifierMatch =
-      line.match(/android\.enableJetifier\s*=\s*true/) || [];
-    const commentMatch =
-      line.match(
-        /# Automatically convert third-party libraries to use AndroidX/,
-      ) || [];
+    const jetifierMatch = line.match(/android\.enableJetifier\s*=\s*true/) || [];
+    const commentMatch = line.match(/# Automatically convert third-party libraries to use AndroidX/) || [];
 
     if (jetifierMatch.length == 0 && commentMatch.length == 0) {
       linesToKeep += line + '\n';
@@ -635,24 +506,17 @@ async function updateGradleProperties(filename: string) {
   writeFileSync(filename, linesToKeep, { encoding: 'utf-8' });
 }
 
-async function movePackageFromManifestToBuildGradle(
-  manifestFilename: string,
-  buildGradleFilename: string,
-) {
+async function movePackageFromManifestToBuildGradle(manifestFilename: string, buildGradleFilename: string) {
   const manifestText = readFile(manifestFilename);
   const buildGradleText = readFile(buildGradleFilename);
 
   if (!manifestText) {
-    logger.error(
-      `Could not read ${manifestFilename}. Check its permissions and if it exists.`,
-    );
+    logger.error(`Could not read ${manifestFilename}. Check its permissions and if it exists.`);
     return;
   }
 
   if (!buildGradleText) {
-    logger.error(
-      `Could not read ${buildGradleFilename}. Check its permissions and if it exists.`,
-    );
+    logger.error(`Could not read ${buildGradleFilename}. Check its permissions and if it exists.`);
     return;
   }
 
@@ -679,29 +543,20 @@ async function movePackageFromManifestToBuildGradle(
     manifestText,
     '<manifest xmlns:android="http://schemas.android.com/apk/res/android"',
     '>',
-    ``,
+    ``
   );
 
   if (manifestText == manifestReplaced) {
-    logger.error(
-      `Unable to update Android Manifest: no changes were detected in Android Manifest file`,
-    );
+    logger.error(`Unable to update Android Manifest: no changes were detected in Android Manifest file`);
     return;
   }
 
   let buildGradleReplaced = buildGradleText;
 
-  buildGradleReplaced = setAllStringIn(
-    buildGradleText,
-    'android {',
-    '\n',
-    `\n    namespace "${packageName}"`,
-  );
+  buildGradleReplaced = setAllStringIn(buildGradleText, 'android {', '\n', `\n    namespace "${packageName}"`);
 
   if (buildGradleText == buildGradleReplaced) {
-    logger.error(
-      `Unable to update buildGradleText: no changes were detected in Android Manifest file`,
-    );
+    logger.error(`Unable to update buildGradleText: no changes were detected in Android Manifest file`);
     return;
   }
 
@@ -712,10 +567,10 @@ async function movePackageFromManifestToBuildGradle(
 async function updateBuildGradle(
   filename: string,
   variablesAndClasspaths: {
-    'variables': any;
+    variables: any;
     'com.android.tools.build:gradle': string;
     'com.google.gms:google-services': string;
-  },
+  }
 ) {
   // In build.gradle add dependencies:
   // classpath 'com.android.tools.build:gradle:8.0.0'
@@ -725,10 +580,8 @@ async function updateBuildGradle(
     return;
   }
   const neededDeps: { [key: string]: string } = {
-    'com.android.tools.build:gradle':
-      variablesAndClasspaths['com.android.tools.build:gradle'],
-    'com.google.gms:google-services':
-      variablesAndClasspaths['com.google.gms:google-services'],
+    'com.android.tools.build:gradle': variablesAndClasspaths['com.android.tools.build:gradle'],
+    'com.google.gms:google-services': variablesAndClasspaths['com.google.gms:google-services'],
   };
   let replaced = txt;
 
@@ -736,15 +589,9 @@ async function updateBuildGradle(
     if (replaced.includes(`classpath '${dep}`)) {
       const semver = await import('semver');
       const firstIndex = replaced.indexOf(dep) + dep.length + 1;
-      const existingVersion =
-        '' + replaced.substring(firstIndex, replaced.indexOf("'", firstIndex));
+      const existingVersion = '' + replaced.substring(firstIndex, replaced.indexOf("'", firstIndex));
       if (semver.gte(neededDeps[dep], existingVersion)) {
-        replaced = setAllStringIn(
-          replaced,
-          `classpath '${dep}:`,
-          `'`,
-          neededDeps[dep],
-        );
+        replaced = setAllStringIn(replaced, `classpath '${dep}:`, `'`, neededDeps[dep]);
         logger.info(`Set ${dep} = ${neededDeps[dep]}.`);
       }
     }
@@ -758,7 +605,7 @@ async function updateFile(
   textStart: string,
   textEnd: string,
   replacement?: string,
-  skipIfNotFound?: boolean,
+  skipIfNotFound?: boolean
 ): Promise<boolean> {
   if (config === null) {
     return false;
@@ -796,20 +643,13 @@ async function updateFile(
     }
     return true;
   } else if (!skipIfNotFound) {
-    logger.error(
-      `Unable to find "${textStart}" in ${filename}. Try updating it manually`,
-    );
+    logger.error(`Unable to find "${textStart}" in ${filename}. Try updating it manually`);
   }
 
   return false;
 }
 
-function setAllStringIn(
-  data: string,
-  start: string,
-  end: string,
-  replacement: string,
-): string {
+function setAllStringIn(data: string, start: string, end: string, replacement: string): string {
   let position = 0;
   let result = data;
   let replaced = true;
@@ -820,10 +660,7 @@ function setAllStringIn(
     } else {
       const idx = foundIdx + start.length;
       position = idx + replacement.length;
-      result =
-        result.substring(0, idx) +
-        replacement +
-        result.substring(result.indexOf(end, idx));
+      result = result.substring(0, idx) + replacement + result.substring(result.indexOf(end, idx));
     }
   }
   return result;

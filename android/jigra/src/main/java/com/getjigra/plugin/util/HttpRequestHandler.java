@@ -201,8 +201,7 @@ public class HttpRequestHandler {
      * @throws IOException Thrown if the InputStream is unable to be parsed correctly
      * @throws JSONException Thrown if the JSON is unable to be parsed
      */
-    public static JSObject buildResponse(JigraHttpUrlConnection connection, ResponseType responseType)
-        throws IOException, JSONException {
+    public static JSObject buildResponse(JigraHttpUrlConnection connection, ResponseType responseType) throws IOException, JSONException {
         int statusCode = connection.getResponseCode();
 
         JSObject output = new JSObject();

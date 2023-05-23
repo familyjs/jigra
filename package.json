@@ -28,7 +28,7 @@
   "devDependencies": {
     "@familyjs/prettier-config": "~2.0.0",
     "@familyjs/swiftlint": "^1.0.2",
-    "@familyjs/swiftlint-config": "^1.1.2",
+    "@familyjs/swiftlint-config": "^1.1.3",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "@types/tar": "^6.1.2",

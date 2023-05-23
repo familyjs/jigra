@@ -400,8 +400,7 @@ public class Bridge {
     private boolean isNewBinary() {
         String versionCode = "";
         String versionName = "";
-        SharedPreferences prefs = getContext()
-            .getSharedPreferences(com.getjigra.plugin.WebView.WEBVIEW_PREFS_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences prefs = getContext().getSharedPreferences(com.getjigra.plugin.WebView.WEBVIEW_PREFS_NAME, Activity.MODE_PRIVATE);
         String lastVersionCode = prefs.getString(LAST_BINARY_VERSION_CODE, null);
         String lastVersionName = prefs.getString(LAST_BINARY_VERSION_NAME, null);
 

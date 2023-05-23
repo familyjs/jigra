@@ -190,7 +190,8 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
 
     // MARK: - Initialization
 
-    init(with configuration: InstanceConfiguration, delegate bridgeDelegate: JIGBridgeDelegate, cordovaConfiguration: CDVConfigParser, assetHandler: WebViewAssetHandler, delegationHandler: WebViewDelegationHandler, autoRegisterPlugins: Bool = true) {
+    init(with configuration: InstanceConfiguration, delegate bridgeDelegate: JIGBridgeDelegate,
+         cordovaConfiguration: CDVConfigParser, assetHandler: WebViewAssetHandler, delegationHandler: WebViewDelegationHandler, autoRegisterPlugins: Bool = true) {
         self.bridgeDelegate = bridgeDelegate
         self.webViewAssetHandler = assetHandler
         self.webViewDelegationHandler = delegationHandler
@@ -228,9 +229,9 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
     func exportCoreJS(localUrl: String) {
         do {
             try JSExport.exportJigraGlobalJS(userContentController: webViewDelegationHandler.contentController,
-                                                 isDebug: isDevEnvironment,
-                                                 loggingEnabled: config.loggingEnabled,
-                                                 localUrl: localUrl)
+                                             isDebug: isDevEnvironment,
+                                             loggingEnabled: config.loggingEnabled,
+                                             localUrl: localUrl)
             try JSExport.exportBridgeJS(userContentController: webViewDelegationHandler.contentController)
         } catch {
             type(of: self).fatalError(error, error)
@@ -566,7 +567,9 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
      */
     func toJsError(error: JSResultProtocol) {
         DispatchQueue.main.async {
-            self.webView?.evaluateJavaScript("window.Jigra.fromNative({ callbackId: '\(error.callbackID)', pluginId: '\(error.pluginID)', methodName: '\(error.methodName)', success: false, error: \(error.jsonPayload())})") { (_, error) in
+            self.webView?.evaluateJavaScript(
+                "window.Jigra.fromNative({ callbackId: '\(error.callbackID)', pluginId: '\(error.pluginID)', methodName: '\(error.methodName)', success: false, error: \(error.jsonPayload())})"
+            ) { (_, error) in
                 if let error = error {
                     JIGLog.print(error)
                 }

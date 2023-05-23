@@ -49,10 +49,10 @@ import Cordova
         view = webView
         // create the bridge
         jigraBridge = JigraBridge(with: configuration,
-                                          delegate: self,
-                                          cordovaConfiguration: configDescriptor.cordovaConfiguration,
-                                          assetHandler: assetHandler,
-                                          delegationHandler: delegationHandler)
+                                  delegate: self,
+                                  cordovaConfiguration: configDescriptor.cordovaConfiguration,
+                                  assetHandler: assetHandler,
+                                  delegationHandler: delegationHandler)
         jigraDidLoad()
     }
 

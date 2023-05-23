@@ -228,9 +228,9 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
     func exportCoreJS(localUrl: String) {
         do {
             try JSExport.exportJigraGlobalJS(userContentController: webViewDelegationHandler.contentController,
-                                                 isDebug: isDevEnvironment,
-                                                 loggingEnabled: config.loggingEnabled,
-                                                 localUrl: localUrl)
+                                             isDebug: isDevEnvironment,
+                                             loggingEnabled: config.loggingEnabled,
+                                             localUrl: localUrl)
             try JSExport.exportBridgeJS(userContentController: webViewDelegationHandler.contentController)
         } catch {
             type(of: self).fatalError(error, error)

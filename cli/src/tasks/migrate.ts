@@ -47,6 +47,7 @@ const plugins = [
 const coreVersion = '^5.0.0';
 const pluginVersion = '^5.0.0';
 const gradleVersion = '8.0.2';
+let installFailed = false;
 
 export async function migrateCommand(config: Config, noprompt: boolean, packagemanager: string): Promise<void> {
   if (config === null) {
@@ -75,8 +76,6 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
   if (!variablesAndClasspaths) {
     fatal('Variable and Classpath info could not be read.');
   }
-
-  //*
 
   allDependencies = {
     ...config.app.package.dependencies,
@@ -136,12 +135,12 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
           return installLatestLibs(installerType, runNpmInstall, config);
         });
       } catch (ex) {
-        console.log(ex);
         logger.error(
           `${installerType} install failed. Try deleting node_modules folder and running ${c.input(
             `${installerType} install --force`
           )} manually.`
         );
+        installFailed = true;
       }
 
       // Update iOS Projects
@@ -244,33 +243,45 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
 
         rimraf.sync(join(config.android.appDirAbs, 'build'));
 
-        await runTask('Migrating package from Manifest to build.gradle in Jigra plugins', () => {
-          return patchOldJigraPlugins(config);
-        });
+        if (!installFailed) {
+          await runTask('Migrating package from Manifest to build.gradle in Jigra plugins', () => {
+            return patchOldJigraPlugins(config);
+          });
+        } else {
+          logger.warn('Skipped migrating package from Manifest to build.gradle in Jigra plugins');
+        }
       }
 
-      // Run Jig Sync
-      await runTask(`Running jig sync.`, () => {
-        return getCommandOutput('npx', ['jig', 'sync']);
-      });
+      if (!installFailed) {
+        // Run Jig Sync
+        await runTask(`Running jig sync.`, () => {
+          return getCommandOutput('npx', ['jig', 'sync']);
+        });
+      } else {
+        logger.warn('Skipped Running jig sync.');
+      }
 
       if (allDependencies['@jigra/android'] && existsSync(config.android.platformDirAbs)) {
-        try {
-          await runTask(`Upgrading gradle wrapper files`, () => {
-            return updateGradleWrapperFiles(config.android.platformDirAbs);
-          });
-        } catch (e: any) {
-          if (e.includes('EACCES')) {
-            logger.error(
-              `gradlew file does not have executable permissions. This can happen if the Android platform was added on a Windows machine. Please run ${c.input(
-                `chmod +x ./${config.android.platformDir}/gradlew`
-              )} and ${c.input(
-                `cd ${config.android.platformDir} && ./gradlew wrapper --distribution-type all --gradle-version ${gradleVersion} --warning-mode all`
-              )} to update the files manually`
-            );
-          } else {
-            logger.error(`gradle wrapper files were not updated`);
+        if (!installFailed) {
+          try {
+            await runTask(`Upgrading gradle wrapper files`, () => {
+              return updateGradleWrapperFiles(config.android.platformDirAbs);
+            });
+          } catch (e: any) {
+            if (e.includes('EACCES')) {
+              logger.error(
+                `gradlew file does not have executable permissions. This can happen if the Android platform was added on a Windows machine. Please run ${c.input(
+                  `chmod +x ./${config.android.platformDir}/gradlew`
+                )} and ${c.input(
+                  `cd ${config.android.platformDir} && ./gradlew wrapper --distribution-type all --gradle-version ${gradleVersion} --warning-mode all`
+                )} to update the files manually`
+              );
+            } else {
+              logger.error(`gradle wrapper files were not updated`);
+            }
           }
+        } else {
+          logger.warn('Skipped upgrading gradle wrapper files');
         }
       }
 
@@ -279,14 +290,17 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
         return writeBreakingChanges();
       });
 
-      logSuccess(`Migration to Jigra ${coreVersion} is complete. Run and test your app!`);
+      if (!installFailed) {
+        logSuccess(`Migration to Jigra ${coreVersion} is complete. Run and test your app!`);
+      } else {
+        logger.warn(`Migration to Jigra ${coreVersion} is incomplete. Check the log messages for more information.`);
+      }
     } catch (err) {
       fatal(`Failed to migrate: ${err}`);
     }
   } else {
     fatal(`User canceled migration.`);
   }
-  //*/
 }
 
 async function checkJigraMajorVersion(config: Config): Promise<number> {
@@ -685,9 +699,15 @@ export async function patchOldJigraPlugins(config: Config): Promise<void[]> {
         if (buildGradlePath && manifestPath) {
           const gradleContent = readFile(buildGradlePath);
           if (!gradleContent?.includes('namespace')) {
-            logger.warn(
-              `${p.id} doesn't officially support Jigra ${coreVersion} yet, doing our best moving it's package to build.gradle so it builds`
-            );
+            if (plugins.includes(p.id)) {
+              logger.warn(
+                `You are using an outdated version of ${p.id}, update the plugin to version ${pluginVersion}`
+              );
+            } else {
+              logger.warn(
+                `${p.id}@${p.version} doesn't officially support Jigra ${coreVersion} yet, doing our best moving it's package to build.gradle so it builds`
+              );
+            }
             movePackageFromManifestToBuildGradle(manifestPath, buildGradlePath);
           }
         }

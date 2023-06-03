@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.1](https://github.com/familyjs/jigra/compare/5.0.0...5.0.1) (2023-06-03)
+
+### Bug Fixes
+
+- **cli:** install minor Jigra 5 version ([1c166c5](https://github.com/familyjs/jigra/commit/1c166c57eec98c2bfd67042dc0bd0d56f71cd3db))
+- **cli:** Update migration link ([98d019d](https://github.com/familyjs/jigra/commit/98d019dda745efa271234e53f480f5cf8ca89593))
+
 # [5.0.0](https://github.com/familyjs/jigra/compare/4.0.0...5.0.0) (2023-05-22)
 
 **Note:** Version bump only for package @jigra/cli

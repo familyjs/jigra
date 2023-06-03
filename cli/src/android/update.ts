@@ -19,6 +19,7 @@ import {
 } from '../plugin';
 import type { Plugin } from '../plugin';
 import { copy as copyTask } from '../tasks/copy';
+import { patchOldJigraPlugins } from '../tasks/migrate';
 import { convertToUnixPath } from '../util/fs';
 import { resolveNode } from '../util/node';
 import { extractTemplate } from '../util/template';
@@ -38,6 +39,7 @@ export async function updateAndroid(config: Config): Promise<void> {
   await writePluginsJson(config, jigraPlugins);
   await removePluginsNativeFiles(config);
   const cordovaPlugins = plugins.filter((p) => getPluginType(p, platform) === PluginType.Cordova);
+  await patchOldJigraPlugins(config);
   if (cordovaPlugins.length > 0) {
     await copyPluginsNativeFiles(config, cordovaPlugins);
   }

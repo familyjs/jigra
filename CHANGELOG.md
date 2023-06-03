@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.2](https://github.com/familyjs/jigra/compare/5.0.1...5.0.2) (2023-06-03)
+
+### Bug Fixes
+
+- **cli:** handle unrecognized java --version ([82d68a1](https://github.com/familyjs/jigra/commit/82d68a1dd2faf52786d1d663aa917c057fd2e076))
+- **cli:** Move package to build.gradle in Jigra plugins ([daf4d9d](https://github.com/familyjs/jigra/commit/daf4d9ddbb23dcbe8455207e7f8aa607d4358e55))
+- fallback to plain if does not contain CocoaPods ([a0677c0](https://github.com/familyjs/jigra/commit/a0677c007923d0c6e94bc267fc9457a775ecb084))
+
 ## [5.0.1](https://github.com/familyjs/jigra/compare/5.0.0...5.0.1) (2023-06-03)
 
 ### Bug Fixes

@@ -337,10 +337,9 @@ async function writeBreakingChanges() {
       broken.push(lib);
     }
   }
-  // TODO - remove "next" from the url once jigra 5 is final
   if (broken.length > 0) {
     logger.info(
-      `IMPORTANT: Review https://jigrajs.web.app/docs/next/updating/5-0#plugins for breaking changes in these plugins that you use: ${broken.join(
+      `IMPORTANT: Review https://jigrajs.web.app/docs/updating/5-0#plugins for breaking changes in these plugins that you use: ${broken.join(
         ', '
       )}.`
     );

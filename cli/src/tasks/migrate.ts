@@ -41,8 +41,8 @@ const plugins = [
   '@jigra/text-zoom',
   '@jigra/toast',
 ];
-const coreVersion = '5.0.0';
-const pluginVersion = '5.0.0';
+const coreVersion = '^5.0.0';
+const pluginVersion = '^5.0.0';
 const gradleVersion = '8.0.2';
 
 export async function migrateCommand(config: Config, noprompt: boolean, packagemanager: string): Promise<void> {

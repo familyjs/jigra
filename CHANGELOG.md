@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.4](https://github.com/familyjs/jigra/compare/5.0.3...5.0.4) (2023-06-03)
+
+### Bug Fixes
+
+- **cicd:** removed to allow job to continue ([d064e2f](https://github.com/familyjs/jigra/commit/d064e2f994a1dcf2f420d6bf9821a026f5dbf05e))
+- **cli:** correct migration of package from AndroidManifest.xml to build.gradle ([0e29d42](https://github.com/familyjs/jigra/commit/0e29d422a6550a8fef61dbb76743562aeb3e726b))
+- **cli:** Don't succeed migration if npm install failed ([3efa3b9](https://github.com/familyjs/jigra/commit/3efa3b9afb071514ac238229e3416fc0ea9f5c8e))
+- **cli:** proper plugin module patch in monorepos ([cd51abd](https://github.com/familyjs/jigra/commit/cd51abde21f76fe5d9966d097aa3cfdde1aae598))
+
 ## [5.0.3](https://github.com/familyjs/jigra/compare/5.0.2...5.0.3) (2023-06-03)
 
 **Note:** Version bump only for package jigra

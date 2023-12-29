@@ -51,7 +51,7 @@ Jigra and Cordova differ in that Jigra:
 
 - takes a more modern approach to tooling and plugin development
 - treats native projects as source artifacts as opposed to build artifacts
-- is maintained by the Famiy Team 💙
+- is maintained by the Family Team 💙
 
 See [the docs](https://jigrajs.web.app/docs/cordova#differences-between-jigra-and-cordova) for more details.
 

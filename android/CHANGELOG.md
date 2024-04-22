@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.0.5](https://github.com/familyjs/jigra/compare/5.0.4...5.0.5) (2024-04-22)
+
+### Bug Fixes
+
+- **http:** don't throw errors when content-type is null on response ([1300a25](https://github.com/familyjs/jigra/commit/1300a2500acbc0e2439cdb820cdd220c3a0e9aa5))
+
 ## [5.0.4](https://github.com/familyjs/jigra/compare/5.0.3...5.0.4) (2023-06-03)
 
 **Note:** Version bump only for package @jigra/android

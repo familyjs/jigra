@@ -54,10 +54,11 @@ var nativeBridge = (function (exports) {
                     return webviewServerUrl + '/_jigra_file_' + filePath;
                 }
                 else if (filePath.startsWith('file://')) {
-                    return webviewServerUrl + filePath.replace('file://', '/_jigra_file_');
+                    return (webviewServerUrl + filePath.replace('file://', '/_jigra_file_'));
                 }
                 else if (filePath.startsWith('content://')) {
-                    return webviewServerUrl + filePath.replace('content:/', '/_jigra_content_');
+                    return (webviewServerUrl +
+                        filePath.replace('content:/', '/_jigra_content_'));
                 }
             }
             return filePath;
@@ -196,14 +197,27 @@ var nativeBridge = (function (exports) {
             win.Family.WebView = FamilyWebView;
         };
         const initLogger = (win, jig) => {
-            const BRIDGED_CONSOLE_METHODS = ['debug', 'error', 'info', 'log', 'trace', 'warn'];
+            const BRIDGED_CONSOLE_METHODS = [
+                'debug',
+                'error',
+                'info',
+                'log',
+                'trace',
+                'warn',
+            ];
             const createLogFromNative = (c) => (result) => {
                 if (isFullConsole(c)) {
                     const success = result.success === true;
                     const tagStyles = success
                         ? 'font-style: italic; font-weight: lighter; color: gray'
                         : 'font-style: italic; font-weight: lighter; color: red';
-                    c.groupCollapsed('%cresult %c' + result.pluginId + '.' + result.methodName + ' (#' + result.callbackId + ')', tagStyles, 'font-style: italic; font-weight: bold; color: #444');
+                    c.groupCollapsed('%cresult %c' +
+                        result.pluginId +
+                        '.' +
+                        result.methodName +
+                        ' (#' +
+                        result.callbackId +
+                        ')', tagStyles, 'font-style: italic; font-weight: bold; color: #444');
                     if (result.success === false) {
                         c.error(result.error);
                     }
@@ -223,7 +237,13 @@ var nativeBridge = (function (exports) {
             };
             const createLogToNative = (c) => (call) => {
                 if (isFullConsole(c)) {
-                    c.groupCollapsed('%cnative %c' + call.pluginId + '.' + call.methodName + ' (#' + call.callbackId + ')', 'font-weight: lighter; color: gray', 'font-weight: bold; color: #000');
+                    c.groupCollapsed('%cnative %c' +
+                        call.pluginId +
+                        '.' +
+                        call.methodName +
+                        ' (#' +
+                        call.callbackId +
+                        ')', 'font-weight: lighter; color: gray', 'font-weight: bold; color: #000');
                     c.dir(call);
                     c.groupEnd();
                 }
@@ -235,7 +255,9 @@ var nativeBridge = (function (exports) {
                 if (!c) {
                     return false;
                 }
-                return typeof c.groupCollapsed === 'function' || typeof c.groupEnd === 'function' || typeof c.dir === 'function';
+                return (typeof c.groupCollapsed === 'function' ||
+                    typeof c.groupEnd === 'function' ||
+                    typeof c.dir === 'function');
             };
             const serializeConsoleMessage = (msg) => {
                 if (typeof msg === 'object') {
@@ -292,7 +314,9 @@ var nativeBridge = (function (exports) {
                         set: function (val) {
                             const cookiePairs = val.split(';');
                             const domainSection = val.toLowerCase().split('domain=')[1];
-                            const domain = cookiePairs.length > 1 && domainSection != null && domainSection.length > 0
+                            const domain = cookiePairs.length > 1 &&
+                                domainSection != null &&
+                                domainSection.length > 0
                                 ? domainSection.split(';')[0].trim()
                                 : '';
                             if (platform === 'ios') {
@@ -344,7 +368,9 @@ var nativeBridge = (function (exports) {
                 if (doPatchHttp) {
                     // fetch patch
                     window.fetch = async (resource, options) => {
-                        if (!(resource.toString().startsWith('http:') || resource.toString().startsWith('https:'))) {
+                        var _a;
+                        if (!(resource.toString().startsWith('http:') ||
+                            resource.toString().startsWith('https:'))) {
                             return win.JigraWebFetch(resource, options);
                         }
                         const tag = `JigraHttp fetch ${Date.now()} ${resource}`;
@@ -361,9 +387,9 @@ var nativeBridge = (function (exports) {
                                 data: (options === null || options === void 0 ? void 0 : options.body) ? options.body : undefined,
                                 headers: headers,
                             });
-                            let data = !nativeResponse.headers['Content-Type'].startsWith('application/json')
-                                ? nativeResponse.data
-                                : JSON.stringify(nativeResponse.data);
+                            let data = ((_a = nativeResponse.headers['Content-Type']) === null || _a === void 0 ? void 0 : _a.startsWith('application/json'))
+                                ? JSON.stringify(nativeResponse.data)
+                                : nativeResponse.data;
                             // use null data for 204 No Content HTTP response
                             if (nativeResponse.status === 204) {
                                 data = null;
@@ -374,7 +400,7 @@ var nativeBridge = (function (exports) {
                                 status: nativeResponse.status,
                             });
                             /*
-                             * copy url to response, `cordova-plugin-family` uses this url from the response
+                             * copy url to response, `cordova-plugin-ionic` uses this url from the response
                              * we need `Object.defineProperty` because url is an inherited getter on the Response
                              * see: https://stackoverflow.com/a/57382543
                              * */
@@ -422,7 +448,8 @@ var nativeBridge = (function (exports) {
                     };
                     // XHR patch abort
                     window.XMLHttpRequest.prototype.abort = function () {
-                        if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+                        if (this._url == null ||
+                            !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
                             return win.JigraWebXMLHttpRequest.abort.call(this);
                         }
                         this.readyState = 0;
@@ -476,14 +503,16 @@ var nativeBridge = (function (exports) {
                     };
                     // XHR patch set request header
                     window.XMLHttpRequest.prototype.setRequestHeader = function (header, value) {
-                        if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+                        if (this._url == null ||
+                            !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
                             return win.JigraWebXMLHttpRequest.setRequestHeader.call(this, header, value);
                         }
                         this._headers[header] = value;
                     };
                     // XHR patch send
                     window.XMLHttpRequest.prototype.send = function (body) {
-                        if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+                        if (this._url == null ||
+                            !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
                             return win.JigraWebXMLHttpRequest.send.call(this, body);
                         }
                         const tag = `JigraHttp XMLHttpRequest ${Date.now()} ${this._url}`;
@@ -496,18 +525,21 @@ var nativeBridge = (function (exports) {
                                 url: this._url,
                                 method: this._method,
                                 data: body !== null ? body : undefined,
-                                headers: this._headers != null && Object.keys(this._headers).length > 0 ? this._headers : undefined,
+                                headers: this._headers != null && Object.keys(this._headers).length > 0
+                                    ? this._headers
+                                    : undefined,
                             })
                                 .then((nativeResponse) => {
+                                var _a;
                                 // intercept & parse response before returning
                                 if (this.readyState == 2) {
                                     this.dispatchEvent(new Event('loadstart'));
                                     this._headers = nativeResponse.headers;
                                     this.status = nativeResponse.status;
                                     this.response = nativeResponse.data;
-                                    this.responseText = !nativeResponse.headers['Content-Type'].startsWith('application/json')
-                                        ? nativeResponse.data
-                                        : JSON.stringify(nativeResponse.data);
+                                    this.responseText = ((_a = nativeResponse.headers['Content-Type']) === null || _a === void 0 ? void 0 : _a.startsWith('application/json'))
+                                        ? JSON.stringify(nativeResponse.data)
+                                        : nativeResponse.data;
                                     this.responseURL = nativeResponse.url;
                                     this.readyState = 4;
                                     this.dispatchEvent(new Event('load'));
@@ -543,7 +575,8 @@ var nativeBridge = (function (exports) {
                     };
                     // XHR patch getAllResponseHeaders
                     window.XMLHttpRequest.prototype.getAllResponseHeaders = function () {
-                        if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+                        if (this._url == null ||
+                            !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
                             return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(this);
                         }
                         let returnString = '';
@@ -556,7 +589,8 @@ var nativeBridge = (function (exports) {
                     };
                     // XHR patch getResponseHeader
                     window.XMLHttpRequest.prototype.getResponseHeader = function (name) {
-                        if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
+                        if (this._url == null ||
+                            !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
                             return win.JigraWebXMLHttpRequest.getResponseHeader.call(this, name);
                         }
                         return this._headers[name];
@@ -598,7 +632,7 @@ var nativeBridge = (function (exports) {
             };
             jig.logToNative = createLogToNative(win.console);
             jig.logFromNative = createLogFromNative(win.console);
-            jig.handleError = (err) => win.console.error(err);
+            jig.handleError = err => win.console.error(err);
             win.Jigra = jig;
         };
         function initNativeBridge(win) {
@@ -607,7 +641,7 @@ var nativeBridge = (function (exports) {
             const callbacks = new Map();
             const webviewServerUrl = typeof win.WEBVIEW_SERVER_URL === 'string' ? win.WEBVIEW_SERVER_URL : '';
             jig.getServerUrl = () => webviewServerUrl;
-            jig.convertFileSrc = (filePath) => convertFileSrcServerUrl(webviewServerUrl, filePath);
+            jig.convertFileSrc = filePath => convertFileSrcServerUrl(webviewServerUrl, filePath);
             // Counter of callback ids, randomized to avoid
             // any issues during reloads if a call comes back with
             // an existing callback id from an old session
@@ -616,12 +650,12 @@ var nativeBridge = (function (exports) {
             const isNativePlatform = () => true;
             const getPlatform = () => getPlatformId(win);
             jig.getPlatform = getPlatform;
-            jig.isPluginAvailable = (name) => Object.prototype.hasOwnProperty.call(jig.Plugins, name);
+            jig.isPluginAvailable = name => Object.prototype.hasOwnProperty.call(jig.Plugins, name);
             jig.isNativePlatform = isNativePlatform;
             // create the postToNative() fn if needed
             if (getPlatformId(win) === 'android') {
                 // android platform
-                postToNative = (data) => {
+                postToNative = data => {
                     var _a;
                     try {
                         win.androidBridge.postMessage(JSON.stringify(data));
@@ -633,7 +667,7 @@ var nativeBridge = (function (exports) {
             }
             else if (getPlatformId(win) === 'ios') {
                 // ios platform
-                postToNative = (data) => {
+                postToNative = data => {
                     var _a;
                     try {
                         data.type = data.type ? data.type : 'message';
@@ -678,7 +712,8 @@ var nativeBridge = (function (exports) {
                     if (typeof postToNative === 'function') {
                         let callbackId = '-1';
                         if (storedCallback &&
-                            (typeof storedCallback.callback === 'function' || typeof storedCallback.resolve === 'function')) {
+                            (typeof storedCallback.callback === 'function' ||
+                                typeof storedCallback.resolve === 'function')) {
                             // store the call for later lookup
                             callbackId = String(++callbackIdCount);
                             callbacks.set(callbackId, storedCallback);
@@ -713,7 +748,7 @@ var nativeBridge = (function (exports) {
             /**
              * Process a response from the native layer.
              */
-            jig.fromNative = (result) => {
+            jig.fromNative = result => {
                 returnResult(result);
             };
             const returnResult = (result) => {

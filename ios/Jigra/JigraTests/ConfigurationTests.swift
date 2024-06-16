@@ -148,8 +148,8 @@ class ConfigurationTests: XCTestCase {
         let url = Bundle.main.url(forResource: "configurations", withExtension: "")!
         let descriptor = InstanceDescriptor.init(at: url, configuration: ConfigurationTests.files[.server], cordovaConfiguration: nil)
         let configuration = InstanceConfiguration(with: descriptor, isDebug: true)
-        XCTAssertTrue(configuration.shouldAllowNavigation(to: "family-io.web.app"))
-        XCTAssertTrue(configuration.shouldAllowNavigation(to: "family-io.web.app".uppercased()))
+        XCTAssertTrue(configuration.shouldAllowNavigation(to: "familio.web.app"))
+        XCTAssertTrue(configuration.shouldAllowNavigation(to: "familio.web.app".uppercased()))
         XCTAssertTrue(configuration.shouldAllowNavigation(to: "jigrajs-test.web.app"))
         XCTAssertTrue(configuration.shouldAllowNavigation(to: "192.168.0.1"))
         XCTAssertTrue(configuration.shouldAllowNavigation(to: "familyjs-subdomain-test.web.app"))

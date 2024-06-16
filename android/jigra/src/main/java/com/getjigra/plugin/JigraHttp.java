@@ -3,7 +3,6 @@ package com.getjigra.plugin;
 import android.Manifest;
 import android.webkit.JavascriptInterface;
 import com.getjigra.JSObject;
-import com.getjigra.JigConfig;
 import com.getjigra.Plugin;
 import com.getjigra.PluginCall;
 import com.getjigra.PluginConfig;
@@ -11,6 +10,11 @@ import com.getjigra.PluginMethod;
 import com.getjigra.annotation.JigraPlugin;
 import com.getjigra.annotation.Permission;
 import com.getjigra.plugin.util.HttpRequestHandler;
+import com.getjigra.plugin.util.JigraHttpUrlConnection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @JigraPlugin(
     permissions = {
@@ -20,10 +24,36 @@ import com.getjigra.plugin.util.HttpRequestHandler;
 )
 public class JigraHttp extends Plugin {
 
+    private final Map<Runnable, PluginCall> activeRequests = new HashMap<>();
+    private final ExecutorService executor = Executors.newCachedThreadPool();
+
     @Override
     public void load() {
         this.bridge.getWebView().addJavascriptInterface(this, "JigraHttpAndroidInterface");
         super.load();
+    }
+
+    @Override
+    protected void handleOnDestroy() {
+        super.handleOnDestroy();
+
+        for (Map.Entry<Runnable, PluginCall> entry : activeRequests.entrySet()) {
+            Runnable job = entry.getKey();
+            PluginCall call = entry.getValue();
+
+            if (call.getData().has("activeJigraHttpUrlConnection")) {
+                try {
+                    JigraHttpUrlConnection connection = (JigraHttpUrlConnection) call.getData().get("activeJigraHttpUrlConnection");
+                    connection.disconnect();
+                    call.getData().remove("activeJigraHttpUrlConnection");
+                } catch (Exception ignored) {}
+            }
+
+            getBridge().releaseCall(call);
+        }
+
+        activeRequests.clear();
+        executor.shutdownNow();
     }
 
     private void http(final PluginCall call, final String httpMethod) {
@@ -35,11 +65,18 @@ public class JigraHttp extends Plugin {
                     call.resolve(response);
                 } catch (Exception e) {
                     call.reject(e.getLocalizedMessage(), e.getClass().getSimpleName(), e);
+                } finally {
+                    activeRequests.remove(this);
                 }
             }
         };
-        Thread httpThread = new Thread(asyncHttpCall);
-        httpThread.start();
+
+        if (!executor.isShutdown()) {
+            activeRequests.put(asyncHttpCall, call);
+            executor.submit(asyncHttpCall);
+        } else {
+            call.reject("Failed to execute request - Http Plugin was shutdown");
+        }
     }
 
     @JavascriptInterface

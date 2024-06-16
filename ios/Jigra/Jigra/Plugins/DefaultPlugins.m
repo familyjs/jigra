@@ -24,6 +24,7 @@ JIG_PLUGIN(JIGConsolePlugin, "Console",
 )
 
 JIG_PLUGIN(JIGWebViewPlugin, "WebView",
+  JIG_PLUGIN_METHOD(setServerAssetPath, JIGPluginReturnPromise);
   JIG_PLUGIN_METHOD(setServerBasePath, JIGPluginReturnPromise);
   JIG_PLUGIN_METHOD(getServerBasePath, JIGPluginReturnPromise);
   JIG_PLUGIN_METHOD(persistServerBasePath, JIGPluginReturnPromise);

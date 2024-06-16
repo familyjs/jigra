@@ -27,7 +27,7 @@ const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
   },
   {
     name: 'Family Kdu',
-    isMatch: (config) => hasDependency(config, '@familyjs/vue'),
+    isMatch: (config) => hasDependency(config, '@familyjs/kdu'),
     webDir: 'public',
     priority: 1,
   },
@@ -58,6 +58,12 @@ const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
   {
     name: 'Wite',
     isMatch: (config) => hasDependency(config, 'wite'),
+    webDir: 'dist',
+    priority: 2,
+  },
+  {
+    name: 'Lahm',
+    isMatch: (config) => hasDependency(config, 'lahm'),
     webDir: 'dist',
     priority: 2,
   },

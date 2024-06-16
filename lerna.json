@@ -1,16 +1,16 @@
 {
-  "useWorkspaces": true,
   "command": {
     "bootstrap": {
       "hoist": true
     },
     "version": {
-      "allowBranch": "main",
+      "allowBranch": "5.x",
       "conventionalCommits": true,
       "createRelease": "github",
       "message": "Release %s",
       "tagVersionPrefix": ""
     }
   },
-  "version": "5.0.5"
+  "version": "5.7.0-alpha.0",
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

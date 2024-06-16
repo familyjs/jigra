@@ -44,7 +44,7 @@
   if(listenersForEvent == nil || [listenersForEvent count] == 0) {
     listenersForEvent = [[NSMutableArray alloc] initWithObjects:listener, nil];
     [self.eventListeners setValue:listenersForEvent forKey:eventName];
-    
+
     [self sendRetainedArgumentsForEvent:eventName];
   } else {
     [listenersForEvent addObject:listener];
@@ -57,9 +57,9 @@
     if (retained == nil) {
         return;
     }
-    
+
     [self.retainedEventArguments removeObjectForKey:eventName];
-    
+
     for(id data in retained) {
         [self notifyListeners:eventName data:data];
     }
@@ -83,11 +83,11 @@
   NSArray<JIGPluginCall *> *listenersForEvent = [self.eventListeners objectForKey:eventName];
   if(listenersForEvent == nil || [listenersForEvent count] == 0) {
     if (retain == YES) {
-        
+
         if ([self.retainedEventArguments objectForKey:eventName] == nil) {
             [self.retainedEventArguments setObject:[[NSMutableArray alloc] init] forKey:eventName];
         }
-        
+
         [[self.retainedEventArguments objectForKey:eventName] addObject:data];
     }
     return;
@@ -128,7 +128,7 @@
 
 - (BOOL)hasListeners:(NSString *)eventName {
   NSArray<JIGPluginCall *>* listeners = [self.eventListeners objectForKey:eventName];
-  
+
   if (listeners == nil) {
     return false;
   }

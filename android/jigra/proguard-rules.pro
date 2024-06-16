@@ -13,6 +13,8 @@
      @com.getjigra.PluginMethod public <methods>;
  }
 
+ -keep public class * extends com.getjigra.Plugin { *; }
+
 # Rules for Jigra v2 plugins and annotations
 # These are deprecated but can still be used with Jigra for now
 -keep @com.getjigra.NativePlugin public class * {

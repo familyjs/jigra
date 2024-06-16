@@ -157,6 +157,7 @@ export interface WindowJigra {
     WebView?: {
       getServerBasePath?: any;
       setServerBasePath?: any;
+      setServerAssetPath?: any;
       persistServerBasePath?: any;
       convertFileSrc?: any;
     };
@@ -184,4 +185,12 @@ export interface WindowJigra {
       exitApp?: () => void;
     };
   };
+}
+
+export interface JigFormDataEntry {
+  key: string;
+  value: string;
+  type: 'base64File' | 'string';
+  contentType?: string;
+  fileName?: string;
 }

@@ -139,22 +139,39 @@ export function runProgram(config: Config): void {
         'APK',
       ])
     )
+    .addOption(
+      new Option('--signing-type <signingtype>', 'Program used to sign apps (default: jarsigner)').choices([
+        'apksigner',
+        'jarsigner',
+      ])
+    )
     .action(
       wrapAction(
         telemetryAction(
           config,
           async (
             platform,
-            { scheme, keystorepath, keystorepass, keystorealias, keystorealiaspass, androidreleasetype }
-          ) => {
-            const { buildCommand } = await import('./tasks/build');
-            await buildCommand(config, platform, {
+            {
               scheme,
+              flavor,
               keystorepath,
               keystorepass,
               keystorealias,
               keystorealiaspass,
               androidreleasetype,
+              signingType,
+            }
+          ) => {
+            const { buildCommand } = await import('./tasks/build');
+            await buildCommand(config, platform, {
+              scheme,
+              flavor,
+              keystorepath,
+              keystorepass,
+              keystorealias,
+              keystorealiaspass,
+              androidreleasetype,
+              signingtype: signingType,
             });
           }
         )
@@ -164,26 +181,35 @@ export function runProgram(config: Config): void {
     .command(`run [platform]`)
     .description(`runs ${c.input('sync')}, then builds and deploys the native app`)
     .option('--scheme <schemeName>', 'set the scheme of the iOS project')
-    .option('--flavor <flavorName>', 'set the flavor of the Android project')
+    .option('--flavor <flavorName>', 'set the flavor of the Android project (flavor dimensions not yet supported)')
     .option('--list', 'list targets, then quit')
     // TODO: remove once --json is a hidden option (https://github.com/tj/commander.js/issues/1106)
     .allowUnknownOption(true)
     .option('--target <id>', 'use a specific target')
     .option('--no-sync', `do not run ${c.input('sync')}`)
     .option('--forwardPorts <port:port>', 'Automatically run "adb reverse" for better live-reloading support')
+    .option('-l, --live-reload', 'Enable Live Reload')
+    .option('--host <host>', 'Host used for live reload')
+    .option('--port <port>', 'Port used for live reload')
     .action(
       wrapAction(
-        telemetryAction(config, async (platform, { scheme, flavor, list, target, sync, forwardPorts }) => {
-          const { runCommand } = await import('./tasks/run');
-          await runCommand(config, platform, {
-            scheme,
-            flavor,
-            list,
-            target,
-            sync,
-            forwardPorts,
-          });
-        })
+        telemetryAction(
+          config,
+          async (platform, { scheme, flavor, list, target, sync, forwardPorts, liveReload, host, port }) => {
+            const { runCommand } = await import('./tasks/run');
+            await runCommand(config, platform, {
+              scheme,
+              flavor,
+              list,
+              target,
+              sync,
+              forwardPorts,
+              liveReload,
+              host,
+              port,
+            });
+          }
+        )
       )
     );
 

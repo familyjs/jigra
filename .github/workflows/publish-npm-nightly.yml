@@ -27,7 +27,7 @@ jobs:
       - run: |
           npm install
       - name: Version & Publish
-        env: 
+        env:
           GH_TOKEN: ${{ secrets.JIG_GH_RELEASE_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |

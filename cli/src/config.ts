@@ -9,6 +9,7 @@ import { fatal, isFatal } from './errors';
 import { logger } from './log';
 import { tryFn } from './util/fn';
 import { formatJSObject } from './util/js';
+import { findNXMonorepoRoot, isNXMonorepo } from './util/monorepotools';
 import { requireTS, resolveNode } from './util/node';
 import { lazy } from './util/promise';
 import { getCommandOutput } from './util/subprocess';
@@ -23,6 +24,20 @@ export async function loadConfig(): Promise<Config> {
   const appRootDir = process.cwd();
   const cliRootDir = dirname(__dirname);
   const conf = await loadExtConfig(appRootDir);
+
+  const depsForNx = await (async (): Promise<{ devDependencies: any; dependencies: any } | object> => {
+    if (isNXMonorepo(appRootDir)) {
+      const rootOfNXMonorepo = findNXMonorepoRoot(appRootDir);
+      const pkgJSONOfMonorepoRoot: any = await tryFn(readJSON, resolve(rootOfNXMonorepo, 'package.json'));
+      const devDependencies = pkgJSONOfMonorepoRoot?.devDependencies ?? {};
+      const dependencies = pkgJSONOfMonorepoRoot?.dependencies ?? {};
+      return {
+        devDependencies,
+        dependencies,
+      };
+    }
+    return {};
+  })();
 
   const appId = conf.extConfig.appId ?? '';
   const appName = conf.extConfig.appName ?? '';
@@ -43,6 +58,7 @@ export async function loadConfig(): Promise<Config> {
       package: (await tryFn(readJSON, resolve(appRootDir, 'package.json'))) ?? {
         name: appName,
         version: '1.0.0',
+        ...depsForNx,
       },
       ...conf,
     },
@@ -205,6 +221,7 @@ async function loadAndroidConfig(
     keystorePassword: extConfig.android?.buildOptions?.keystorePassword,
     keystoreAlias: extConfig.android?.buildOptions?.keystoreAlias,
     keystoreAliasPassword: extConfig.android?.buildOptions?.keystoreAliasPassword,
+    signingType: extConfig.android?.buildOptions?.signingType,
     releaseType: extConfig.android?.buildOptions?.releaseType,
   };
 

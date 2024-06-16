@@ -5,7 +5,7 @@ import c from '../colors';
 import { promptForPlatformTarget, runTask } from '../common';
 import type { Config } from '../definitions';
 import type { RunCommandOptions } from '../tasks/run';
-import { runNativeRun, getPlatformTargets } from '../util/native-run';
+import { runFmlNativeRun, getPlatformTargets } from '../util/fml-native-run';
 import { runCommand } from '../util/subprocess';
 
 const debug = Debug('jigra:ios:run');
@@ -49,9 +49,11 @@ export async function runIOS(
     appName
   );
 
-  const nativeRunArgs = ['ios', '--app', appPath, '--target', target.id];
+  const fmlNativeRunArgs = ['ios', '--app', appPath, '--target', target.id];
 
-  debug('Invoking native-run with args: %O', nativeRunArgs);
+  debug('Invoking fml-native-run with args: %O', fmlNativeRunArgs);
 
-  await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () => runNativeRun(nativeRunArgs));
+  await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () =>
+    runFmlNativeRun(fmlNativeRunArgs)
+  );
 }

@@ -23,7 +23,7 @@ jobs:
         run: |
           cd ios/JigraCordova
           xcodebuild archive -scheme Cordova -sdk iphonesimulator SKIP_INSTALL=NO -archivePath Build/iOS-Simulator
-          xcodebuild archive -scheme Cordova -sdk iphoneos SKIP_INSTALL=NO -archivePath Build/iOS 
+          xcodebuild archive -scheme Cordova -sdk iphoneos SKIP_INSTALL=NO -archivePath Build/iOS
           xcodebuild -create-xcframework -framework Build/iOS.xcarchive/Products/Library/Frameworks/Cordova.framework -framework Build/iOS-Simulator.xcarchive/Products/Library/Frameworks/Cordova.framework -output JigraCordova.xcframework
           cd ../..
       - name: Create Jigra.xcframework.zip

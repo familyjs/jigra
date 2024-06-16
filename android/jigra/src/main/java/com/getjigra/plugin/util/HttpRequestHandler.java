@@ -12,6 +12,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -300,14 +301,18 @@ public class HttpRequestHandler {
             if ("null".equals(input.trim())) {
                 return JSONObject.NULL;
             } else if ("true".equals(input.trim())) {
-                return new JSONObject().put("flag", "true");
+                return true;
             } else if ("false".equals(input.trim())) {
-                return new JSONObject().put("flag", "false");
+                return false;
             } else if (input.trim().length() <= 0) {
                 return "";
             } else if (input.trim().matches("^\".*\"$")) {
                 // a string enclosed in " " is a json value, return the string without the quotes
                 return input.trim().substring(1, input.trim().length() - 1);
+            } else if (input.trim().matches("^-?\\d+$")) {
+                return Integer.parseInt(input.trim());
+            } else if (input.trim().matches("^-?\\d+(\\.\\d+)?$")) {
+                return Double.parseDouble(input.trim());
             } else {
                 try {
                     return new JSObject(input);
@@ -316,7 +321,7 @@ public class HttpRequestHandler {
                 }
             }
         } catch (JSONException e) {
-            return new JSArray(input);
+            return input;
         }
     }
 
@@ -377,6 +382,7 @@ public class HttpRequestHandler {
         Boolean disableRedirects = call.getBoolean("disableRedirects");
         Boolean shouldEncode = call.getBoolean("shouldEncodeUrlParams", true);
         ResponseType responseType = ResponseType.parse(call.getString("responseType"));
+        String dataType = call.getString("dataType");
 
         String method = httpMethod != null ? httpMethod.toUpperCase(Locale.ROOT) : call.getString("method", "GET").toUpperCase(Locale.ROOT);
 
@@ -395,7 +401,7 @@ public class HttpRequestHandler {
 
         JigraHttpUrlConnection connection = connectionBuilder.build();
 
-        if (null != bridge) {
+        if (null != bridge && !isDomainExcludedFromSSL(bridge, url)) {
             connection.setSSLSocketFactory(bridge);
         }
 
@@ -404,13 +410,29 @@ public class HttpRequestHandler {
             JSValue data = new JSValue(call, "data");
             if (data.getValue() != null) {
                 connection.setDoOutput(true);
-                connection.setRequestBody(call, data);
+                connection.setRequestBody(call, data, dataType);
             }
         }
 
+        call.getData().put("activeJigraHttpUrlConnection", connection);
         connection.connect();
 
-        return buildResponse(connection, responseType);
+        JSObject response = buildResponse(connection, responseType);
+
+        connection.disconnect();
+        call.getData().remove("activeJigraHttpUrlConnection");
+
+        return response;
+    }
+
+    private static Boolean isDomainExcludedFromSSL(Bridge bridge, URL url) {
+        try {
+            Class<?> sslPinningImpl = Class.forName("io.family.sslpinning.SSLPinning");
+            Method method = sslPinningImpl.getDeclaredMethod("isDomainExcluded", Bridge.class, URL.class);
+            return (Boolean) method.invoke(sslPinningImpl.newInstance(), bridge, url);
+        } catch (Exception ignored) {
+            return false;
+        }
     }
 
     @FunctionalInterface

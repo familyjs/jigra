@@ -6,6 +6,7 @@ import c from './colors';
 import type { Config, PackageJson } from './definitions';
 import { fatal } from './errors';
 import { output, logger } from './log';
+import { findNXMonorepoRoot, isNXMonorepo } from './util/monorepotools';
 import { resolveNode } from './util/node';
 import { runCommand } from './util/subprocess';
 
@@ -54,11 +55,15 @@ export async function checkWebDir(config: Config): Promise<string | null> {
 
 export async function checkPackage(): Promise<string | null> {
   if (!(await pathExists('package.json'))) {
-    return (
-      `The Jigra CLI needs to run at the root of an npm package.\n` +
-      `Make sure you have a package.json file in the directory where you run the Jigra CLI.\n` +
-      `More info: ${c.strong('https://docs.npmjs.com/cli/init')}`
-    );
+    if (await pathExists('project.json')) {
+      return null;
+    } else {
+      return (
+        `The Jigra CLI needs to run at the root of an npm package or in a valid NX monorepo.\n` +
+        `Make sure you have a package.json or project.json file in the directory where you run the Jigra CLI.\n` +
+        `More info: ${c.strong('https://docs.npmjs.com/cli/init')}`
+      );
+    }
   }
   return null;
 }
@@ -139,7 +144,12 @@ export async function runPlatformHook(
   hook: string
 ): Promise<void> {
   const { spawn } = await import('child_process');
-  const pkg = await readJSON(join(platformDir, 'package.json'));
+  let pkg;
+  if (isNXMonorepo(platformDir)) {
+    pkg = await readJSON(join(findNXMonorepoRoot(platformDir), 'package.json'));
+  } else {
+    pkg = await readJSON(join(platformDir, 'package.json'));
+  }
   const cmd = pkg.scripts?.[hook];
 
   if (!cmd) {
@@ -283,14 +293,6 @@ export async function getKnownCommunityPlatforms(): Promise<string[]> {
 
 export async function isValidCommunityPlatform(platform: string): Promise<boolean> {
   return (await getKnownCommunityPlatforms()).includes(platform);
-}
-
-export async function getKnownEnterprisePlatforms(): Promise<string[]> {
-  return ['windows'];
-}
-
-export async function isValidEnterprisePlatform(platform: string): Promise<boolean> {
-  return (await getKnownEnterprisePlatforms()).includes(platform);
 }
 
 export async function promptForPlatform(

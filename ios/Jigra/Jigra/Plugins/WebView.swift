@@ -3,6 +3,13 @@ import Foundation
 @objc(JIGWebViewPlugin)
 public class JIGWebViewPlugin: JIGPlugin {
 
+    @objc func setServerAssetPath(_ call: JIGPluginCall) {
+        if let path = call.getString("path"), let viewController = bridge?.viewController as? JIGBridgeViewController {
+            viewController.setServerBasePath(path: Bundle.main.url(forResource: path, withExtension: nil)?.path ?? path)
+            call.resolve()
+        }
+    }
+
     @objc func setServerBasePath(_ call: JIGPluginCall) {
         if let path = call.getString("path"), let viewController = bridge?.viewController as? JIGBridgeViewController {
             viewController.setServerBasePath(path: path)

@@ -1,10 +1,9 @@
 import { copy as fsCopy, pathExists, remove, writeJSON } from '@familyjs/utils-fs';
-import { basename, join, relative, resolve } from 'path';
+import { basename, join, relative } from 'path';
 
 import c from '../colors';
 import { checkWebDir, resolvePlatform, runPlatformHook, runTask, isValidPlatform, selectPlatforms } from '../common';
 import { getCordovaPlugins, handleCordovaPluginsJS, writeCordovaAndroidManifest } from '../cordova';
-import type { FederatedApp } from '../declarations';
 import type { Config } from '../definitions';
 import { isFatal } from '../errors';
 import { logger } from '../log';
@@ -46,34 +45,13 @@ export async function copy(config: Config, platformName: string, inline = false)
     await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:copy:before');
 
     const allPlugins = await getPlugins(config, platformName);
-    let usesFederatedJigra = false;
-    if (allPlugins.filter((plugin) => plugin.id === '@family-enterprise/federated-jigra').length > 0) {
-      usesFederatedJigra = true;
-    }
-
     let usesLiveUpdates = false;
     if (allPlugins.filter((plugin) => plugin.id === '@jigra/live-updates').length > 0) {
       usesLiveUpdates = true;
     }
 
-    let usesSSLPinning = false;
-    if (allPlugins.filter((plugin) => plugin.id === '@family-enterprise/ssl-pinning').length > 0) {
-      usesSSLPinning = true;
-    }
-
     if (platformName === config.ios.name) {
-      if (usesFederatedJigra) {
-        await copyFederatedWebDirs(config, await config.ios.webDirAbs);
-        if (config.app.extConfig?.plugins?.FederatedJigra?.liveUpdatesKey) {
-          await copySecureLiveUpdatesKey(
-            config.app.extConfig.plugins.FederatedJigra.liveUpdatesKey,
-            config.app.rootDir,
-            config.ios.nativeTargetDirAbs
-          );
-        }
-      } else {
-        await copyWebDir(config, await config.ios.webDirAbs, config.app.webDirAbs);
-      }
+      await copyWebDir(config, await config.ios.webDirAbs, config.app.webDirAbs);
       if (usesLiveUpdates && config.app.extConfig?.plugins?.LiveUpdates?.key) {
         await copySecureLiveUpdatesKey(
           config.app.extConfig.plugins.LiveUpdates.key,
@@ -81,39 +59,14 @@ export async function copy(config: Config, platformName: string, inline = false)
           config.ios.nativeTargetDirAbs
         );
       }
-      if (usesSSLPinning && config.app.extConfig?.plugins?.SSLPinning?.certs) {
-        await copySSLCert(
-          config.app.extConfig.plugins.SSLPinning?.certs as unknown as string[],
-          config.app.rootDir,
-          await config.ios.webDirAbs
-        );
-      }
       await copyJigraConfig(config, config.ios.nativeTargetDirAbs);
       const cordovaPlugins = await getCordovaPlugins(config, platformName);
       await handleCordovaPluginsJS(cordovaPlugins, config, platformName);
     } else if (platformName === config.android.name) {
-      if (usesFederatedJigra) {
-        await copyFederatedWebDirs(config, config.android.webDirAbs);
-        if (config.app.extConfig?.plugins?.FederatedJigra?.liveUpdatesKey) {
-          await copySecureLiveUpdatesKey(
-            config.app.extConfig.plugins.FederatedJigra.liveUpdatesKey,
-            config.app.rootDir,
-            config.android.assetsDirAbs
-          );
-        }
-      } else {
-        await copyWebDir(config, config.android.webDirAbs, config.app.webDirAbs);
-      }
+      await copyWebDir(config, config.android.webDirAbs, config.app.webDirAbs);
       if (usesLiveUpdates && config.app.extConfig?.plugins?.LiveUpdates?.key) {
         await copySecureLiveUpdatesKey(
           config.app.extConfig.plugins.LiveUpdates.key,
-          config.app.rootDir,
-          config.android.assetsDirAbs
-        );
-      }
-      if (usesSSLPinning && config.app.extConfig?.plugins?.SSLPinning?.certs) {
-        await copySSLCert(
-          config.app.extConfig.plugins.SSLPinning?.certs as unknown as string[],
           config.app.rootDir,
           config.android.assetsDirAbs
         );
@@ -123,11 +76,7 @@ export async function copy(config: Config, platformName: string, inline = false)
       await handleCordovaPluginsJS(cordovaPlugins, config, platformName);
       await writeCordovaAndroidManifest(cordovaPlugins, config, platformName);
     } else if (platformName === config.web.name) {
-      if (usesFederatedJigra) {
-        logger.info('FederatedJigra Plugin installed, skipping web bundling...');
-      } else {
-        await copyWeb(config);
-      }
+      await copyWeb(config);
     } else {
       throw `Platform ${platformName} is not valid.`;
     }
@@ -173,42 +122,6 @@ async function copyWebDir(config: Config, nativeAbsDir: string, webAbsDir: strin
   });
 }
 
-async function copyFederatedWebDirs(config: Config, nativeAbsDir: string) {
-  logger.info('FederatedJigra Plugin Loaded - Copying Web Assets');
-
-  if (!config.app.extConfig?.plugins?.FederatedJigra) {
-    throw `FederatedJigra plugin is present but no valid config is defined.`;
-  }
-
-  const federatedConfig = config.app.extConfig.plugins.FederatedJigra;
-  if (federatedConfig) {
-    if (federatedConfig.shell.name === undefined) {
-      throw `FederatedJigra plugin is present but no valid Shell application is defined in the config.`;
-    }
-
-    if (!federatedConfig.apps.every(isFederatedApp)) {
-      throw `FederatedJigra plugin is present but there is a problem with the apps defined in the config.`;
-    }
-
-    const copyApps = (): Promise<void>[] => {
-      return federatedConfig.apps.map((app) => {
-        const appDir = resolve(config.app.rootDir, app.webDir);
-        return copyWebDir(config, resolve(nativeAbsDir, app.name), appDir);
-      });
-    };
-
-    const copyShell = (): Promise<void> => {
-      return copyWebDir(config, resolve(nativeAbsDir, federatedConfig.shell.name), config.app.webDirAbs);
-    };
-
-    await Promise.all([...copyApps(), copyShell()]);
-  }
-}
-
-function isFederatedApp(config: any): config is FederatedApp {
-  return (config as FederatedApp).webDir !== undefined && (config as FederatedApp).name !== undefined;
-}
-
 async function copySecureLiveUpdatesKey(secureLiveUpdatesKeyFile: string, rootDir: string, nativeAbsDir: string) {
   const keyAbsFromPath = join(rootDir, secureLiveUpdatesKeyFile);
   const keyAbsToPath = join(nativeAbsDir, basename(keyAbsFromPath));
@@ -229,36 +142,4 @@ async function copySecureLiveUpdatesKey(secureLiveUpdatesKeyFile: string, rootDi
       return fsCopy(keyAbsFromPath, keyAbsToPath);
     }
   );
-}
-
-async function copySSLCert(sslCertPaths: string[], rootDir: string, targetDir: string) {
-  const validCertPaths: string[] = [];
-  for (const sslCertPath of sslCertPaths) {
-    const certAbsFromPath = join(rootDir, sslCertPath);
-    if (!/^.+\.(cer)$/.test(certAbsFromPath)) {
-      logger.warn(
-        `Cannot copy file from ${c.strong(certAbsFromPath)}\n` + `The file is not a .cer SSL Certificate file.`
-      );
-
-      return;
-    }
-    if (!(await pathExists(certAbsFromPath))) {
-      logger.warn(
-        `Cannot copy SSL Certificate file from ${c.strong(certAbsFromPath)}\n` +
-          `SSL Certificate does not exist at specified path.`
-      );
-
-      return;
-    }
-    validCertPaths.push(certAbsFromPath);
-  }
-  const certsDirAbsToPath = join(targetDir, 'certs');
-  const certsDirRelToDir = relative(rootDir, targetDir);
-  await runTask(`Copying SSL Certificates from to ${certsDirRelToDir}`, async () => {
-    const promises: Promise<void>[] = [];
-    for (const certPath of validCertPaths) {
-      promises.push(fsCopy(certPath, join(certsDirAbsToPath, basename(certPath))));
-    }
-    return Promise.all(promises);
-  });
 }

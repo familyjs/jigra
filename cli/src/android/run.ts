@@ -5,7 +5,7 @@ import c from '../colors';
 import { promptForPlatformTarget, runTask } from '../common';
 import type { Config } from '../definitions';
 import type { RunCommandOptions } from '../tasks/run';
-import { runNativeRun, getPlatformTargets } from '../util/native-run';
+import { runFmlNativeRun, getPlatformTargets } from '../util/fml-native-run';
 import { runCommand } from '../util/subprocess';
 
 const debug = Debug('jigra:android:run');
@@ -47,13 +47,15 @@ export async function runAndroid(
 
   const apkPath = resolve(pathToApk, apkName);
 
-  const nativeRunArgs = ['android', '--app', apkPath, '--target', target.id];
+  const fmlNativeRunArgs = ['android', '--app', apkPath, '--target', target.id];
 
   if (selectedPorts) {
-    nativeRunArgs.push('--forward', `${selectedPorts}`);
+    fmlNativeRunArgs.push('--forward', `${selectedPorts}`);
   }
 
-  debug('Invoking native-run with args: %O', nativeRunArgs);
+  debug('Invoking fml-native-run with args: %O', fmlNativeRunArgs);
 
-  await runTask(`Deploying ${c.strong(apkName)} to ${c.input(target.id)}`, async () => runNativeRun(nativeRunArgs));
+  await runTask(`Deploying ${c.strong(apkName)} to ${c.input(target.id)}`, async () =>
+    runFmlNativeRun(fmlNativeRunArgs)
+  );
 }

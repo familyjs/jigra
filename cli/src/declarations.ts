@@ -259,6 +259,14 @@ export interface JigraConfig {
        * @default "AAB"
        */
       releaseType?: 'AAB' | 'APK';
+
+      /**
+       * Program to sign your build with
+       *
+       * @since 5.1.0
+       * @default "jarsigner"
+       */
+      signingType?: 'apksigner' | 'jarsigner';
     };
 
     /**
@@ -467,6 +475,10 @@ export interface JigraConfig {
     /**
      * Configure the local scheme on Android.
      *
+     * Custom schemes on Android are unable to change the URL path as of Webview 117. Changing this value from anything other than `http` or `https` can result in your
+     * application unable to resolve routing. If you must change this for some reason, consider using a hash-based url strategy, but there are no guarentees that this
+     * will continue to work long term as allowing non-standard schemes to modify query parameters and url fragments is only allowed for compatibility reasons.
+     *
      * @since 1.2.0
      * @default http
      */
@@ -570,12 +582,6 @@ export interface JigraConfig {
   includePlugins?: string[];
 }
 
-export interface FederatedApp {
-  name: string;
-  webDir: string;
-  liveUpdateConfig?: LiveUpdateConfig;
-}
-
 export interface LiveUpdateConfig {
   appId: string;
   channel: string;
@@ -599,17 +605,6 @@ export interface PluginsConfig {
     | undefined;
 
   /**
-   * FederatedJigra plugin configuration
-   *
-   * @since 5.0.0
-   */
-  FederatedJigra?: {
-    shell: Omit<FederatedApp, 'webDir'>;
-    apps: FederatedApp[];
-    liveUpdatesKey?: string;
-  };
-
-  /**
    * Jigra Live Updates plugin configuration
    *
    * @since 4.2.0
@@ -628,6 +623,14 @@ export interface PluginsConfig {
      * @default false
      */
     enabled?: boolean;
+    /**
+     * Enable `httpOnly` and other insecure cookies to be read and accessed on Android.
+     *
+     * Note: This can potentially be a security risk and is only intended to be used
+     * when your application uses a custom scheme on Android.
+     *
+     */
+    androidCustomSchemeAllowInsecureAccess?: boolean;
   };
 
   /**

@@ -10,12 +10,111 @@ import type {
   MessageCallData,
   PluginResult,
   WindowJigra,
+  JigFormDataEntry,
 } from './src/definitions-internal';
 import { JigraException } from './src/util';
 
 // For removing exports for iOS/Android, keep let for reassignment
 // eslint-disable-next-line
 let dummy = {};
+
+const readFileAsBase64 = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const data = reader.result as string;
+      resolve(btoa(data));
+    };
+    reader.onerror = reject;
+
+    reader.readAsBinaryString(file);
+  });
+
+const convertFormData = async (formData: FormData): Promise<any> => {
+  const newFormData: JigFormDataEntry[] = [];
+  for (const pair of formData.entries()) {
+    const [key, value] = pair;
+    if (value instanceof File) {
+      const base64File = await readFileAsBase64(value);
+      newFormData.push({
+        key,
+        value: base64File,
+        type: 'base64File',
+        contentType: value.type,
+        fileName: value.name,
+      });
+    } else {
+      newFormData.push({ key, value, type: 'string' });
+    }
+  }
+
+  return newFormData;
+};
+
+const convertBody = async (
+  body: Document | XMLHttpRequestBodyInit | ReadableStream<any> | undefined,
+  contentType?: string
+): Promise<any> => {
+  if (body instanceof ReadableStream) {
+    const reader = body.getReader();
+    const chunks: any[] = [];
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+    const concatenated = new Uint8Array(chunks.reduce((acc, chunk) => acc + chunk.length, 0));
+    let position = 0;
+    for (const chunk of chunks) {
+      concatenated.set(chunk, position);
+      position += chunk.length;
+    }
+
+    let data = new TextDecoder().decode(concatenated);
+    let type;
+    if (contentType === 'application/json') {
+      try {
+        data = JSON.parse(data);
+      } catch (ignored) {
+        // ignore
+      }
+      type = 'json';
+    } else if (contentType === 'multipart/form-data') {
+      type = 'formData';
+    } else if (contentType?.startsWith('image')) {
+      type = 'image';
+    } else if (contentType === 'application/octet-stream') {
+      type = 'binary';
+    } else {
+      type = 'text';
+    }
+
+    return {
+      data,
+      type,
+      headers: { 'Content-Type': contentType || 'application/octet-stream' },
+    };
+  } else if (body instanceof FormData) {
+    const formData = await convertFormData(body);
+    const boundary = `${Date.now()}`;
+    return {
+      data: formData,
+      type: 'formData',
+      headers: {
+        'Content-Type': `multipart/form-data; boundary=--${boundary}`,
+      },
+    };
+  } else if (body instanceof File) {
+    const fileData = await readFileAsBase64(body);
+    return {
+      data: fileData,
+      type: 'file',
+      headers: { 'Content-Type': body.type },
+    };
+  }
+
+  return { data: body, type: 'json' };
+};
 
 const initBridge = (w: any): void => {
   const getPlatformId = (win: WindowJigra): 'android' | 'ios' | 'web' => {
@@ -176,6 +275,10 @@ const initBridge = (w: any): void => {
       });
     };
 
+    FamilyWebView.setServerAssetPath = (path: any) => {
+      Plugins?.WebView?.setServerAssetPath({ path });
+    };
+
     FamilyWebView.setServerBasePath = (path: any) => {
       Plugins?.WebView?.setServerBasePath({ path });
     };
@@ -299,7 +402,8 @@ const initBridge = (w: any): void => {
               const res = prompt(JSON.stringify(payload));
               return res;
             } else if (typeof win.JigraCookiesAndroidInterface !== 'undefined') {
-              return win.JigraCookiesAndroidInterface.getCookies();
+              // return original document.cookie since Android does not support filtering of `httpOnly` cookies
+              return win.JigraCookiesDescriptor?.get?.call(document) ?? '';
             }
           },
           set: function (val) {
@@ -333,9 +437,12 @@ const initBridge = (w: any): void => {
       win.JigraWebFetch = window.fetch;
       win.JigraWebXMLHttpRequest = {
         abort: window.XMLHttpRequest.prototype.abort,
+        constructor: window.XMLHttpRequest.prototype.constructor,
+        fullObject: window.XMLHttpRequest,
         getAllResponseHeaders: window.XMLHttpRequest.prototype.getAllResponseHeaders,
         getResponseHeader: window.XMLHttpRequest.prototype.getResponseHeader,
         open: window.XMLHttpRequest.prototype.open,
+        prototype: window.XMLHttpRequest.prototype,
         send: window.XMLHttpRequest.prototype.send,
         setRequestHeader: window.XMLHttpRequest.prototype.setRequestHeader,
       };
@@ -365,7 +472,8 @@ const initBridge = (w: any): void => {
       if (doPatchHttp) {
         // fetch patch
         window.fetch = async (resource: RequestInfo | URL, options?: RequestInit) => {
-          if (!(resource.toString().startsWith('http:') || resource.toString().startsWith('https:'))) {
+          const request = new Request(resource, options);
+          if (request.url.startsWith(`${jig.getServerUrl()}/`)) {
             return win.JigraWebFetch(resource, options);
           }
 
@@ -373,18 +481,29 @@ const initBridge = (w: any): void => {
           console.time(tag);
           try {
             // intercept request & pass to the bridge
-            let headers = options?.headers;
-            if (options?.headers instanceof Headers) {
-              headers = Object.fromEntries((options.headers as any).entries());
-            }
+            const { body, method } = request;
+            const optionHeaders = Object.fromEntries(request.headers.entries());
+            const {
+              data: requestData,
+              type,
+              headers,
+            } = await convertBody(
+              options?.body || body || undefined,
+              optionHeaders['Content-Type'] || optionHeaders['content-type']
+            );
             const nativeResponse: HttpResponse = await jig.nativePromise('JigraHttp', 'request', {
-              url: resource,
-              method: options?.method ? options.method : undefined,
-              data: options?.body ? options.body : undefined,
-              headers: headers,
+              url: request.url,
+              method: method,
+              data: requestData,
+              dataType: type,
+              headers: {
+                ...headers,
+                ...optionHeaders,
+              },
             });
 
-            let data = nativeResponse.headers['Content-Type']?.startsWith('application/json')
+            const contentType = nativeResponse.headers['Content-Type'] || nativeResponse.headers['content-type'];
+            let data = contentType?.startsWith('application/json')
               ? JSON.stringify(nativeResponse.data)
               : nativeResponse.data;
 
@@ -400,7 +519,7 @@ const initBridge = (w: any): void => {
             });
 
             /*
-             * copy url to response, `cordova-plugin-ionic` uses this url from the response
+             * copy url to response, `cordova-plugin-family` uses this url from the response
              * we need `Object.defineProperty` because url is an inherited getter on the Response
              * see: https://stackoverflow.com/a/57382543
              * */
@@ -416,62 +535,20 @@ const initBridge = (w: any): void => {
           }
         };
 
-        // XHR event listeners
-        const addEventListeners = function () {
-          this.addEventListener('abort', function () {
-            if (typeof this.onabort === 'function') this.onabort();
-          });
+        // XHR patch
+        interface PatchedXMLHttpRequestConstructor extends XMLHttpRequest {
+          new (): XMLHttpRequest;
+        }
 
-          this.addEventListener('error', function () {
-            if (typeof this.onerror === 'function') this.onerror();
-          });
-
-          this.addEventListener('load', function () {
-            if (typeof this.onload === 'function') this.onload();
-          });
-
-          this.addEventListener('loadend', function () {
-            if (typeof this.onloadend === 'function') this.onloadend();
-          });
-
-          this.addEventListener('loadstart', function () {
-            if (typeof this.onloadstart === 'function') this.onloadstart();
-          });
-
-          this.addEventListener('readystatechange', function () {
-            if (typeof this.onreadystatechange === 'function') this.onreadystatechange();
-          });
-
-          this.addEventListener('timeout', function () {
-            if (typeof this.ontimeout === 'function') this.ontimeout();
-          });
-        };
-
-        // XHR patch abort
-        window.XMLHttpRequest.prototype.abort = function () {
-          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.abort.call(this);
-          }
-          this.readyState = 0;
-          this.dispatchEvent(new Event('abort'));
-          this.dispatchEvent(new Event('loadend'));
-        };
-
-        // XHR patch open
-        window.XMLHttpRequest.prototype.open = function (method: string, url: string) {
-          this._url = url;
-
-          if (!(url.startsWith('http:') || url.toString().startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.open.call(this, method, url);
-          }
-
-          Object.defineProperties(this, {
+        window.XMLHttpRequest = function () {
+          const xhr = new win.JigraWebXMLHttpRequest.constructor();
+          Object.defineProperties(xhr, {
             _headers: {
               value: {},
               writable: true,
             },
             _method: {
-              value: method,
+              value: xhr.method,
               writable: true,
             },
             readyState: {
@@ -480,124 +557,229 @@ const initBridge = (w: any): void => {
               },
               set: function (val: number) {
                 this._readyState = val;
-                this.dispatchEvent(new Event('readystatechange'));
+                setTimeout(() => {
+                  this.dispatchEvent(new Event('readystatechange'));
+                });
               },
-            },
-            response: {
-              value: '',
-              writable: true,
-            },
-            responseText: {
-              value: '',
-              writable: true,
-            },
-            responseURL: {
-              value: '',
-              writable: true,
-            },
-            status: {
-              value: 0,
-              writable: true,
             },
           });
 
-          addEventListeners.call(this);
-          this.readyState = 1;
-        };
+          xhr.readyState = 0;
+          const prototype = win.JigraWebXMLHttpRequest.prototype;
 
-        // XHR patch set request header
-        window.XMLHttpRequest.prototype.setRequestHeader = function (header: string, value: string) {
-          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.setRequestHeader.call(this, header, value);
-          }
-          this._headers[header] = value;
-        };
+          const isRelativeURL = (url: string | undefined) =>
+            !url || !(url.startsWith('http:') || url.startsWith('https:'));
+          const isProgressEventAvailable = () =>
+            typeof ProgressEvent !== 'undefined' && ProgressEvent.prototype instanceof Event;
 
-        // XHR patch send
-        window.XMLHttpRequest.prototype.send = function (body?: Document | XMLHttpRequestBodyInit) {
-          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.send.call(this, body);
-          }
+          // XHR patch abort
+          prototype.abort = function () {
+            if (isRelativeURL(this._url)) {
+              return win.JigraWebXMLHttpRequest.abort.call(this);
+            }
+            this.readyState = 0;
+            setTimeout(() => {
+              this.dispatchEvent(new Event('abort'));
+              this.dispatchEvent(new Event('loadend'));
+            });
+          };
 
-          const tag = `JigraHttp XMLHttpRequest ${Date.now()} ${this._url}`;
-          console.time(tag);
+          // XHR patch open
+          prototype.open = function (method: string, url: string) {
+            this._url = url;
+            this._method = method;
 
-          try {
-            this.readyState = 2;
+            if (isRelativeURL(url)) {
+              return win.JigraWebXMLHttpRequest.open.call(this, method, url);
+            }
 
-            // intercept request & pass to the bridge
-            jig
-              .nativePromise('JigraHttp', 'request', {
-                url: this._url,
-                method: this._method,
-                data: body !== null ? body : undefined,
-                headers: this._headers != null && Object.keys(this._headers).length > 0 ? this._headers : undefined,
-              })
-              .then((nativeResponse: any) => {
-                // intercept & parse response before returning
-                if (this.readyState == 2) {
-                  this.dispatchEvent(new Event('loadstart'));
-                  this._headers = nativeResponse.headers;
-                  this.status = nativeResponse.status;
-                  this.response = nativeResponse.data;
-                  this.responseText = nativeResponse.headers['Content-Type']?.startsWith('application/json')
-                    ? JSON.stringify(nativeResponse.data)
-                    : nativeResponse.data;
-                  this.responseURL = nativeResponse.url;
-                  this.readyState = 4;
-                  this.dispatchEvent(new Event('load'));
-                  this.dispatchEvent(new Event('loadend'));
-                }
-                console.timeEnd(tag);
-              })
-              .catch((error: any) => {
-                this.dispatchEvent(new Event('loadstart'));
-                this.status = error.status;
-                this._headers = error.headers;
-                this.response = error.data;
-                this.responseText = JSON.stringify(error.data);
-                this.responseURL = error.url;
-                this.readyState = 4;
+            setTimeout(() => {
+              this.dispatchEvent(new Event('loadstart'));
+            });
+            this.readyState = 1;
+          };
+
+          // XHR patch set request header
+          prototype.setRequestHeader = function (header: string, value: string) {
+            if (isRelativeURL(this._url)) {
+              return win.JigraWebXMLHttpRequest.setRequestHeader.call(this, header, value);
+            }
+            this._headers[header] = value;
+          };
+
+          // XHR patch send
+          prototype.send = function (body?: Document | XMLHttpRequestBodyInit) {
+            if (isRelativeURL(this._url)) {
+              return win.JigraWebXMLHttpRequest.send.call(this, body);
+            }
+
+            const tag = `JigraHttp XMLHttpRequest ${Date.now()} ${this._url}`;
+            console.time(tag);
+
+            try {
+              this.readyState = 2;
+
+              Object.defineProperties(this, {
+                response: {
+                  value: '',
+                  writable: true,
+                },
+                responseText: {
+                  value: '',
+                  writable: true,
+                },
+                responseURL: {
+                  value: '',
+                  writable: true,
+                },
+                status: {
+                  value: 0,
+                  writable: true,
+                },
+              });
+
+              convertBody(body).then(({ data, type, headers }) => {
+                const otherHeaders =
+                  this._headers != null && Object.keys(this._headers).length > 0 ? this._headers : undefined;
+
+                // intercept request & pass to the bridge
+                jig
+                  .nativePromise('JigraHttp', 'request', {
+                    url: this._url,
+                    method: this._method,
+                    data: data !== null ? data : undefined,
+                    headers: {
+                      ...headers,
+                      ...otherHeaders,
+                    },
+                    dataType: type,
+                  })
+                  .then((nativeResponse: any) => {
+                    // intercept & parse response before returning
+                    if (this.readyState == 2) {
+                      //TODO: Add progress event emission on native side
+                      if (isProgressEventAvailable()) {
+                        this.dispatchEvent(
+                          new ProgressEvent('progress', {
+                            lengthComputable: true,
+                            loaded: nativeResponse.data.length,
+                            total: nativeResponse.data.length,
+                          })
+                        );
+                      }
+                      this._headers = nativeResponse.headers;
+                      this.status = nativeResponse.status;
+
+                      const responseString =
+                        typeof nativeResponse.data !== 'string'
+                          ? JSON.stringify(nativeResponse.data)
+                          : nativeResponse.data;
+
+                      if (this.responseType === '' || this.responseType === 'text') {
+                        this.response = responseString;
+                      } else if (this.responseType === 'blob') {
+                        this.response = new Blob([responseString], {
+                          type: 'application/json',
+                        });
+                      } else if (this.responseType === 'arraybuffer') {
+                        const encoder = new TextEncoder();
+                        const uint8Array = encoder.encode(responseString);
+                        this.response = uint8Array.buffer;
+                      } else {
+                        this.response = nativeResponse.data;
+                      }
+                      this.responseText = nativeResponse.headers['Content-Type']?.startsWith('application/json')
+                        ? JSON.stringify(nativeResponse.data)
+                        : nativeResponse.data;
+                      this.responseURL = nativeResponse.url;
+                      this.readyState = 4;
+                      setTimeout(() => {
+                        this.dispatchEvent(new Event('load'));
+                        this.dispatchEvent(new Event('loadend'));
+                      });
+                    }
+                    console.timeEnd(tag);
+                  })
+                  .catch((error: any) => {
+                    this.status = error.status;
+                    this._headers = error.headers;
+                    this.response = error.data;
+                    this.responseText = JSON.stringify(error.data);
+                    this.responseURL = error.url;
+                    this.readyState = 4;
+                    if (isProgressEventAvailable()) {
+                      this.dispatchEvent(
+                        new ProgressEvent('progress', {
+                          lengthComputable: false,
+                          loaded: 0,
+                          total: 0,
+                        })
+                      );
+                    }
+                    setTimeout(() => {
+                      this.dispatchEvent(new Event('error'));
+                      this.dispatchEvent(new Event('loadend'));
+                    });
+                    console.timeEnd(tag);
+                  });
+              });
+            } catch (error) {
+              this.status = 500;
+              this._headers = {};
+              this.response = error;
+              this.responseText = error.toString();
+              this.responseURL = this._url;
+              this.readyState = 4;
+              if (isProgressEventAvailable()) {
+                this.dispatchEvent(
+                  new ProgressEvent('progress', {
+                    lengthComputable: false,
+                    loaded: 0,
+                    total: 0,
+                  })
+                );
+              }
+              setTimeout(() => {
                 this.dispatchEvent(new Event('error'));
                 this.dispatchEvent(new Event('loadend'));
-                console.timeEnd(tag);
               });
-          } catch (error) {
-            this.dispatchEvent(new Event('loadstart'));
-            this.status = 500;
-            this._headers = {};
-            this.response = error;
-            this.responseText = error.toString();
-            this.responseURL = this._url;
-            this.readyState = 4;
-            this.dispatchEvent(new Event('error'));
-            this.dispatchEvent(new Event('loadend'));
-            console.timeEnd(tag);
-          }
-        };
-
-        // XHR patch getAllResponseHeaders
-        window.XMLHttpRequest.prototype.getAllResponseHeaders = function () {
-          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(this);
-          }
-
-          let returnString = '';
-          for (const key in this._headers) {
-            if (key != 'Set-Cookie') {
-              returnString += key + ': ' + this._headers[key] + '\r\n';
+              console.timeEnd(tag);
             }
-          }
-          return returnString;
-        };
+          };
 
-        // XHR patch getResponseHeader
-        window.XMLHttpRequest.prototype.getResponseHeader = function (name) {
-          if (this._url == null || !(this._url.startsWith('http:') || this._url.startsWith('https:'))) {
-            return win.JigraWebXMLHttpRequest.getResponseHeader.call(this, name);
-          }
-          return this._headers[name];
-        };
+          // XHR patch getAllResponseHeaders
+          prototype.getAllResponseHeaders = function () {
+            if (isRelativeURL(this._url)) {
+              return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(this);
+            }
+
+            let returnString = '';
+            for (const key in this._headers) {
+              if (key.toLowerCase() !== 'set-cookie') {
+                returnString += key + ': ' + this._headers[key] + '\r\n';
+              }
+            }
+            return returnString;
+          };
+
+          // XHR patch getResponseHeader
+          prototype.getResponseHeader = function (name: string) {
+            if (isRelativeURL(this._url)) {
+              return win.JigraWebXMLHttpRequest.getResponseHeader.call(this, name);
+            }
+            for (const key in this._headers) {
+              if (key.toLowerCase() === name.toLowerCase()) {
+                return this._headers[key];
+              }
+            }
+            return null;
+          };
+
+          Object.setPrototypeOf(xhr, prototype);
+          return xhr;
+        } as unknown as PatchedXMLHttpRequestConstructor;
+
+        Object.assign(window.XMLHttpRequest, win.JigraWebXMLHttpRequest.fullObject);
       }
     }
 
@@ -859,6 +1041,7 @@ const initBridge = (w: any): void => {
       });
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     jig.withPlugin = (_pluginId, _fn) => dummy;
 
     jig.Exception = JigraException;

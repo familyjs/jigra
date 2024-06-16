@@ -58,3 +58,7 @@ See [the docs](https://jigrajs.web.app/docs/cordova#differences-between-jigra-an
 #### Do I need to use Family Framework with Jigra?
 
 No, you do not need to use Family Framework with Jigra. Without the Family Framework, you may need to implement Native UI yourself. Without the Family CLI, you may need to configure tooling yourself to enable features such as [livereload](https://family-js.web.app/docs/cli/livereload). See [the docs](https://jigrajs.web.app/docs/getting-started/with-family) for more details.
+
+## Contributing
+
+See [`CONTRIBUTING.md`](./CONTRIBUTING.md).

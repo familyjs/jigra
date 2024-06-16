@@ -16,7 +16,8 @@ class JSExportTests: XCTestCase {
         let contentController = WKUserContentController()
         do {
             try Jigra.JSExport.exportBridgeJS(userContentController: contentController)
-        } catch {
+        }
+        catch {
             XCTFail()
         }
     }

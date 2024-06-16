@@ -1,3 +1,4 @@
+import open from 'open';
 import { basename, dirname, resolve } from 'path';
 
 import c from '../colors';

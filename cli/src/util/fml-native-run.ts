@@ -8,11 +8,11 @@ import { resolveNode } from './node';
 import { runCommand } from './subprocess';
 import type { RunCommandOptions } from './subprocess';
 
-export async function runNativeRun(args: readonly string[], options: RunCommandOptions = {}): Promise<string> {
-  const p = resolveNode(__dirname, dirname('native-run/package'), 'bin/native-run');
+export async function runFmlNativeRun(args: readonly string[], options: RunCommandOptions = {}): Promise<string> {
+  const p = resolveNode(__dirname, dirname('fml-native-run/package'), 'bin/fml-native-run');
 
   if (!p) {
-    fatal(`${c.input('native-run')} not found.`);
+    fatal(`${c.input('fml-native-run')} not found.`);
   }
 
   return await runCommand(p, args, options);
@@ -21,7 +21,7 @@ export async function runNativeRun(args: readonly string[], options: RunCommandO
 export async function getPlatformTargets(platformName: string): Promise<PlatformTarget[]> {
   const errors = [];
   try {
-    const output = await runNativeRun([platformName, '--list', '--json']);
+    const output = await runFmlNativeRun([platformName, '--list', '--json']);
     const parsedOutput = JSON.parse(output);
     if (parsedOutput.devices.length || parsedOutput.virtualDevices.length) {
       return [
@@ -41,14 +41,14 @@ export async function getPlatformTargets(platformName: string): Promise<Platform
     errors.push(err);
   }
   const plural = errors.length > 1 ? 's' : '';
-  const errMsg = `${c.strong('native-run')} failed with error${plural}\n
+  const errMsg = `${c.strong('fml-native-run')} failed with error${plural}\n
   ${errors
     .map((e: any) => {
       return `\t${c.strong(e.code)}: ${e.error}`;
     })
     .join('\n')}
   \n\tMore details for this error${plural} may be available online: ${c.strong(
-    'https://github.com/familyjs/native-run/wiki/Android-Errors'
+    'https://github.com/familyjs/fml-native-run/wiki/Android-Errors'
   )}
   `;
   throw errMsg;

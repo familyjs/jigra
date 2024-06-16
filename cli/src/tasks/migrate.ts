@@ -55,8 +55,8 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
   }
 
   const jigMajor = await checkJigraMajorVersion(config);
-  if (jigMajor < 4) {
-    fatal('Migrate can only be used on jigra 4 and above, please use the CLI in Jigra 4 to upgrade to 4 first');
+  if (jigMajor < 5) {
+    fatal('Migrate can only be used on jigra 5 and above, please use the CLI in Jigra 5 to upgrade to 5 first');
   }
 
   const jdkMajor = await checkJDKMajorVersion();
@@ -325,7 +325,7 @@ async function installLatestLibs(dependencyManager: string, runInstall: boolean,
       pkgJson['devDependencies'][devDepKey] = pluginVersion;
     }
   }
-  for (const depKey of Object.keys(pkgJson['dependencies'])) {
+  for (const depKey of Object.keys(pkgJson['dependencies'] || {})) {
     if (libs.includes(depKey)) {
       pkgJson['dependencies'][depKey] = coreVersion;
     } else if (plugins.includes(depKey)) {

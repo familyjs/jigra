@@ -3,11 +3,11 @@
 export NATIVE_PUBLISH=true
 
 case $1 in
-     lint) 
+     lint)
        pod spec lint ios/JigraCordova.podspec --allow-warnings
        pod spec lint ios/Jigra.podspec --allow-warnings;;
 
-     publish) 
+     publish)
        pod trunk push ios/JigraCordova.podspec --allow-warnings
        pod trunk push ios/Jigra.podspec --allow-warnings;;
 

@@ -152,5 +152,6 @@ jobs:
           key: ${{ runner.OS }}-dependencies-cache-${{ hashFiles('**/package.json') }}
       - run: npm install
       - run: chmod +x ./gradlew
+        working-directory: ./android
       - run: npm run verify
         working-directory: ./android

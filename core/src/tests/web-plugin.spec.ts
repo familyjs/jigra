@@ -13,7 +13,7 @@ initBridge(win);
 class MockPlugin extends WebPlugin {
   trigger() {
     this.notifyListeners('test', {
-      value: 'Jigra on top of toast!',
+      value: 'Jigras on top of toast!',
     });
   }
 

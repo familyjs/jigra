@@ -110,12 +110,12 @@ class BridgedTypesTests: XCTestCase {
         // but the cast accessor should restore it
         let castFloat = testContainer.getFloat("testFloat")!
         XCTAssertTrue(type(of: castFloat) == Float.self)
-        XCTAssertEqual(sourceFloat as! Float, castFloat)
+        XCTAssertEqual(sourceFloat as! Float, castFloat) //swiftlint:disable:this force_cast
     }
 
     func testDateObject() throws {
         let coercedResult = JSTypes.coerceDictionaryToJSObject(deserializedDictionary)!
-        let date = coercedResult["testDateObject"] as! Date
+        let date = coercedResult["testDateObject"] as! Date //swiftlint:disable:this force_cast
         XCTAssertNotNil(date)
         XCTAssertTrue(type(of: date) == Date.self)
     }
@@ -123,8 +123,8 @@ class BridgedTypesTests: XCTestCase {
     func testDateParsing() throws {
         let coercedResult = JSTypes.coerceDictionaryToJSObject(deserializedDictionary)!
         let formatter = ISO8601DateFormatter()
-        let parsedDate = formatter.date(from: coercedResult["testDateString"] as! String)!
-        let dateObject = coercedResult["testDateObject"] as! Date
+        let parsedDate = formatter.date(from: coercedResult["testDateString"] as! String)! //swiftlint:disable:this force_cast
+        let dateObject = coercedResult["testDateObject"] as! Date //swiftlint:disable:this force_cast
         XCTAssertNotNil(parsedDate)
         XCTAssertNotNil(dateObject)
         XCTAssertTrue(dateObject.compare(parsedDate) == .orderedSame)
@@ -145,12 +145,12 @@ class BridgedTypesTests: XCTestCase {
         let unstringifiedValue = unstringifiedDictionary["testDateObject"]!
         XCTAssertTrue(type(of: stringifiedValue) == String.self)
         XCTAssertTrue(type(of: unstringifiedValue) == Date.self)
-        XCTAssertEqual(stringifiedValue as! String, stringifiedDictionary["testDateString"] as! String)
+        XCTAssertEqual(stringifiedValue as! String, stringifiedDictionary["testDateString"] as! String) //swiftlint:disable:this force_cast
     }
 
     func testDateResultWrapping() throws {
         let result = try PluginCallResult.dictionary(["date": unserializedDictionary["testDateObject"]!]).jsonRepresentation()
-        XCTAssertEqual(result, "{\"date\":\"\(unserializedDictionary["testDateString"] as! String)\"}")
+        XCTAssertEqual(result, "{\"date\":\"\(unserializedDictionary["testDateString"] as! String)\"}") //swiftlint:disable:this force_cast
     }
 
     func testResultMerging() throws {

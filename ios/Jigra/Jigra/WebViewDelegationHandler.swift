@@ -242,7 +242,8 @@ internal class WebViewDelegationHandler: NSObject, WKNavigationDelegate, WKUIDel
         viewController.present(alertController, animated: true, completion: nil)
     }
 
-    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo, completionHandler: @escaping (String?) -> Void) {
+    public func webView(_ webView: WKWebView, runJavaScriptTextInputPanelWithPrompt prompt: String, defaultText: String?, initiatedByFrame frame: WKFrameInfo,
+                        completionHandler: @escaping (String?) -> Void) {
 
         // Check if this is synchronous cookie or http call
         do {

@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -265,6 +266,7 @@ public class WebViewLocalServer {
             .replace(bridge.getLocalUrl(), isHttps ? "https:/" : "http:/")
             .replace(Bridge.JIGRA_HTTP_INTERCEPTOR_START, "")
             .replace(Bridge.JIGRA_HTTPS_INTERCEPTOR_START, "");
+        urlString = URLDecoder.decode(urlString, "UTF-8");
         URL url = new URL(urlString);
         JSObject headers = new JSObject();
 

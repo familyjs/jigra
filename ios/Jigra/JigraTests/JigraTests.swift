@@ -25,9 +25,4 @@ class JigraTests: XCTestCase {
         let descriptor = InstanceDescriptor.init()
         bridge = MockBridge(with: InstanceConfiguration(with: descriptor, isDebug: true), delegate: MockBridgeViewController(), cordovaConfiguration: descriptor.cordovaConfiguration, assetHandler: MockAssetHandler(router: _Router()), delegationHandler: MockDelegationHandler())
     }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
 }

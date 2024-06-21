@@ -478,13 +478,13 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
             let pluginCall = JIGPluginCall(callbackId: call.callbackId,
                                            options: JSTypes.coerceDictionaryToJSObject(call.options,
                                                                                        formattingDatesAsStrings: plugin.shouldStringifyDatesInCalls) ?? [:],
-                                           success: {(result: JIGPluginCallResult?, pluginCall: JIGPluginCall?) -> Void in
+                                           success: {(result: JIGPluginCallResult?, pluginCall: JIGPluginCall?) in
                                             if let result = result {
                                                 self?.toJs(result: JSResult(call: call, callResult: result), save: pluginCall?.keepAlive ?? false)
                                             } else {
                                                 self?.toJs(result: JSResult(call: call, result: .dictionary([:])), save: pluginCall?.keepAlive ?? false)
                                             }
-                                           }, error: {(error: JIGPluginCallError?) -> Void in
+                                           }, error: {(error: JIGPluginCallError?) in
                                             if let error = error {
                                                 self?.toJsError(error: JSResultError(call: call, callError: error))
                                             } else {

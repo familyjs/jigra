@@ -184,6 +184,7 @@ public class WebViewLocalServer {
                 return handleJigraHttpRequest(request);
             } catch (Exception e) {
                 Logger.error(e.getLocalizedMessage());
+                return null;
             }
         }
 

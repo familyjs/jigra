@@ -206,7 +206,10 @@ open class JigraUrlRequest: NSObject, URLSessionTaskDelegate {
         return request
     }
 
-    open func urlSession(_ session: URLSession, task: URLSessionTask, willPerformHTTPRedirection response: HTTPURLResponse, newRequest request: URLRequest, completionHandler: @escaping (URLRequest?) -> Void) {
+    open func urlSession(_ session: URLSession, task: URLSessionTask,
+                         willPerformHTTPRedirection response: HTTPURLResponse,
+                         newRequest request: URLRequest,
+                         completionHandler: @escaping (URLRequest?) -> Void) {
         completionHandler(nil)
     }
 

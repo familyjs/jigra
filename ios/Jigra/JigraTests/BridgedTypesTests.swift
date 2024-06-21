@@ -29,7 +29,13 @@ class BridgedTypesTests: XCTestCase {
         // we use a fixed timestamp at a whole hour.
         let date = NSDate(timeIntervalSinceReferenceDate: 632854800)
         let subDictionary: [AnyHashable: Any] = ["testIntArray": [0, 1, 2], "testStringArray": ["1", "2", "3"], "testDictionary": ["foo": "bar"]]
-        var dictionary: [AnyHashable: Any] = ["testInt": 1 as Int, "testFloat": Float.pi, "testBool": true as Bool, "testString": "Some string value", "testChild": subDictionary, "testDateString": formatter.string(from: date as Date)]
+        var dictionary: [AnyHashable: Any] = ["testInt": 1 as Int,
+                                              "testFloat": Float.pi,
+                                              "testBool": true as Bool,
+                                              "testString": "Some string value",
+                                              "testChild": subDictionary,
+                                              "testDateString": formatter.string(from: date as Date)
+                                             ]
         let serializer = JSONSerializationWrapper(dictionary: dictionary)!
         var unwrappedResult = serializer.unwrappedResult()!
         // date objects are not handled by the JSON serializer, so we have to insert these after the roundtrip

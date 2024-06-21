@@ -88,6 +88,9 @@ public class Bridge {
     public static final String JIGRA_HTTPS_SCHEME = "https";
     public static final String JIGRA_FILE_START = "/_jigra_file_";
     public static final String JIGRA_CONTENT_START = "/_jigra_content_";
+    public static final String JIGRA_HTTP_INTERCEPTOR_START = "/_jigra_http_interceptor_";
+    public static final String JIGRA_HTTPS_INTERCEPTOR_START = "/_jigra_https_interceptor_";
+
     public static final int DEFAULT_ANDROID_WEBVIEW_VERSION = 60;
     public static final int MINIMUM_ANDROID_WEBVIEW_VERSION = 55;
     public static final int DEFAULT_HUAWEI_WEBVIEW_VERSION = 10;

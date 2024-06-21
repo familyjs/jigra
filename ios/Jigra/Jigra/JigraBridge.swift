@@ -90,6 +90,8 @@ internal class JigraBridge: NSObject, JIGBridgeProtocol {
     static let tmpVCAppeared = Notification(name: Notification.Name(rawValue: "tmpViewControllerAppeared"))
     public static let jigraSite = "https://jigrajs.web.app/"
     public static let fileStartIdentifier = "/_jigra_file_"
+    public static let httpInterceptorStartIdentifier = "/_jigra_http_interceptor_"
+    public static let httpsInterceptorStartIdentifier = "/_jigra_https_interceptor_"
     public static let defaultScheme = "jigra"
 
     var webViewAssetHandler: WebViewAssetHandler

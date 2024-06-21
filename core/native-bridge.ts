@@ -116,6 +116,32 @@ const convertBody = async (
   return { data: body, type: 'json' };
 };
 
+const JIGRA_HTTP_INTERCEPTOR = '/_jigra_http_interceptor_';
+const JIGRA_HTTPS_INTERCEPTOR = '/_jigra_https_interceptor_';
+
+// TODO: export as Jig function
+const isRelativeOrProxyUrl = (url: string | undefined): boolean =>
+  !url ||
+  !(url.startsWith('http:') || url.startsWith('https:')) ||
+  url.indexOf(JIGRA_HTTP_INTERCEPTOR) > -1 ||
+  url.indexOf(JIGRA_HTTPS_INTERCEPTOR) > -1;
+
+// TODO: export as Jig function
+const createProxyUrl = (url: string, win: WindowJigra): string => {
+  if (isRelativeOrProxyUrl(url)) return url;
+
+  let proxyUrl = new URL(url);
+  const isHttps = proxyUrl.protocol === 'https:';
+  const originalHostname = proxyUrl.hostname;
+  const originalPathname = proxyUrl.pathname;
+  proxyUrl = new URL(win.Jigra?.getServerUrl() ?? '');
+
+  proxyUrl.pathname = `${
+    isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR
+  }/${originalHostname}${originalPathname}`;
+  return proxyUrl.toString();
+};
+
 const initBridge = (w: any): void => {
   const getPlatformId = (win: WindowJigra): 'android' | 'ios' | 'web' => {
     if (win?.androidBridge) {
@@ -477,6 +503,19 @@ const initBridge = (w: any): void => {
             return win.JigraWebFetch(resource, options);
           }
 
+          if (
+            !options?.method ||
+            options.method.toLocaleUpperCase() === 'GET' ||
+            options.method.toLocaleUpperCase() === 'HEAD' ||
+            options.method.toLocaleUpperCase() === 'OPTIONS' ||
+            options.method.toLocaleUpperCase() === 'TRACE'
+          ) {
+            const modifiedResource = createProxyUrl(resource.toString(), win);
+            const response = await win.JigraWebFetch(modifiedResource, options);
+
+            return response;
+          }
+
           const tag = `JigraHttp fetch ${Date.now()} ${resource}`;
           console.time(tag);
           try {
@@ -567,14 +606,12 @@ const initBridge = (w: any): void => {
           xhr.readyState = 0;
           const prototype = win.JigraWebXMLHttpRequest.prototype;
 
-          const isRelativeURL = (url: string | undefined) =>
-            !url || !(url.startsWith('http:') || url.startsWith('https:'));
           const isProgressEventAvailable = () =>
             typeof ProgressEvent !== 'undefined' && ProgressEvent.prototype instanceof Event;
 
           // XHR patch abort
           prototype.abort = function () {
-            if (isRelativeURL(this._url)) {
+            if (isRelativeOrProxyUrl(this._url)) {
               return win.JigraWebXMLHttpRequest.abort.call(this);
             }
             this.readyState = 0;
@@ -586,11 +623,23 @@ const initBridge = (w: any): void => {
 
           // XHR patch open
           prototype.open = function (method: string, url: string) {
+            this._method = method.toLocaleUpperCase();
             this._url = url;
-            this._method = method;
 
-            if (isRelativeURL(url)) {
-              return win.JigraWebXMLHttpRequest.open.call(this, method, url);
+            if (
+              !this._method ||
+              this._method === 'GET' ||
+              this._method === 'HEAD' ||
+              this._method === 'OPTIONS' ||
+              this._method === 'TRACE'
+            ) {
+              if (isRelativeOrProxyUrl(url)) {
+                return win.JigraWebXMLHttpRequest.open.call(this, method, url);
+              }
+
+              this._url = createProxyUrl(this._url, win);
+
+              return win.JigraWebXMLHttpRequest.open.call(this, method, this._url);
             }
 
             setTimeout(() => {
@@ -601,7 +650,7 @@ const initBridge = (w: any): void => {
 
           // XHR patch set request header
           prototype.setRequestHeader = function (header: string, value: string) {
-            if (isRelativeURL(this._url)) {
+            if (isRelativeOrProxyUrl(this._url)) {
               return win.JigraWebXMLHttpRequest.setRequestHeader.call(this, header, value);
             }
             this._headers[header] = value;
@@ -609,7 +658,7 @@ const initBridge = (w: any): void => {
 
           // XHR patch send
           prototype.send = function (body?: Document | XMLHttpRequestBodyInit) {
-            if (isRelativeURL(this._url)) {
+            if (isRelativeOrProxyUrl(this._url)) {
               return win.JigraWebXMLHttpRequest.send.call(this, body);
             }
 
@@ -749,7 +798,7 @@ const initBridge = (w: any): void => {
 
           // XHR patch getAllResponseHeaders
           prototype.getAllResponseHeaders = function () {
-            if (isRelativeURL(this._url)) {
+            if (isRelativeOrProxyUrl(this._url)) {
               return win.JigraWebXMLHttpRequest.getAllResponseHeaders.call(this);
             }
 
@@ -764,7 +813,7 @@ const initBridge = (w: any): void => {
 
           // XHR patch getResponseHeader
           prototype.getResponseHeader = function (name: string) {
-            if (isRelativeURL(this._url)) {
+            if (isRelativeOrProxyUrl(this._url)) {
               return win.JigraWebXMLHttpRequest.getResponseHeader.call(this, name);
             }
             for (const key in this._headers) {

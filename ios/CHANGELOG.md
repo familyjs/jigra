@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.1](https://github.com/familyjs/jigra/compare/5.6.0...5.7.1) (2024-06-21)
+
+### Bug Fixes
+
+- **http:** handle proxy urls with port ([f496849](https://github.com/familyjs/jigra/commit/f4968490e22629ffa85ff8f008df20ed6c81b4a0))
+- **http:** route get requests through custom handler ([7599e02](https://github.com/familyjs/jigra/commit/7599e02fb4e876cef534b372f3620564d8f5a53c))
+
 # [5.7.0](https://github.com/familyjs/jigra/compare/5.6.0...5.7.0) (2024-06-21)
 
 **Note:** Version bump only for package @jigra/ios

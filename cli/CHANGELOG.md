@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.1](https://github.com/familyjs/jigra/compare/5.6.0...5.7.1) (2024-06-21)
+
+### Bug Fixes
+
+- **cli:** correct build path for non flavor builds ([5291ab0](https://github.com/familyjs/jigra/commit/5291ab074341d9eb73db5d40945c57d021bed25e))
+
 # [5.7.0](https://github.com/familyjs/jigra/compare/5.6.0...5.7.0) (2024-06-21)
 
 **Note:** Version bump only for package @jigra/cli

@@ -33,7 +33,7 @@ export async function buildAndroid(config: Config, buildOptions: BuildCommandOpt
   const releaseDir = releaseTypeIsAAB
     ? flavor !== ''
       ? `${flavor}Release`
-      : 'Release'
+      : 'release'
     : flavor !== ''
     ? join(flavor, 'release')
     : 'release';

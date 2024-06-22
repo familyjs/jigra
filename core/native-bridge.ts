@@ -130,12 +130,13 @@ const isRelativeOrProxyUrl = (url: string | undefined): boolean =>
 const createProxyUrl = (url: string, win: WindowJigra): string => {
   if (isRelativeOrProxyUrl(url)) return url;
 
-  let proxyUrl = new URL(url);
+  const proxyUrl = new URL(url);
+  const bridgeUrl = new URL(win.Jigra?.getServerUrl() ?? '');
   const isHttps = proxyUrl.protocol === 'https:';
   const originalHost = encodeURIComponent(proxyUrl.host);
   const originalPathname = proxyUrl.pathname;
-  proxyUrl = new URL(win.Jigra?.getServerUrl() ?? '');
-
+  proxyUrl.protocol = bridgeUrl.protocol;
+  proxyUrl.host = bridgeUrl.host;
   proxyUrl.pathname = `${
     isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR
   }/${originalHost}${originalPathname}`;

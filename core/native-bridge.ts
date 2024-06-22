@@ -133,15 +133,12 @@ const createProxyUrl = (url: string, win: WindowJigra): string => {
   const proxyUrl = new URL(url);
   const bridgeUrl = new URL(win.Jigra?.getServerUrl() ?? '');
   const isHttps = proxyUrl.protocol === 'https:';
-  const originalHost = encodeURIComponent(proxyUrl.host);
-  const originalPathname = proxyUrl.pathname;
-  proxyUrl.protocol = bridgeUrl.protocol;
-  proxyUrl.hostname = bridgeUrl.hostname;
-  proxyUrl.port = bridgeUrl.port;
-  proxyUrl.pathname = `${
-    isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR
-  }/${originalHost}${originalPathname}`;
-  return proxyUrl.toString();
+  bridgeUrl.search = proxyUrl.search;
+  bridgeUrl.hash = proxyUrl.hash;
+  bridgeUrl.pathname = `${isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR}/${encodeURIComponent(
+    proxyUrl.host
+  )}${proxyUrl.pathname}`;
+  return bridgeUrl.toString();
 };
 
 const initBridge = (w: any): void => {

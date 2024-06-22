@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.3](https://github.com/familyjs/jigra/compare/5.6.0...5.7.3) (2024-06-22)
+
+### Bug Fixes
+
+- **cli:** apkName for multi-dimensional flavors ([3d374df](https://github.com/familyjs/jigra/commit/3d374df4b1e8b34923f861a56885219c40df7afd))
+- **cli:** Attempt to verify non-cjs modules exist if cjs resolution fails ([bab2ef5](https://github.com/familyjs/jigra/commit/bab2ef56624c1e2b1947584a8398d71bae1784a0))
+- **cli:** correct build path for non flavor builds ([5291ab0](https://github.com/familyjs/jigra/commit/5291ab074341d9eb73db5d40945c57d021bed25e))
+
 ## [5.7.2](https://github.com/familyjs/jigra/compare/5.6.0...5.7.2) (2024-06-22)
 
 ### Bug Fixes

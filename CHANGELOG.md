@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.3](https://github.com/familyjs/jigra/compare/5.6.0...5.7.3) (2024-06-22)
+
+### Bug Fixes
+
+- **android:** handle http errors on the proxy ([dd39a96](https://github.com/familyjs/jigra/commit/dd39a96aee0afd6c4483d8d8c673aef0493878b1))
+- **android:** incorrect http url params encoding ([62f4281](https://github.com/familyjs/jigra/commit/62f42814b1a63a00980e104c6d99bf5726be1f76))
+- **android:** let WebView handle errors ([790d5d0](https://github.com/familyjs/jigra/commit/790d5d0bcbc55ea0c55c7f0f703759d2cb7f15a9))
+- **android:** make `JSInjector` replace first `<head>` only ([e5cce4d](https://github.com/familyjs/jigra/commit/e5cce4d74977fd24afd2de445e976f2fdccbda32))
+- **android:** prevent crash on script injection if the script is too long ([30e0f71](https://github.com/familyjs/jigra/commit/30e0f718425caa26d17f8455ece47ef6e8e329e0))
+- **cli:** apkName for multi-dimensional flavors ([3d374df](https://github.com/familyjs/jigra/commit/3d374df4b1e8b34923f861a56885219c40df7afd))
+- **cli:** Attempt to verify non-cjs modules exist if cjs resolution fails ([bab2ef5](https://github.com/familyjs/jigra/commit/bab2ef56624c1e2b1947584a8398d71bae1784a0))
+- **cli:** correct build path for non flavor builds ([5291ab0](https://github.com/familyjs/jigra/commit/5291ab074341d9eb73db5d40945c57d021bed25e))
+- **http:** handle proxy urls with port ([f496849](https://github.com/familyjs/jigra/commit/f4968490e22629ffa85ff8f008df20ed6c81b4a0))
+- **http:** keep original URL properties on proxy ([a4df88d](https://github.com/familyjs/jigra/commit/a4df88decbc0d41c495b609515b39a2be01d5db6))
+- **http:** Make proxy work with Request objects ([16c2d4e](https://github.com/familyjs/jigra/commit/16c2d4e8b48083142f403b076f4fc2b3df72408e))
+- **http:** route get requests through custom handler ([7599e02](https://github.com/familyjs/jigra/commit/7599e02fb4e876cef534b372f3620564d8f5a53c))
+- **http:** set port for proxy url ([a5d3693](https://github.com/familyjs/jigra/commit/a5d369396109b3afda48dc6c722a532520ea0c64))
+- **ios:** overwrite CORS headers on livereload ([c7d464a](https://github.com/familyjs/jigra/commit/c7d464a9bf2ac4fedcfa84cb73baab89f02a90d9))
+
 ## [5.7.2](https://github.com/familyjs/jigra/compare/5.6.0...5.7.2) (2024-06-22)
 
 ### Bug Fixes

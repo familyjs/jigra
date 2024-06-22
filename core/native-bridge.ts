@@ -512,10 +512,12 @@ const initBridge = (w: any): void => {
             options.method.toLocaleUpperCase() === 'OPTIONS' ||
             options.method.toLocaleUpperCase() === 'TRACE'
           ) {
-            const modifiedResource = createProxyUrl(resource.toString(), win);
-            const response = await win.JigraWebFetch(modifiedResource, options);
-
-            return response;
+            if (typeof resource === 'string') {
+              return await win.JigraWebFetch(createProxyUrl(resource, win), options);
+            } else if (resource instanceof Request) {
+              const modifiedRequest = new Request(createProxyUrl(resource.url, win), resource);
+              return await win.JigraWebFetch(modifiedRequest, options);
+            }
           }
 
           const tag = `JigraHttp fetch ${Date.now()} ${resource}`;

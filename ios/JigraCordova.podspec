@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
   s.public_header_files = "#{prefix}JigraCordova/JigraCordova/Classes/Public/*.h",
                           "#{prefix}JigraCordova/JigraCordova/JigraCordova.h"
   s.module_map = "#{prefix}JigraCordova/JigraCordova/JigraCordova.modulemap"
+  s.resources = ["#{prefix}JigraCordova/JigraCordova/PrivacyInfo.xcprivacy"]
   s.requires_arc = true
   s.framework    = 'WebKit'
 end

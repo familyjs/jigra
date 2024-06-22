@@ -19,7 +19,7 @@ Pod::Spec.new do |s|
   s.source_files = "#{prefix}Jigra/Jigra/*.{swift,h,m}", "#{prefix}Jigra/Jigra/Plugins/*.{swift,h,m}",
                    "#{prefix}Jigra/Jigra/Plugins/**/*.{swift,h,m}"
   s.module_map = "#{prefix}Jigra/Jigra/Jigra.modulemap"
-  s.resources = ["#{prefix}Jigra/Jigra/assets/native-bridge.js"]
+  s.resources = ["#{prefix}Jigra/Jigra/assets/native-bridge.js", "#{prefix}Jigra/Jigra/PrivacyInfo.xcprivacy"]
   s.dependency 'JigraCordova'
   s.swift_version = '5.1'
 end

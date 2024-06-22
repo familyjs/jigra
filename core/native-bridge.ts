@@ -136,7 +136,8 @@ const createProxyUrl = (url: string, win: WindowJigra): string => {
   const originalHost = encodeURIComponent(proxyUrl.host);
   const originalPathname = proxyUrl.pathname;
   proxyUrl.protocol = bridgeUrl.protocol;
-  proxyUrl.host = bridgeUrl.host;
+  proxyUrl.hostname = bridgeUrl.hostname;
+  proxyUrl.port = bridgeUrl.port;
   proxyUrl.pathname = `${
     isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR
   }/${originalHost}${originalPathname}`;

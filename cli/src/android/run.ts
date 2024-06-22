@@ -2,7 +2,7 @@ import Debug from 'debug';
 import { resolve } from 'path';
 
 import c from '../colors';
-import { promptForPlatformTarget, runTask } from '../common';
+import { promptForPlatformTarget, parseApkNameFromFlavor, runTask } from '../common';
 import type { Config } from '../definitions';
 import type { RunCommandOptions } from '../tasks/run';
 import { runFmlNativeRun, getPlatformTargets } from '../util/fml-native-run';
@@ -43,7 +43,7 @@ export async function runAndroid(
     runFlavor !== '' ? '/' + runFlavor : ''
   }/debug`;
 
-  const apkName = `app${runFlavor !== '' ? '-' + runFlavor : ''}-debug.apk`;
+  const apkName = parseApkNameFromFlavor(runFlavor);
 
   const apkPath = resolve(pathToApk, apkName);
 

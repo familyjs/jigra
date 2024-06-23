@@ -11,8 +11,8 @@ import com.getjigra.annotation.JigraPlugin;
 import com.getjigra.annotation.Permission;
 import com.getjigra.plugin.util.HttpRequestHandler;
 import com.getjigra.plugin.util.JigraHttpUrlConnection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -24,7 +24,7 @@ import java.util.concurrent.Executors;
 )
 public class JigraHttp extends Plugin {
 
-    private final Map<Runnable, PluginCall> activeRequests = new HashMap<>();
+    private final Map<Runnable, PluginCall> activeRequests = new ConcurrentHashMap<>();
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     @Override

@@ -505,13 +505,12 @@ const initBridge = (w: any): void => {
           if (request.url.startsWith(`${jig.getServerUrl()}/`)) {
             return win.JigraWebFetch(resource, options);
           }
-
+          const { method } = request;
           if (
-            !options?.method ||
-            options.method.toLocaleUpperCase() === 'GET' ||
-            options.method.toLocaleUpperCase() === 'HEAD' ||
-            options.method.toLocaleUpperCase() === 'OPTIONS' ||
-            options.method.toLocaleUpperCase() === 'TRACE'
+            method.toLocaleUpperCase() === 'GET' ||
+            method.toLocaleUpperCase() === 'HEAD' ||
+            method.toLocaleUpperCase() === 'OPTIONS' ||
+            method.toLocaleUpperCase() === 'TRACE'
           ) {
             if (typeof resource === 'string') {
               return await win.JigraWebFetch(createProxyUrl(resource, win), options);
@@ -524,8 +523,7 @@ const initBridge = (w: any): void => {
           const tag = `JigraHttp fetch ${Date.now()} ${resource}`;
           console.time(tag);
           try {
-            // intercept request & pass to the bridge
-            const { body, method } = request;
+            const { body } = request;
             const optionHeaders = Object.fromEntries(request.headers.entries());
             const {
               data: requestData,

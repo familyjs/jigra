@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [5.7.6](https://github.com/familyjs/jigra/compare/5.6.0...5.7.6) (2024-06-23)
+
+### Bug Fixes
+
+- **http:** Add `URLSearchParams` support ([abf7fd2](https://github.com/familyjs/jigra/commit/abf7fd2252703885db31a5999e35f6435ae193f0))
+- **http:** change proxy url generation ([683cf14](https://github.com/familyjs/jigra/commit/683cf1437e322212387f74a738916ad8da274519))
+- **http:** don't override readyState for non POST requests ([1e90edf](https://github.com/familyjs/jigra/commit/1e90edfc74dab49acaa6a200050ec4f7a520f1bd))
+- **http:** handle proxy urls with port ([f496849](https://github.com/familyjs/jigra/commit/f4968490e22629ffa85ff8f008df20ed6c81b4a0))
+- **http:** keep original URL properties on proxy ([a4df88d](https://github.com/familyjs/jigra/commit/a4df88decbc0d41c495b609515b39a2be01d5db6))
+- **http:** Make proxy work with Request objects ([16c2d4e](https://github.com/familyjs/jigra/commit/16c2d4e8b48083142f403b076f4fc2b3df72408e))
+- **http:** prevent POST request from being proxied ([bcbea41](https://github.com/familyjs/jigra/commit/bcbea41045479acb5d1e3b235c4e21eb74697ab8))
+- **http:** route get requests through custom handler ([7599e02](https://github.com/familyjs/jigra/commit/7599e02fb4e876cef534b372f3620564d8f5a53c))
+- **http:** set port for proxy url ([a5d3693](https://github.com/familyjs/jigra/commit/a5d369396109b3afda48dc6c722a532520ea0c64))
+- **ios:** check if `urlSchemeTask` is stopped before calling its methods ([2d1c6db](https://github.com/familyjs/jigra/commit/2d1c6dbd02022996b9453dc55441c1630bfecd50))
+- **ios:** overwrite CORS headers on livereload ([c7d464a](https://github.com/familyjs/jigra/commit/c7d464a9bf2ac4fedcfa84cb73baab89f02a90d9))
+- kdu 3 log warning causes error on iOS ([f67799d](https://github.com/familyjs/jigra/commit/f67799de0a078e3c479cd9ae5685fd83c95a7732))
+
 ## [5.7.5](https://github.com/familyjs/jigra/compare/5.6.0...5.7.5) (2024-06-23)
 
 ### Bug Fixes

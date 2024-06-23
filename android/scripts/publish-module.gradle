@@ -17,7 +17,7 @@ artifacts {
     archives androidSourcesJar
 }
 
-group = 'app.jigrajs'
+group = 'io.github.jigrajs'
 version = LIB_VERSION
 
 afterEvaluate {
@@ -25,7 +25,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 // Coordinates
-                groupId 'app.jigrajs'
+                groupId 'io.github.jigrajs'
                 artifactId 'core'
                 version LIB_VERSION
 

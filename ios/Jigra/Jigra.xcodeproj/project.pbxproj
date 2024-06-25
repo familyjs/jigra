@@ -868,7 +868,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = Jigra/Jigra.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.Jigra;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.Jigra;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
@@ -897,7 +897,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MODULEMAP_FILE = Jigra/Jigra.modulemap;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.Jigra;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.Jigra;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
@@ -916,7 +916,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = JigraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.JigraTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.JigraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "JigraTests/JigraTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -935,7 +935,7 @@
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = JigraTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.JigraTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.JigraTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "JigraTests/JigraTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -960,7 +960,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.TestsHostApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.TestsHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -982,7 +982,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.jigrajs.ios.TestsHostApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.TestsHostApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

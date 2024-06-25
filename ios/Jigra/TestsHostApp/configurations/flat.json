@@ -1,5 +1,5 @@
 {
-  "appId": "io.github.jigrajs.testshostapp",
+  "appId": "com.jigrajs.testshostapp",
   "appName": "testshostapp",
   "npmClient": "npm",
   "webDir": "build",

@@ -1,6 +1,8 @@
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
+def LIB_VERSION = System.getenv('JIG_VERSION')
+
 task androidSourcesJar(type: Jar) {
     dependsOn(':bundleReleaseAar')
     archiveClassifier.set('sources')
@@ -16,7 +18,7 @@ artifacts {
 }
 
 group = 'com.jigrajs'
-version = JIG_LIB_VERSION
+version = LIB_VERSION
 
 afterEvaluate {
     publishing {
@@ -27,7 +29,7 @@ afterEvaluate {
                 // Coordinates
                 groupId 'com.jigrajs'
                 artifactId 'core'
-                version JIG_LIB_VERSION
+                version LIB_VERSION
 
                 // Two artifacts, the `aar` (or `jar`) and the sources
                 if (project.plugins.findPlugin("com.android.library")) {

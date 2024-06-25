@@ -23,7 +23,10 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:8.0.0'
-        classpath 'com.gradle-nexus:publish-plugin:1.3.0'
+
+        if (System.getenv("JIG_PUBLISH") == "true") {
+            classpath 'io.github.gradle-nexus:publish-plugin:1.3.0'
+        }
     }
 }
 
@@ -31,9 +34,11 @@ tasks.withType(Javadoc).all { enabled = false }
 
 apply plugin: 'com.android.library'
 
-apply plugin: 'io.github.gradle-nexus.publish-plugin'
-apply from: file('../scripts/publish-root.gradle')
-apply from: file('../scripts/publish-module.gradle')
+if (System.getenv("JIG_PUBLISH") == "true") {
+    apply plugin: 'io.github.gradle-nexus.publish-plugin'
+    apply from: file('../scripts/publish-root.gradle')
+    apply from: file('../scripts/publish-module.gradle')
+}
 
 android {
     namespace "com.getjigra.android"

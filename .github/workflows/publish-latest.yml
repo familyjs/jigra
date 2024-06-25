@@ -13,3 +13,14 @@ jobs:
     secrets:
       JIG_GH_RELEASE_TOKEN: ${{ secrets.JIG_GH_RELEASE_TOKEN }}
       NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+  publish-android:
+    needs: publish-npm-latest
+    uses: ./.github/workflows/publish-android-github-packages.yml
+    secrets:
+      JIG_GH_AUTHOR: ${{ secrets.JIG_GH_AUTHOR }}
+      JIG_GH_RELEASE_TOKEN: ${{ secrets.JIG_GH_RELEASE_TOKEN }}
+  publish-ios:
+    needs: publish-npm-latest
+    uses: ./.github/workflows/publish-ios.yml
+    secrets:
+      COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}

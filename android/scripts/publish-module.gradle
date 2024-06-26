@@ -17,17 +17,15 @@ artifacts {
     archives androidSourcesJar
 }
 
-group = 'com.jigrajs'
+group = 'io.github.jigrajs'
 version = LIB_VERSION
 
 afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
-//                from(components.java)
-
                 // Coordinates
-                groupId 'com.jigrajs'
+                groupId 'io.github.jigrajs'
                 artifactId 'core'
                 version LIB_VERSION
 
@@ -67,15 +65,14 @@ afterEvaluate {
                 }
             }
         }
-        repositories {
-            maven {
-                name = "GitHubPackages"
-                url = uri("https://maven.pkg.github.com/familyjs/jigra")
-                credentials {
-                    username = JIG_AUTHOR
-                    password = JIG_RELEASE_TOKEN
-                }
-            }
-        }
     }
+}
+
+signing {
+    useInMemoryPgpKeys(
+            rootProject.ext["signing.keyId"],
+            rootProject.ext["signing.key"],
+            rootProject.ext["signing.password"],
+    )
+    sign publishing.publications
 }

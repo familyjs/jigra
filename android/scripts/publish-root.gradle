@@ -21,3 +21,17 @@ if (secretPropsFile.exists()) {
     ext["signing.key"] = System.getenv('ANDROID_SIGNING_KEY')
     ext["signing.password"] = System.getenv('ANDROID_SIGNING_PASSWORD')
 }
+
+// Set up Sonatype repository
+nexusPublishing {
+    repositories {
+        sonatype {
+            stagingProfileId = sonatypeStagingProfileId
+            username = ossrhUsername
+            password = ossrhPassword
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
+    repositoryDescription = 'Jigra Android Core v' + System.getenv('JIG_VERSION')
+}

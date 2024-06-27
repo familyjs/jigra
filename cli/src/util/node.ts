@@ -15,7 +15,10 @@ export const requireTS = (ts: typeof typescript, p: string): unknown => {
 
   delete require.cache[id];
 
-  require.extensions['.ts'] = (module: NodeModuleWithCompile, fileName: string) => {
+  require.extensions['.ts'] = (
+    module: NodeModuleWithCompile,
+    fileName: string,
+  ) => {
     let sourceText = readFileSync(fileName, 'utf8');
 
     if (fileName.endsWith('.ts')) {
@@ -47,7 +50,10 @@ export const requireTS = (ts: typeof typescript, p: string): unknown => {
   return m;
 };
 
-export function resolveNode(root: string, ...pathSegments: string[]): string | null {
+export function resolveNode(
+  root: string,
+  ...pathSegments: string[]
+): string | null {
   try {
     return require.resolve(pathSegments.join('/'), { paths: [root] });
   } catch (e) {

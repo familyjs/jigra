@@ -211,7 +211,8 @@ public class HttpRequestHandler {
      * @throws IOException Thrown if the InputStream is unable to be parsed correctly
      * @throws JSONException Thrown if the JSON is unable to be parsed
      */
-    public static JSObject buildResponse(JigraHttpUrlConnection connection, ResponseType responseType) throws IOException, JSONException {
+    public static JSObject buildResponse(JigraHttpUrlConnection connection, ResponseType responseType)
+        throws IOException, JSONException {
         int statusCode = connection.getResponseCode();
 
         JSObject output = new JSObject();
@@ -438,7 +439,7 @@ public class HttpRequestHandler {
         try {
             Class<?> sslPinningImpl = Class.forName("io.family.sslpinning.SSLPinning");
             Method method = sslPinningImpl.getDeclaredMethod("isDomainExcluded", Bridge.class, URL.class);
-            return (Boolean) method.invoke(sslPinningImpl.newInstance(), bridge, url);
+            return (Boolean) method.invoke(sslPinningImpl.getDeclaredConstructor().newInstance(), bridge, url);
         } catch (Exception ignored) {
             return false;
         }

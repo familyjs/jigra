@@ -9,7 +9,13 @@ import { root } from './lib/repo.mjs';
 execute(async () => {
   const assetsDir = resolve(root, 'cli', 'assets');
 
-  const templates = ['android-template', 'ios-template', 'jigra-cordova-android-plugins', 'jigra-cordova-ios-plugins'];
+  const templates = [
+    'android-template',
+    'ios-pods-template',
+    'ios-spm-template',
+    'jigra-cordova-android-plugins',
+    'jigra-cordova-ios-plugins',
+  ];
 
   await mkdir(assetsDir, { recursive: true });
 

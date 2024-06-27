@@ -2,7 +2,7 @@ package com.getjigra;
 
 import static com.getjigra.Bridge.DEFAULT_ANDROID_WEBVIEW_VERSION;
 import static com.getjigra.Bridge.DEFAULT_HUAWEI_WEBVIEW_VERSION;
-import static com.getjigra.Bridge.JIGRA_HTTP_SCHEME;
+import static com.getjigra.Bridge.JIGRA_HTTPS_SCHEME;
 import static com.getjigra.Bridge.MINIMUM_ANDROID_WEBVIEW_VERSION;
 import static com.getjigra.Bridge.MINIMUM_HUAWEI_WEBVIEW_VERSION;
 import static com.getjigra.FileUtils.readFileFromAssets;
@@ -36,7 +36,7 @@ public class JigConfig {
     private boolean html5mode = true;
     private String serverUrl;
     private String hostname = "localhost";
-    private String androidScheme = JIGRA_HTTP_SCHEME;
+    private String androidScheme = JIGRA_HTTPS_SCHEME;
     private String[] allowNavigation;
 
     // Android Config
@@ -52,6 +52,7 @@ public class JigConfig {
     private int minWebViewVersion = DEFAULT_ANDROID_WEBVIEW_VERSION;
     private int minHuaweiWebViewVersion = DEFAULT_HUAWEI_WEBVIEW_VERSION;
     private String errorPath;
+    private boolean zoomableWebView = false;
 
     // Embedded
     private String startPath;
@@ -177,6 +178,7 @@ public class JigConfig {
         this.minWebViewVersion = builder.minWebViewVersion;
         this.minHuaweiWebViewVersion = builder.minHuaweiWebViewVersion;
         this.errorPath = builder.errorPath;
+        this.zoomableWebView = builder.zoomableWebView;
 
         // Embedded
         this.startPath = builder.startPath;
@@ -271,6 +273,7 @@ public class JigConfig {
         captureInput = JSONUtils.getBoolean(configJSON, "android.captureInput", captureInput);
         useLegacyBridge = JSONUtils.getBoolean(configJSON, "android.useLegacyBridge", useLegacyBridge);
         webContentsDebuggingEnabled = JSONUtils.getBoolean(configJSON, "android.webContentsDebuggingEnabled", isDebug);
+        zoomableWebView = JSONUtils.getBoolean(configJSON, "android.zoomEnabled", JSONUtils.getBoolean(configJSON, "zoomEnabled", false));
 
         String logBehavior = JSONUtils.getString(
             configJSON,
@@ -297,7 +300,7 @@ public class JigConfig {
     private boolean validateScheme(String scheme) {
         List<String> invalidSchemes = Arrays.asList("file", "ftp", "ftps", "ws", "wss", "about", "blob", "data");
         if (invalidSchemes.contains(scheme)) {
-            Logger.warn(scheme + " is not an allowed scheme.  Defaulting to http.");
+            Logger.warn(scheme + " is not an allowed scheme.  Defaulting to https.");
             return false;
         }
 
@@ -361,6 +364,10 @@ public class JigConfig {
 
     public boolean isWebContentsDebuggingEnabled() {
         return webContentsDebuggingEnabled;
+    }
+
+    public boolean isZoomableWebView() {
+        return zoomableWebView;
     }
 
     public boolean isLoggingEnabled() {
@@ -538,7 +545,7 @@ public class JigConfig {
         private String serverUrl;
         private String errorPath;
         private String hostname = "localhost";
-        private String androidScheme = JIGRA_HTTP_SCHEME;
+        private String androidScheme = JIGRA_HTTPS_SCHEME;
         private String[] allowNavigation;
 
         // Android Config Values
@@ -553,6 +560,7 @@ public class JigConfig {
         private boolean useLegacyBridge = false;
         private int minWebViewVersion = DEFAULT_ANDROID_WEBVIEW_VERSION;
         private int minHuaweiWebViewVersion = DEFAULT_HUAWEI_WEBVIEW_VERSION;
+        private boolean zoomableWebView = false;
 
         // Embedded
         private String startPath = null;
@@ -654,6 +662,11 @@ public class JigConfig {
 
         public Builder setWebContentsDebuggingEnabled(boolean webContentsDebuggingEnabled) {
             this.webContentsDebuggingEnabled = webContentsDebuggingEnabled;
+            return this;
+        }
+
+        public Builder setZoomableWebView(boolean zoomableWebView) {
+            this.zoomableWebView = zoomableWebView;
             return this;
         }
 

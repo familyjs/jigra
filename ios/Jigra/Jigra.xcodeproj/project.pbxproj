@@ -13,11 +13,9 @@
 		2F81F5CA26FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */; };
 		373A69C1255C9360000A6F44 /* NotificationHandlerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373A69C0255C9360000A6F44 /* NotificationHandlerProtocol.swift */; };
 		373A69F2255C95D0000A6F44 /* NotificationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373A69F1255C95D0000A6F44 /* NotificationRouter.swift */; };
-		4D0D590F29E86FAB008A6833 /* WKWebView+Jigra.h in Headers */ = {isa = PBXBuildFile; fileRef = 4D0D590D29E86FAB008A6833 /* WKWebView+Jigra.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		501CBAA71FC0A723009B0D4D /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 501CBAA61FC0A723009B0D4D /* WebKit.framework */; };
 		50503EE91FC08595003606DC /* Jigra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50503EDF1FC08594003606DC /* Jigra.framework */; };
 		50503EEE1FC08595003606DC /* JigraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50503EED1FC08595003606DC /* JigraTests.swift */; };
-		55F6736A26C371E6001E7AB9 /* JIGWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55F6736826C371E6001E7AB9 /* JIGWebView.swift */; };
 		6214934725509C3F006C36F9 /* JIGInstanceConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */; };
 		621ECCB72542045900D3D615 /* JIGBridgedJSTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = 621ECCB42542045900D3D615 /* JIGBridgedJSTypes.m */; };
 		621ECCB82542045900D3D615 /* JIGBridgedJSTypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 621ECCB62542045900D3D615 /* JIGBridgedJSTypes.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -90,7 +88,14 @@
 		A38C3D7B2848BE6F004B3680 /* JigraCookieManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38C3D7A2848BE6F004B3680 /* JigraCookieManager.swift */; };
 		A71289E627F380A500DADDF3 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71289E527F380A500DADDF3 /* Router.swift */; };
 		A71289EB27F380FD00DADDF3 /* RouterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A71289EA27F380FD00DADDF3 /* RouterTests.swift */; };
-		A767396E2B98C9BE00795F7B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A767396D2B98C9BE00795F7B /* PrivacyInfo.xcprivacy */; };
+		A76739792B98E09700795F7B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = A76739782B98E09700795F7B /* PrivacyInfo.xcprivacy */; };
+		A7BE62CC2B486A5400165ACB /* KeyValueStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7BE62CB2B486A5400165ACB /* KeyValueStore.swift */; };
+		A7D8B3522B238A840003FAD6 /* JSValueEncoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8B3512B238A840003FAD6 /* JSValueEncoder.swift */; };
+		A7D8B3632B263B8D0003FAD6 /* NestedCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8B3622B263B8D0003FAD6 /* NestedCodableTests.swift */; };
+		A7D8B3642B263B8D0003FAD6 /* Jigra.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 50503EDF1FC08594003606DC /* Jigra.framework */; };
+		A7D8B36A2B263B990003FAD6 /* CodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8B3562B23B2110003FAD6 /* CodableTests.swift */; };
+		A7D8B36E2B2692300003FAD6 /* SuperCodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D8B36D2B2692300003FAD6 /* SuperCodableTests.swift */; };
+		A7D9312F2B23710300FF59A2 /* JSValueDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7D9312E2B23710300FF59A2 /* JSValueDecoder.swift */; };
 		A7DB03AC29B001E300888AE9 /* JIGBridgedPlugin+getMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DB03AB29B001E300888AE9 /* JIGBridgedPlugin+getMethod.swift */; };
 		A7F7EDCD291EC75C0015B73B /* JIGPlugin+LoadInstance.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F7EDCC291EC75C0015B73B /* JIGPlugin+LoadInstance.swift */; };
 		A7F7EDD5292BE8520015B73B /* JIGInstancePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F7EDD4292BE8520015B73B /* JIGInstancePlugin.swift */; };
@@ -117,6 +122,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 6296A77A253A2E49005A202A;
 			remoteInfo = TestsHostApp;
+		};
+		A7D8B3652B263B8D0003FAD6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 50503ED61FC08594003606DC /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 50503EDE1FC08594003606DC;
+			remoteInfo = Jigra;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -145,12 +157,10 @@
 		2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "JIGBridgeViewController+CDVScreenOrientationDelegate.m"; sourceTree = "<group>"; };
 		373A69C0255C9360000A6F44 /* NotificationHandlerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationHandlerProtocol.swift; sourceTree = "<group>"; };
 		373A69F1255C95D0000A6F44 /* NotificationRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationRouter.swift; sourceTree = "<group>"; };
-		4D0D590D29E86FAB008A6833 /* WKWebView+Jigra.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+Jigra.h"; sourceTree = "<group>"; };
 		501CBAA61FC0A723009B0D4D /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		50503EDF1FC08594003606DC /* Jigra.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Jigra.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		50503EE81FC08595003606DC /* JigraTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JigraTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		50503EED1FC08595003606DC /* JigraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JigraTests.swift; sourceTree = "<group>"; };
-		55F6736826C371E6001E7AB9 /* JIGWebView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JIGWebView.swift; sourceTree = "<group>"; };
 		6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIGInstanceConfiguration.swift; sourceTree = "<group>"; };
 		621ECCB42542045900D3D615 /* JIGBridgedJSTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JIGBridgedJSTypes.m; sourceTree = "<group>"; };
 		621ECCB62542045900D3D615 /* JIGBridgedJSTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JIGBridgedJSTypes.h; sourceTree = "<group>"; };
@@ -231,7 +241,14 @@
 		A38C3D7A2848BE6F004B3680 /* JigraCookieManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JigraCookieManager.swift; sourceTree = "<group>"; };
 		A71289E527F380A500DADDF3 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		A71289EA27F380FD00DADDF3 /* RouterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterTests.swift; sourceTree = "<group>"; };
-		A767396D2B98C9BE00795F7B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A76739782B98E09700795F7B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		A7BE62CB2B486A5400165ACB /* KeyValueStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyValueStore.swift; sourceTree = "<group>"; };
+		A7D8B3512B238A840003FAD6 /* JSValueEncoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSValueEncoder.swift; sourceTree = "<group>"; };
+		A7D8B3562B23B2110003FAD6 /* CodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableTests.swift; sourceTree = "<group>"; };
+		A7D8B3602B263B8D0003FAD6 /* CodableTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CodableTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A7D8B3622B263B8D0003FAD6 /* NestedCodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedCodableTests.swift; sourceTree = "<group>"; };
+		A7D8B36D2B2692300003FAD6 /* SuperCodableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuperCodableTests.swift; sourceTree = "<group>"; };
+		A7D9312E2B23710300FF59A2 /* JSValueDecoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSValueDecoder.swift; sourceTree = "<group>"; };
 		A7DB03AB29B001E300888AE9 /* JIGBridgedPlugin+getMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "JIGBridgedPlugin+getMethod.swift"; sourceTree = "<group>"; };
 		A7F7EDCC291EC75C0015B73B /* JIGPlugin+LoadInstance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "JIGPlugin+LoadInstance.swift"; sourceTree = "<group>"; };
 		A7F7EDD4292BE8520015B73B /* JIGInstancePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JIGInstancePlugin.swift; sourceTree = "<group>"; };
@@ -262,6 +279,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A7D8B35D2B263B8D0003FAD6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7D8B3642B263B8D0003FAD6 /* Jigra.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -281,6 +306,7 @@
 				62959AE12524DA7700A3D7F1 /* Jigra */,
 				50503EEC1FC08595003606DC /* JigraTests */,
 				6296A77C253A2E49005A202A /* TestsHostApp */,
+				A7D8B3612B263B8D0003FAD6 /* CodableTests */,
 				50503EE01FC08594003606DC /* Products */,
 				501CBAA51FC0A723009B0D4D /* Frameworks */,
 			);
@@ -292,6 +318,7 @@
 				50503EDF1FC08594003606DC /* Jigra.framework */,
 				50503EE81FC08595003606DC /* JigraTests.xctest */,
 				6296A77B253A2E49005A202A /* TestsHostApp.app */,
+				A7D8B3602B263B8D0003FAD6 /* CodableTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -318,9 +345,10 @@
 		62959AE12524DA7700A3D7F1 /* Jigra */ = {
 			isa = PBXGroup;
 			children = (
+				A7D9312C2B2370EF00FF59A2 /* Codable */,
 				0F8F33B127DA980A003F49D6 /* PluginConfig.swift */,
+				A76739782B98E09700795F7B /* PrivacyInfo.xcprivacy */,
 				62959B0F2524DA7700A3D7F1 /* Jigra.h */,
-				A767396D2B98C9BE00795F7B /* PrivacyInfo.xcprivacy */,
 				62959B132524DA7700A3D7F1 /* JIGPlugin.h */,
 				62959B012524DA7700A3D7F1 /* JIGPlugin.m */,
 				A7F7EDCC291EC75C0015B73B /* JIGPlugin+LoadInstance.swift */,
@@ -353,7 +381,6 @@
 				623D6913254C7030002D01D1 /* JIGInstanceDescriptor.swift */,
 				623D691B254C7462002D01D1 /* JIGInstanceConfiguration.h */,
 				623D691C254C7462002D01D1 /* JIGInstanceConfiguration.m */,
-				55F6736826C371E6001E7AB9 /* JIGWebView.swift */,
 				6214934625509C3F006C36F9 /* JIGInstanceConfiguration.swift */,
 				62959B082524DA7700A3D7F1 /* JIGLog.swift */,
 				62959AE72524DA7700A3D7F1 /* JIGFile.swift */,
@@ -364,7 +391,6 @@
 				62959B112524DA7700A3D7F1 /* Data+Jigra.swift */,
 				62FABD1925AE5C01007B3814 /* Array+Jigra.swift */,
 				62D43AEF2581817500673C24 /* WKWebView+Jigra.swift */,
-				4D0D590D29E86FAB008A6833 /* WKWebView+Jigra.h */,
 				62D43B642582A13D00673C24 /* WKWebView+Jigra.m */,
 				2F81F5C726FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.h */,
 				2F81F5C826FB7CB400DD35BE /* JIGBridgeViewController+CDVScreenOrientationDelegate.m */,
@@ -376,6 +402,7 @@
 				373A69F1255C95D0000A6F44 /* NotificationRouter.swift */,
 				62E79C562638AF7500414164 /* assets */,
 				A71289E527F380A500DADDF3 /* Router.swift */,
+				A7BE62CB2B486A5400165ACB /* KeyValueStore.swift */,
 				0F83E884285A332D006C43CB /* AppUUID.swift */,
 			);
 			path = Jigra;
@@ -439,6 +466,25 @@
 			path = assets;
 			sourceTree = "<group>";
 		};
+		A7D8B3612B263B8D0003FAD6 /* CodableTests */ = {
+			isa = PBXGroup;
+			children = (
+				A7D8B3622B263B8D0003FAD6 /* NestedCodableTests.swift */,
+				A7D8B3562B23B2110003FAD6 /* CodableTests.swift */,
+				A7D8B36D2B2692300003FAD6 /* SuperCodableTests.swift */,
+			);
+			path = CodableTests;
+			sourceTree = "<group>";
+		};
+		A7D9312C2B2370EF00FF59A2 /* Codable */ = {
+			isa = PBXGroup;
+			children = (
+				A7D9312E2B23710300FF59A2 /* JSValueDecoder.swift */,
+				A7D8B3512B238A840003FAD6 /* JSValueEncoder.swift */,
+			);
+			path = Codable;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -447,7 +493,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				62959B412524DA7800A3D7F1 /* Jigra.h in Headers */,
-				4D0D590F29E86FAB008A6833 /* WKWebView+Jigra.h in Headers */,
 				62959B452524DA7800A3D7F1 /* JIGPlugin.h in Headers */,
 				62959B162524DA7800A3D7F1 /* JIGPluginCall.h in Headers */,
 				62959B3B2524DA7800A3D7F1 /* JIGPluginMethod.h in Headers */,
@@ -517,13 +562,31 @@
 			productReference = 6296A77B253A2E49005A202A /* TestsHostApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A7D8B35F2B263B8D0003FAD6 /* CodableTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A7D8B3672B263B8D0003FAD6 /* Build configuration list for PBXNativeTarget "CodableTests" */;
+			buildPhases = (
+				A7D8B35C2B263B8D0003FAD6 /* Sources */,
+				A7D8B35D2B263B8D0003FAD6 /* Frameworks */,
+				A7D8B35E2B263B8D0003FAD6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A7D8B3662B263B8D0003FAD6 /* PBXTargetDependency */,
+			);
+			name = CodableTests;
+			productName = CodableTests;
+			productReference = A7D8B3602B263B8D0003FAD6 /* CodableTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
 		50503ED61FC08594003606DC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1200;
+				LastSwiftUpdateCheck = 1500;
 				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = "Drifty Co.";
 				TargetAttributes = {
@@ -540,6 +603,10 @@
 					};
 					6296A77A253A2E49005A202A = {
 						CreatedOnToolsVersion = 12.0;
+						ProvisioningStyle = Automatic;
+					};
+					A7D8B35F2B263B8D0003FAD6 = {
+						CreatedOnToolsVersion = 15.0.1;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -566,6 +633,7 @@
 				50503EDE1FC08594003606DC /* Jigra */,
 				50503EE71FC08595003606DC /* JigraTests */,
 				6296A77A253A2E49005A202A /* TestsHostApp */,
+				A7D8B35F2B263B8D0003FAD6 /* CodableTests */,
 			);
 		};
 /* End PBXProject section */
@@ -585,7 +653,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A767396E2B98C9BE00795F7B /* PrivacyInfo.xcprivacy in Resources */,
+				A76739792B98E09700795F7B /* PrivacyInfo.xcprivacy in Resources */,
 				62E79CD7263A178B00414164 /* native-bridge.js in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -607,6 +675,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A7D8B35E2B263B8D0003FAD6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -614,10 +689,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				55F6736A26C371E6001E7AB9 /* JIGWebView.swift in Sources */,
 				A38C3D7728484E76004B3680 /* JigraCookies.swift in Sources */,
 				A71289E627F380A500DADDF3 /* Router.swift in Sources */,
 				A327E6B828DB8B2900CA8B0A /* JigraUrlRequest.swift in Sources */,
+				A7D9312F2B23710300FF59A2 /* JSValueDecoder.swift in Sources */,
 				62959B362524DA7800A3D7F1 /* JIGBridgeViewController.swift in Sources */,
 				621ECCB72542045900D3D615 /* JIGBridgedJSTypes.m in Sources */,
 				62959B402524DA7800A3D7F1 /* TmpViewController.swift in Sources */,
@@ -629,6 +704,7 @@
 				621ECCDA254205C400D3D615 /* JigraBridge.swift in Sources */,
 				62959B382524DA7800A3D7F1 /* JIGPluginCall.m in Sources */,
 				623D690A254C6FDF002D01D1 /* JIGInstanceDescriptor.m in Sources */,
+				A7D8B3522B238A840003FAD6 /* JSValueEncoder.swift in Sources */,
 				A7F7EDD5292BE8520015B73B /* JIGInstancePlugin.swift in Sources */,
 				A38C3D7B2848BE6F004B3680 /* JigraCookieManager.swift in Sources */,
 				62959B1B2524DA7800A3D7F1 /* JIGFile.swift in Sources */,
@@ -648,6 +724,7 @@
 				A327E6B628DB8B2900CA8B0A /* HttpRequestHandler.swift in Sources */,
 				62959B422524DA7800A3D7F1 /* DocLinks.swift in Sources */,
 				62FABD1A25AE5C01007B3814 /* Array+Jigra.swift in Sources */,
+				A7BE62CC2B486A5400165ACB /* KeyValueStore.swift in Sources */,
 				62959B172524DA7800A3D7F1 /* JSExport.swift in Sources */,
 				373A69C1255C9360000A6F44 /* NotificationHandlerProtocol.swift in Sources */,
 				0F83E885285A332E006C43CB /* AppUUID.swift in Sources */,
@@ -694,6 +771,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A7D8B35C2B263B8D0003FAD6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A7D8B3632B263B8D0003FAD6 /* NestedCodableTests.swift in Sources */,
+				A7D8B36A2B263B990003FAD6 /* CodableTests.swift in Sources */,
+				A7D8B36E2B2692300003FAD6 /* SuperCodableTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -706,6 +793,11 @@
 			isa = PBXTargetDependency;
 			target = 6296A77A253A2E49005A202A /* TestsHostApp */;
 			targetProxy = 6296A796253A2EAE005A202A /* PBXContainerItemProxy */;
+		};
+		A7D8B3662B263B8D0003FAD6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 50503EDE1FC08594003606DC /* Jigra */;
+			targetProxy = A7D8B3652B263B8D0003FAD6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -911,6 +1003,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -930,6 +1023,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
@@ -989,6 +1083,58 @@
 			};
 			name = Release;
 		};
+		A7D8B3682B263B8D0003FAD6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.CodableTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A7D8B3692B263B8D0003FAD6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jigrajs.ios.CodableTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1024,6 +1170,15 @@
 			buildConfigurations = (
 				6296A78C253A2E49005A202A /* Debug */,
 				6296A78D253A2E49005A202A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A7D8B3672B263B8D0003FAD6 /* Build configuration list for PBXNativeTarget "CodableTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7D8B3682B263B8D0003FAD6 /* Debug */,
+				A7D8B3692B263B8D0003FAD6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

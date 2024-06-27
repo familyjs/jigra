@@ -84,6 +84,14 @@ export interface JigraConfig {
    */
   backgroundColor?: string;
 
+  /**
+   * Enable zooming within the Jigra Web View.
+   *
+   * @default false
+   * @since 6.0.0
+   */
+  zoomEnabled?: boolean;
+
   android?: {
     /**
      * Specify a custom path to the native Android project.
@@ -121,6 +129,14 @@ export interface JigraConfig {
      * @since 1.1.0
      */
     backgroundColor?: string;
+
+    /**
+     * Enable zooming within the Jigra Web View for Android.
+     *
+     * @default false
+     * @since 6.0.0
+     */
+    zoomEnabled?: boolean;
 
     /**
      * Enable mixed content in the Jigra Web View for Android.
@@ -333,6 +349,14 @@ export interface JigraConfig {
     backgroundColor?: string;
 
     /**
+     * Enable zooming within the Jigra Web View for iOS.
+     *
+     * @default false
+     * @since 6.0.0
+     */
+    zoomEnabled?: boolean;
+
+    /**
      * Configure the scroll view's content inset adjustment behavior.
      *
      * This will set the
@@ -480,7 +504,7 @@ export interface JigraConfig {
      * will continue to work long term as allowing non-standard schemes to modify query parameters and url fragments is only allowed for compatibility reasons.
      *
      * @since 1.2.0
-     * @default http
+     * @default https
      */
     androidScheme?: string;
 
@@ -582,16 +606,6 @@ export interface JigraConfig {
   includePlugins?: string[];
 }
 
-export interface LiveUpdateConfig {
-  appId: string;
-  channel: string;
-  autoUpdateMethod: AutoUpdateMethod;
-  maxVersions?: number;
-  key?: string;
-}
-
-export type AutoUpdateMethod = 'none' | 'background';
-
 export interface PluginsConfig {
   /**
    * Plugin configuration by class name.
@@ -605,13 +619,6 @@ export interface PluginsConfig {
     | undefined;
 
   /**
-   * Jigra Live Updates plugin configuration
-   *
-   * @since 4.2.0
-   */
-  LiveUpdates?: LiveUpdateConfig;
-
-  /**
    * Jigra Cookies plugin configuration
    *
    * @since 4.3.0
@@ -623,14 +630,6 @@ export interface PluginsConfig {
      * @default false
      */
     enabled?: boolean;
-    /**
-     * Enable `httpOnly` and other insecure cookies to be read and accessed on Android.
-     *
-     * Note: This can potentially be a security risk and is only intended to be used
-     * when your application uses a custom scheme on Android.
-     *
-     */
-    androidCustomSchemeAllowInsecureAccess?: boolean;
   };
 
   /**

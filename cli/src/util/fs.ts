@@ -1,4 +1,10 @@
-import { existsSync, lstatSync, readdirSync, rmdirSync, unlinkSync } from '@familyjs/utils-fs';
+import {
+  existsSync,
+  lstatSync,
+  readdirSync,
+  rmdirSync,
+  unlinkSync,
+} from '@familyjs/utils-fs';
 import { join } from 'path';
 
 export const convertToUnixPath = (path: string): string => {
@@ -7,7 +13,7 @@ export const convertToUnixPath = (path: string): string => {
 
 export const deleteFolderRecursive = (directoryPath: any): void => {
   if (existsSync(directoryPath)) {
-    readdirSync(directoryPath).forEach((file) => {
+    readdirSync(directoryPath).forEach(file => {
       const curPath = join(directoryPath, file);
       if (lstatSync(curPath).isDirectory()) {
         deleteFolderRecursive(curPath);

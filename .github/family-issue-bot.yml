@@ -27,3 +27,16 @@ comment:
         Thanks!
         Famibot 💙
   dryRun: false
+
+closeAndLock:
+  labels:
+    - label: "support request"
+      message: >
+        Thanks for the issue! This issue appears to be a support request. We use this issue tracker exclusively for
+        bug reports and feature requests. Please use our [forum](https://github.com/familyjs/jigra/discussions/) for questions about Jigra.
+
+
+        Thank you for using Jigra!
+  close: true
+  lock: true
+  dryRun: false

@@ -11,7 +11,7 @@ export const Jigra = /*#__PURE__*/ initJigraGlobal(
     ? window
     : typeof global !== 'undefined'
     ? global
-    : {}
+    : {},
 );
 
 export const registerPlugin = Jigra.registerPlugin;
@@ -34,4 +34,5 @@ export const Plugins = Jigra.Plugins;
  *
  * @deprecated Deprecated in v3, will be removed from v4.
  */
-export const registerWebPlugin = (plugin: WebPlugin): void => legacyRegisterWebPlugin(Jigra, plugin);
+export const registerWebPlugin = (plugin: WebPlugin): void =>
+  legacyRegisterWebPlugin(Jigra, plugin);

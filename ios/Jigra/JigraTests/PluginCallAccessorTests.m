@@ -1,14 +1,6 @@
 #import <XCTest/XCTest.h>
 #import <Jigra/Jigra.h>
 #import <Jigra/JIGBridgedJSTypes.h>
-// forward declaration of internal jigra classes that are exposed in the swift header via the @testable import.
-@interface JIGWebViewAssetHandler: NSObject
-@end
-@interface JigraBridge: NSObject
-@end
-@interface JIGWebViewDelegationHandler: NSObject
-@end
-// import that will fail without the declarations
 #import "JigraTests-Swift.h"
 
 // interface for this class

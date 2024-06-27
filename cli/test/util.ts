@@ -1,4 +1,10 @@
-import { mkdir, mkdirp, readFile, pathExists, writeFile } from '@familyjs/utils-fs';
+import {
+  mkdir,
+  mkdirp,
+  readFile,
+  pathExists,
+  writeFile,
+} from '@familyjs/utils-fs';
 import { exec } from 'child_process';
 import { join, resolve } from 'path';
 import tmp from 'tmp';
@@ -21,15 +27,21 @@ export async function makeConfig(appRoot: string): Promise<Config> {
   return config;
 }
 
-export async function run(appRoot: string, jigCommand: string): Promise<string> {
+export async function run(
+  appRoot: string,
+  jigCommand: string,
+): Promise<string> {
   return new Promise((resolve, reject) => {
-    exec(`cd "${appRoot}" && "${cwd}/bin/jigra" ${jigCommand}`, (error, stdout, stderr) => {
-      if (error) {
-        reject(stdout + stderr);
-      } else {
-        resolve(stdout);
-      }
-    });
+    exec(
+      `cd "${appRoot}" && "${cwd}/bin/jigra" ${jigCommand}`,
+      (error, stdout, stderr) => {
+        if (error) {
+          reject(stdout + stderr);
+        } else {
+          resolve(stdout);
+        }
+      },
+    );
   });
 }
 
@@ -37,7 +49,7 @@ export function mktmp(): Promise<{
   cleanupCallback: DirCallback;
   path: string;
 }> {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     tmp.dir((err, path, cleanupCallback) => {
       if (err) {
         throw err;
@@ -64,7 +76,10 @@ const APP_INDEX = `
 </html>
 `;
 
-export async function installPlatform(appDir: string, platform: string): Promise<void> {
+export async function installPlatform(
+  appDir: string,
+  platform: string,
+): Promise<void> {
   const platformPath = resolve(cwd, '..', platform);
   await runCommand('npm', ['install', platformPath], { cwd: appDir });
 }
@@ -72,7 +87,9 @@ export async function installPlatform(appDir: string, platform: string): Promise
 export async function makeAppDir(monoRepoLike = false): Promise<void> {
   const appDirObj: any = await mktmp();
   const tmpDir = appDirObj.path;
-  const rootDir = monoRepoLike ? join(tmpDir, 'test-root') : join(tmpDir, 'test-app');
+  const rootDir = monoRepoLike
+    ? join(tmpDir, 'test-root')
+    : join(tmpDir, 'test-app');
   if (monoRepoLike) {
     await mkdir(rootDir);
   }
@@ -177,7 +194,10 @@ async function makeCordovaPlugin(cordovaPluginPath: string) {
   await mkdirp(cordovaPluginPath);
   await writeFile(join(cordovaPluginPath, 'plugin.js'), CODOVA_PLUGIN_JS);
   await writeFile(join(cordovaPluginPath, 'plugin.xml'), CORDOVA_PLUGIN_XML);
-  await writeFile(join(cordovaPluginPath, 'package.json'), CORDOVA_PLUGIN_PACKAGE);
+  await writeFile(
+    join(cordovaPluginPath, 'package.json'),
+    CORDOVA_PLUGIN_PACKAGE,
+  );
   await mkdirp(iosPath);
   await mkdirp(androidPath);
   await writeFile(join(iosPath, 'CoolPlugin.m'), '');

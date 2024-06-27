@@ -1,6 +1,6 @@
 {
   "name": "@jigra/core",
-  "version": "5.7.7",
+  "version": "6.0.0-alpha.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Family Team",
@@ -15,16 +15,19 @@
   "files": [
     "dist/",
     "types/",
-    "cordova.js"
+    "cookies.md",
+    "cordova.js",
+    "http.md"
   ],
   "main": "dist/index.cjs.js",
   "module": "dist/index.js",
   "types": "types/index.d.ts",
   "unpkg": "dist/jigra.js",
   "scripts": {
-    "build": "npm run clean && npm run transpile && npm run rollup",
+    "build": "npm run clean && npm run docgen && npm run transpile && npm run rollup",
     "build:nativebridge": "tsc native-bridge.ts --target es2017 --moduleResolution node --outDir build && rollup --config rollup.bridge.config.js",
     "clean": "rimraf dist",
+    "docgen": "docgen --api JigraCookiesPlugin --output-readme cookies.md && docgen --api JigraHttpPlugin --output-readme http.md",
     "prepublishOnly": "npm run build",
     "rollup": "rollup --config rollup.config.js",
     "transpile": "tsc",
@@ -36,6 +39,7 @@
     "tslib": "^2.1.0"
   },
   "devDependencies": {
+    "@jigra/docgen": "^0.2.2",
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-replace": "^2.4.2",
     "@types/jest": "^29.5.0",

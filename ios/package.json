@@ -1,6 +1,6 @@
 {
   "name": "@jigra/ios",
-  "version": "5.7.7",
+  "version": "6.0.0-alpha.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Family Team",
@@ -22,10 +22,11 @@
   "scripts": {
     "verify": "npm run xc:build:Jigra && npm run xc:build:JigraCordova",
     "xc:build:Jigra": "cd Jigra && xcodebuild -workspace Jigra.xcworkspace -scheme Jigra && cd ..",
-    "xc:build:JigraCordova": "cd JigraCordova && xcodebuild && cd .."
+    "xc:build:JigraCordova": "cd JigraCordova && xcodebuild && cd ..",
+    "xc:build:xcframework": "scripts/build.sh xcframework"
   },
   "peerDependencies": {
-    "@jigra/core": "^5.7.0"
+    "@jigra/core": "^6.0.0-alpha.0"
   },
   "publishConfig": {
     "access": "public"

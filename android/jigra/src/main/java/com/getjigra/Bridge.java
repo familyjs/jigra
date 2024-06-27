@@ -26,6 +26,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
+import androidx.webkit.WebViewCompat;
+import androidx.webkit.WebViewFeature;
 import com.getjigra.android.R;
 import com.getjigra.annotation.JigraPlugin;
 import com.getjigra.annotation.Permission;
@@ -40,6 +42,7 @@ import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -249,7 +252,17 @@ public class Bridge {
         final boolean html5mode = this.config.isHTML5Mode();
 
         // Start the local web server
-        localServer = new WebViewLocalServer(context, this, getJSInjector(), authorities, html5mode);
+        JSInjector injector = getJSInjector();
+        if (WebViewFeature.isFeatureSupported(WebViewFeature.DOCUMENT_START_SCRIPT)) {
+            String allowedOrigin = appUrl;
+            Uri appUri = Uri.parse(appUrl);
+            if (appUri.getPath() != null) {
+                allowedOrigin = appUri.toString().replace(appUri.getPath(), "");
+            }
+            WebViewCompat.addDocumentStartJavaScript(webView, injector.getScriptString(), Collections.singleton(allowedOrigin));
+            injector = null;
+        }
+        localServer = new WebViewLocalServer(context, this, injector, authorities, html5mode);
         localServer.hostAssets(DEFAULT_WEB_ASSET_DIR);
 
         Logger.debug("Loading app at " + appUrl);
@@ -390,7 +403,8 @@ public class Bridge {
     private boolean isNewBinary() {
         String versionCode = "";
         String versionName = "";
-        SharedPreferences prefs = getContext().getSharedPreferences(com.getjigra.plugin.WebView.WEBVIEW_PREFS_NAME, Activity.MODE_PRIVATE);
+        SharedPreferences prefs = getContext()
+            .getSharedPreferences(com.getjigra.plugin.WebView.WEBVIEW_PREFS_NAME, Activity.MODE_PRIVATE);
         String lastVersionCode = prefs.getString(LAST_BINARY_VERSION_CODE, null);
         String lastVersionName = prefs.getString(LAST_BINARY_VERSION_NAME, null);
 
@@ -569,6 +583,9 @@ public class Bridge {
         } catch (IllegalArgumentException ex) {
             Logger.debug("WebView background color not applied");
         }
+
+        settings.setDisplayZoomControls(false);
+        settings.setBuiltInZoomControls(this.config.isZoomableWebView());
 
         if (config.isInitialFocus()) {
             webView.requestFocusFromTouch();

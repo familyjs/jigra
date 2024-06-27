@@ -12,5 +12,4 @@ FOUNDATION_EXPORT const unsigned char JigraVersionString[];
 #import <Jigra/JIGPluginMethod.h>
 #import <Jigra/JIGInstanceDescriptor.h>
 #import <Jigra/JIGInstanceConfiguration.h>
-#import <Jigra/WKWebView+Jigra.h>
 

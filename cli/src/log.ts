@@ -15,7 +15,9 @@ const options = {
   stream: process.argv.includes('--json') ? process.stderr : process.stdout,
 };
 
-export const output = isInteractive() ? new TTYOutputStrategy(options) : new StreamOutputStrategy(options);
+export const output = isInteractive()
+  ? new TTYOutputStrategy(options)
+  : new StreamOutputStrategy(options);
 
 export const logger = createDefaultLogger({
   output,
@@ -30,7 +32,10 @@ export const logger = createDefaultLogger({
   },
 });
 
-export async function logPrompt<T extends string>(msg: string, promptObject: PromptObject<T>): Promise<Answers<T>> {
+export async function logPrompt<T extends string>(
+  msg: string,
+  promptObject: PromptObject<T>,
+): Promise<Answers<T>> {
   const { wordWrap } = await import('@familyjs/cli-framework-output');
   const { prompt } = await import('prompts');
 

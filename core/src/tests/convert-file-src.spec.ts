@@ -1,5 +1,8 @@
 import { initBridge } from '../../native-bridge';
-import type { JigraInstance, WindowJigra } from '../definitions-internal';
+import type {
+  JigraInstance,
+  WindowJigra,
+} from '../definitions-internal';
 import { createJigra } from '../runtime';
 
 describe('convertFileSrc', () => {
@@ -15,15 +18,21 @@ describe('convertFileSrc', () => {
   });
 
   it('starts with content://', () => {
-    expect(jig.convertFileSrc('content://myfile')).toBe('webviewSeverUrl/_jigra_content_/myfile');
+    expect(jig.convertFileSrc('content://myfile')).toBe(
+      'webviewSeverUrl/_jigra_content_/myfile',
+    );
   });
 
   it('starts with file://', () => {
-    expect(jig.convertFileSrc('file://myfile')).toBe('webviewSeverUrl/_jigra_file_myfile');
+    expect(jig.convertFileSrc('file://myfile')).toBe(
+      'webviewSeverUrl/_jigra_file_myfile',
+    );
   });
 
   it('starts with /', () => {
-    expect(jig.convertFileSrc('/myfile')).toBe('webviewSeverUrl/_jigra_file_/myfile');
+    expect(jig.convertFileSrc('/myfile')).toBe(
+      'webviewSeverUrl/_jigra_file_/myfile',
+    );
   });
 
   it('non string', () => {

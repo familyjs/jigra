@@ -26,7 +26,7 @@ class RouterTests: XCTestCase {
 
     func checkRouter(path: String, expected: String) {
         XCTContext.runActivity(named: "router creates route path correctly") { _ in
-            var router = _Router()
+            var router = JigraRouter()
             XCTAssertEqual(router.route(for: path), expected)
             router.basePath = "/A/Route"
             XCTAssertEqual(router.route(for: path), "/A/Route" + expected)

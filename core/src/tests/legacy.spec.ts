@@ -92,7 +92,7 @@ describe('legacy', () => {
     expect(() => {
       legacyRegisterWebPlugin(jig, new LegacyWebPlugin({} as any));
     }).toThrowError(
-      'Jigra WebPlugin is using the deprecated "registerWebPlugin()" function, but without the config. Please use "registerPlugin()" instead to register this web plugin."'
+      'Jigra WebPlugin is using the deprecated "registerWebPlugin()" function, but without the config. Please use "registerPlugin()" instead to register this web plugin."',
     );
   });
 
@@ -103,11 +103,11 @@ describe('legacy', () => {
     expect(() => {
       legacyRegisterWebPlugin(jig, new LegacyWebPlugin());
     }).toThrowError(
-      'Jigra WebPlugin is using the deprecated "registerWebPlugin()" function, but without the config. Please use "registerPlugin()" instead to register this web plugin."'
+      'Jigra WebPlugin is using the deprecated "registerWebPlugin()" function, but without the config. Please use "registerPlugin()" instead to register this web plugin."',
     );
   });
 
-  it('doc.addEventListener backbutton', (done) => {
+  it('doc.addEventListener backbutton', done => {
     const AppWeb = class {
       async addListener(eventName: string) {
         expect(eventName).toBe('backButton');
@@ -135,7 +135,7 @@ describe('legacy', () => {
     win.document.addEventListener('backbutton', bbCallback);
   });
 
-  it('doc.addEventListener deviceready', (done) => {
+  it('doc.addEventListener deviceready', done => {
     win = {
       document: {
         addEventListener() {

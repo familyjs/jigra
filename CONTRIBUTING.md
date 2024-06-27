@@ -53,7 +53,7 @@ On web, this means do not add any third party libraries such as Firebase or Loda
 ### Local Setup
 
 1. Fork and clone the repo.
-1. Install the monorepo dependencies.
+1. Install the dependencies.
 
     ```shell
     npm install
@@ -65,11 +65,14 @@ On web, this means do not add any third party libraries such as Firebase or Loda
     brew install swiftlint
     ```
 
-1. Install package dependencies. [Lerna](https://github.com/lerna/lerna) can automatically install each package's dependencies.
+### Branches
 
-    ```shell
-    npx lerna bootstrap
-    ```
+* [`main`](https://github.com/familyjs/jigra/tree/main): Latest Jigra development branch
+* [`5.x`](https://github.com/familyjs/jigra/tree/5.x): Jigra 5
+* [`4.x`](https://github.com/familyjs/jigra/tree/4.x): Jigra 4 (security fixes only)
+* [`3.x`](https://github.com/familyjs/jigra/tree/3.x): Jigra 3 (not maintained)
+* [`2.x`](https://github.com/familyjs/jigra/tree/2.x): Jigra 2 (not maintained)
+* [`1.x`](https://github.com/familyjs/jigra/tree/1.x): Jigra 1 (not maintained)
 
 ### Directory Structure
 

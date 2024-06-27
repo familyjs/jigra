@@ -9,8 +9,6 @@
 #define JIGPluginReturnNone @"none"
 #define JIGPluginReturnCallback @"callback"
 #define JIGPluginReturnPromise @"promise"
-#define JIGPluginReturnWatch @"watch"
-#define JIGPluginReturnSync @"sync" // not used
 
 @class JIGPluginCall;
 @class JIGPlugin;

@@ -3,84 +3,87 @@ import type { Config, FrameworkConfig } from './definitions';
 const FRAMEWORK_CONFIGS: FrameworkConfig[] = [
   {
     name: 'Create React App',
-    isMatch: (config) => hasDependency(config, 'react-scripts'),
+    isMatch: config => hasDependency(config, 'react-scripts'),
     webDir: 'build',
     priority: 3,
   },
   {
     name: 'Ember',
-    isMatch: (config) => hasDependency(config, 'ember-cli'),
+    isMatch: config => hasDependency(config, 'ember-cli'),
     webDir: 'dist',
     priority: 3,
   },
   {
     name: 'Gatsby',
-    isMatch: (config) => hasDependency(config, 'gatsby'),
+    isMatch: config => hasDependency(config, 'gatsby'),
     webDir: 'public',
     priority: 2,
   },
   {
     name: 'Family React',
-    isMatch: (config) => hasDependency(config, '@familyjs/react'),
+    isMatch: config => hasDependency(config, '@familyjs/react'),
     webDir: 'build',
     priority: 1,
   },
   {
     name: 'Family Kdu',
-    isMatch: (config) => hasDependency(config, '@familyjs/kdu'),
+    isMatch: config => hasDependency(config, '@familyjs/kdu'),
     webDir: 'public',
     priority: 1,
   },
   {
     name: 'Next',
-    isMatch: (config) => hasDependency(config, 'next'),
+    isMatch: config => hasDependency(config, 'next'),
     webDir: 'public',
     priority: 2,
   },
   {
     name: 'Preact',
-    isMatch: (config) => hasDependency(config, 'preact-cli'),
+    isMatch: config => hasDependency(config, 'preact-cli'),
     webDir: 'build',
     priority: 3,
   },
   {
     name: 'Rindo',
-    isMatch: (config) => hasDependency(config, '@rindo/core'),
+    isMatch: config => hasDependency(config, '@rindo/core'),
     webDir: 'www',
     priority: 3,
   },
   {
     name: 'Svelte',
-    isMatch: (config) => hasDependency(config, 'svelte') && hasDependency(config, 'sirv-cli'),
+    isMatch: config =>
+      hasDependency(config, 'svelte') && hasDependency(config, 'sirv-cli'),
     webDir: 'public',
     priority: 3,
   },
   {
     name: 'Wite',
-    isMatch: (config) => hasDependency(config, 'wite'),
+    isMatch: config => hasDependency(config, 'wite'),
     webDir: 'dist',
     priority: 2,
   },
   {
     name: 'Lahm',
-    isMatch: (config) => hasDependency(config, 'lahm'),
+    isMatch: config => hasDependency(config, 'lahm'),
     webDir: 'dist',
     priority: 2,
   },
   {
     name: 'Kdu',
-    isMatch: (config) => hasDependency(config, '@kdujs/cli-service'),
+    isMatch: config => hasDependency(config, '@kdujs/cli-service'),
     webDir: 'dist',
     priority: 3,
   },
 ];
 
 export function detectFramework(config: Config): FrameworkConfig | undefined {
-  const frameworks = FRAMEWORK_CONFIGS.filter((f) => f.isMatch(config)).sort((a, b) => {
-    if (a.priority < b.priority) return -1;
-    if (a.priority > b.priority) return 1;
-    return 0;
-  });
+  const frameworks = FRAMEWORK_CONFIGS.filter(f => f.isMatch(config)).sort(
+    (a, b) => {
+      if (a.priority < b.priority) return -1;
+      if (a.priority > b.priority) return 1;
+      return 0;
+    },
+  );
   return frameworks[0];
 }
 

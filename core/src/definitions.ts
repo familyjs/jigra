@@ -35,12 +35,21 @@ export interface JigraGlobal {
   /**
    * Add a listener for a plugin event.
    */
-  addListener?: (pluginName: string, eventName: string, callback: PluginCallback) => PluginListenerHandle;
+  addListener?: (
+    pluginName: string,
+    eventName: string,
+    callback: PluginCallback,
+  ) => PluginListenerHandle;
 
   /**
    * Remove a listener to a plugin event.
    */
-  removeListener?: (pluginName: string, callbackId: string, eventName: string, callback: PluginCallback) => void;
+  removeListener?: (
+    pluginName: string,
+    callbackId: string,
+    eventName: string,
+    callback: PluginCallback,
+  ) => void;
 
   DEBUG?: boolean;
   isLoggingEnabled?: boolean;
@@ -58,7 +67,11 @@ export interface JigraGlobal {
    * logging a warning. Provided for backwards compatibility.
    * @deprecated Deprecated in v3, will be removed from v4
    */
-  pluginMethodNoop: (target: any, key: PropertyKey, pluginName: string) => Promise<never>;
+  pluginMethodNoop: (
+    target: any,
+    key: PropertyKey,
+    pluginName: string,
+  ) => Promise<never>;
 
   /**
    * @deprecated Use `isNativePlatform()` instead
@@ -84,7 +97,10 @@ export interface JigraGlobal {
  * @param pluginName The unique CamelCase name of this plugin.
  * @param implementations The map of plugin implementations.
  */
-export type RegisterPlugin = <T>(pluginName: string, implementations?: Readonly<PluginImplementations>) => T;
+export type RegisterPlugin = <T>(
+  pluginName: string,
+  implementations?: Readonly<PluginImplementations>,
+) => T;
 
 /**
  * A map of plugin implementations.
@@ -98,11 +114,18 @@ export type PluginImplementations = {
 };
 
 export interface Plugin {
-  addListener(eventName: string, listenerFunc: (...args: any[]) => any): Promise<PluginListenerHandle>;
+  addListener(
+    eventName: string,
+    listenerFunc: (...args: any[]) => any,
+  ): Promise<PluginListenerHandle>;
   removeAllListeners(): Promise<void>;
 }
 
-export type PermissionState = 'prompt' | 'prompt-with-rationale' | 'granted' | 'denied';
+export type PermissionState =
+  | 'prompt'
+  | 'prompt-with-rationale'
+  | 'granted'
+  | 'denied';
 
 export interface PluginListenerHandle {
   remove: () => Promise<void>;
@@ -116,4 +139,7 @@ export interface PluginResultError {
   message: string;
 }
 
-export type PluginCallback = (data: PluginResultData, error?: PluginResultError) => void;
+export type PluginCallback = (
+  data: PluginResultData,
+  error?: PluginResultError,
+) => void;

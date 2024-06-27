@@ -4,13 +4,13 @@
       "hoist": true
     },
     "version": {
-      "allowBranch": "5.x",
+      "allowBranch": "main",
       "conventionalCommits": true,
       "createRelease": "github",
       "message": "Release %s",
       "tagVersionPrefix": ""
     }
   },
-  "version": "5.7.7",
+  "version": "6.0.0-alpha.0",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json"
 }

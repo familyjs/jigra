@@ -23,6 +23,7 @@ android-template/app/app.iml
 .settings/
 .project
 .env
+jigra-build.log
 
 # Carthage and Carthage-built binaries
 Carthage

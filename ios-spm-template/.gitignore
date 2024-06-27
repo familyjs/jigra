@@ -1,0 +1,13 @@
+App/build
+App/Pods
+App/output
+App/App/public
+DerivedData
+xcuserdata
+
+# Cordova plugins for Jigra
+jigra-cordova-ios-plugins
+
+# Generated Config files
+App/App/jigra.config.json
+App/App/config.xml

@@ -29,8 +29,7 @@ public class JIGWebViewPlugin: JIGPlugin {
     @objc func persistServerBasePath(_ call: JIGPluginCall) {
         if let viewController = bridge?.viewController as? JIGBridgeViewController {
             let path = viewController.getServerBasePath()
-            let defaults = UserDefaults.standard
-            defaults.set(path, forKey: "serverBasePath")
+            KeyValueStore.standard["serverBasePath"] = path
             call.resolve()
         }
     }

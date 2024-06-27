@@ -464,7 +464,10 @@ public class JigraHttpUrlConnection implements IJigraHttpUrlConnection {
         try {
             Class<?> sslPinningImpl = Class.forName("io.family.sslpinning.SSLPinning");
             Method method = sslPinningImpl.getDeclaredMethod("getSSLSocketFactory", Bridge.class);
-            SSLSocketFactory sslSocketFactory = (SSLSocketFactory) method.invoke(sslPinningImpl.newInstance(), bridge);
+            SSLSocketFactory sslSocketFactory = (SSLSocketFactory) method.invoke(
+                sslPinningImpl.getDeclaredConstructor().newInstance(),
+                bridge
+            );
             if (sslSocketFactory != null) {
                 ((HttpsURLConnection) this.connection).setSSLSocketFactory(sslSocketFactory);
             }

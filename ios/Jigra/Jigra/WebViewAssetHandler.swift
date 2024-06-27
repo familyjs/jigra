@@ -3,20 +3,20 @@ import MobileCoreServices
 
 @objc(JIGWebViewAssetHandler)
 // swiftlint:disable type_body_length
-internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
+open class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
     private var router: Router
     private var serverUrl: URL?
 
-    init(router: Router) {
+    public init(router: Router) {
         self.router = router
         super.init()
     }
 
-    func setAssetPath(_ assetPath: String) {
+    open func setAssetPath(_ assetPath: String) {
         router.basePath = assetPath
     }
 
-    func setServerUrl(_ serverUrl: URL?) {
+    open func setServerUrl(_ serverUrl: URL?) {
         self.serverUrl = serverUrl
     }
 
@@ -24,7 +24,7 @@ internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
         return self.serverUrl != nil && self.serverUrl?.scheme != localUrl.scheme
     }
 
-    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+    open func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         let startPath: String
         let url = urlSchemeTask.request.url!
         let stringToLoad = url.path
@@ -106,11 +106,11 @@ internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
         urlSchemeTask.didFinish()
     }
 
-    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        urlSchemeTask.stopped = true
+    open func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        JIGLog.print("scheme stop")
     }
 
-    func mimeTypeForExtension(pathExtension: String) -> String {
+    open func mimeTypeForExtension(pathExtension: String) -> String {
         if !pathExtension.isEmpty {
             if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension as NSString, nil)?.takeRetainedValue() {
                 if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?.takeRetainedValue() {
@@ -126,7 +126,7 @@ internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
         return "text/html"
     }
 
-    func isMediaExtension(pathExtension: String) -> Bool {
+    open func isMediaExtension(pathExtension: String) -> Bool {
         let mediaExtensions = ["m4v", "mov", "mp4",
                                "aac", "ac3", "aiff", "au", "flac", "m4a", "mp3", "wav"]
         if mediaExtensions.contains(pathExtension.lowercased()) {
@@ -155,53 +155,49 @@ internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
 
         let urlSession = URLSession.shared
         let task = urlSession.dataTask(with: urlRequest) { (data, response, error) in
-            DispatchQueue.main.async {
-                guard !urlSchemeTask.stopped else { return }
-                if let error = error {
-                    urlSchemeTask.didFailWithError(error)
-                    return
-                }
-
-                if let response = response as? HTTPURLResponse {
-                    let existingHeaders = response.allHeaderFields
-                    var newHeaders: [AnyHashable: Any] = [:]
-
-                    // if using live reload, then set CORS headers
-                    if self.isUsingLiveReload(url) {
-                        newHeaders = [
-                            "Access-Control-Allow-Origin": self.serverUrl?.absoluteString ?? "",
-                            "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS, TRACE"
-                        ]
-                    }
-
-                    if let mergedHeaders = existingHeaders
-                        .merging(newHeaders, uniquingKeysWith: { (_, newHeaders) in newHeaders }) as? [String: String] {
-
-                        if let responseUrl = response.url {
-                            if let modifiedResponse = HTTPURLResponse(
-                                url: responseUrl,
-                                statusCode: response.statusCode,
-                                httpVersion: nil,
-                                headerFields: mergedHeaders
-                            ) {
-                                urlSchemeTask.didReceive(modifiedResponse)
-                            }
-                        }
-
-                        if let data = data {
-                            urlSchemeTask.didReceive(data)
-                        }
-                    }
-                }
-                urlSchemeTask.didFinish()
+            if let error = error {
+                urlSchemeTask.didFailWithError(error)
                 return
             }
+
+            if let response = response as? HTTPURLResponse {
+                let existingHeaders = response.allHeaderFields
+                var newHeaders: [AnyHashable: Any] = [:]
+
+                // if using live reload, then set CORS headers
+                if self.isUsingLiveReload(url) {
+                    newHeaders = [
+                        "Access-Control-Allow-Origin": self.serverUrl?.absoluteString ?? "",
+                        "Access-Control-Allow-Methods": "GET, HEAD, OPTIONS, TRACE"
+                    ]
+                }
+
+                if let mergedHeaders = existingHeaders.merging(newHeaders, uniquingKeysWith: { (_, newHeaders) in newHeaders }) as? [String: String] {
+
+                    if let responseUrl = response.url {
+                        if let modifiedResponse = HTTPURLResponse(
+                            url: responseUrl,
+                            statusCode: response.statusCode,
+                            httpVersion: nil,
+                            headerFields: mergedHeaders
+                        ) {
+                            urlSchemeTask.didReceive(modifiedResponse)
+                        }
+                    }
+
+                    if let data = data {
+                        urlSchemeTask.didReceive(data)
+                    }
+                }
+            }
+            urlSchemeTask.didFinish()
+            return
         }
 
         task.resume()
     }
 
-    let mimeTypes = [
+    public let mimeTypes = [
         "aaf": "application/octet-stream",
         "aca": "application/octet-stream",
         "accdb": "application/msaccess",
@@ -549,17 +545,4 @@ internal class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
         "z": "application/x-compress",
         "zip": "application/x-zip-compressed"
     ]
-}
-
-private var stoppedKey = malloc(1)
-
-private extension WKURLSchemeTask {
-    var stopped: Bool {
-        get {
-            return objc_getAssociatedObject(self, &stoppedKey) as? Bool ?? false
-        }
-        set {
-            objc_setAssociatedObject(self, &stoppedKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
-        }
-    }
 }

@@ -24,7 +24,11 @@ export async function send(msg: IPCMessage): Promise<void> {
   await mkdirp(dir);
   const logPath = resolve(dir, 'ipc.log');
 
-  debug('Sending %O IPC message to forked process (logs: %O)', msg.type, logPath);
+  debug(
+    'Sending %O IPC message to forked process (logs: %O)',
+    msg.type,
+    logPath,
+  );
 
   const fd = await open(logPath, 'a');
   const p = fork(process.argv[1], ['📡'], { stdio: ['ignore', fd, fd, 'ipc'] });
@@ -49,23 +53,29 @@ export async function receive(msg: IPCMessage): Promise<void> {
     // This request is only made if telemetry is on.
     const req = request(
       {
-        hostname: 'familyjs-api.web.app',
-        port: 443,
+        hostname: 'family-apis.onrender.com',
         path: '/events/metrics',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
       },
-      (response) => {
-        debug('Sent %O metric to events service (status: %O)', data.name, response.statusCode);
+      response => {
+        debug(
+          'Sent %O metric to events service (status: %O)',
+          data.name,
+          response.statusCode,
+        );
 
         if (response.statusCode !== 204) {
-          response.on('data', (chunk) => {
-            debug('Bad response from events service. Request body: %O', chunk.toString());
+          response.on('data', chunk => {
+            debug(
+              'Bad response from events service. Request body: %O',
+              chunk.toString(),
+            );
           });
         }
-      }
+      },
     );
 
     const body = {

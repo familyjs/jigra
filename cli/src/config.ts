@@ -1,10 +1,24 @@
-import { pathExists, readFile, readJSON, writeFile, writeJSON } from '@familyjs/utils-fs';
+import {
+  pathExists,
+  readFile,
+  readJSON,
+  writeFile,
+  writeJSON,
+} from '@familyjs/utils-fs';
 import Debug from 'debug';
 import { dirname, extname, join, relative, resolve } from 'path';
 
 import c from './colors';
 import { parseApkNameFromFlavor } from './common';
-import type { AndroidConfig, AppConfig, CLIConfig, Config, ExternalConfig, IOSConfig, WebConfig } from './definitions';
+import type {
+  AndroidConfig,
+  AppConfig,
+  CLIConfig,
+  Config,
+  ExternalConfig,
+  IOSConfig,
+  WebConfig,
+} from './definitions';
 import { OS } from './definitions';
 import { fatal, isFatal } from './errors';
 import { logger } from './log';
@@ -26,10 +40,15 @@ export async function loadConfig(): Promise<Config> {
   const cliRootDir = dirname(__dirname);
   const conf = await loadExtConfig(appRootDir);
 
-  const depsForNx = await (async (): Promise<{ devDependencies: any; dependencies: any } | object> => {
+  const depsForNx = await (async (): Promise<
+    { devDependencies: any; dependencies: any } | object
+  > => {
     if (isNXMonorepo(appRootDir)) {
       const rootOfNXMonorepo = findNXMonorepoRoot(appRootDir);
-      const pkgJSONOfMonorepoRoot: any = await tryFn(readJSON, resolve(rootOfNXMonorepo, 'package.json'));
+      const pkgJSONOfMonorepoRoot: any = await tryFn(
+        readJSON,
+        resolve(rootOfNXMonorepo, 'package.json'),
+      );
       const devDependencies = pkgJSONOfMonorepoRoot?.devDependencies ?? {};
       const dependencies = pkgJSONOfMonorepoRoot?.dependencies ?? {};
       return {
@@ -70,7 +89,10 @@ export async function loadConfig(): Promise<Config> {
   return config;
 }
 
-export async function writeConfig(extConfig: ExternalConfig, extConfigFilePath: string): Promise<void> {
+export async function writeConfig(
+  extConfig: ExternalConfig,
+  extConfigFilePath: string,
+): Promise<void> {
   switch (extname(extConfigFilePath)) {
     case '.json': {
       await writeJSON(extConfigFilePath, extConfig, { spaces: 2 });
@@ -83,12 +105,15 @@ export async function writeConfig(extConfig: ExternalConfig, extConfigFilePath: 
   }
 }
 
-type ExtConfigPairs = Pick<AppConfig, 'extConfigType' | 'extConfigName' | 'extConfigFilePath' | 'extConfig'>;
+type ExtConfigPairs = Pick<
+  AppConfig,
+  'extConfigType' | 'extConfigName' | 'extConfigFilePath' | 'extConfig'
+>;
 
 async function loadExtConfigTS(
   rootDir: string,
   extConfigName: string,
-  extConfigFilePath: string
+  extConfigFilePath: string,
 ): Promise<ExtConfigPairs> {
   try {
     const tsPath = resolveNode(rootDir, 'typescript');
@@ -96,15 +121,19 @@ async function loadExtConfigTS(
     if (!tsPath) {
       fatal(
         'Could not find installation of TypeScript.\n' +
-          `To use ${c.strong(extConfigName)} files, you must install TypeScript in your project, e.g. w/ ${c.input(
-            'npm install -D typescript'
-          )}`
+          `To use ${c.strong(
+            extConfigName,
+          )} files, you must install TypeScript in your project, e.g. w/ ${c.input(
+            'npm install -D typescript',
+          )}`,
       );
     }
 
     const ts = require(tsPath); // eslint-disable-line @typescript-eslint/no-var-requires
     const extConfigObject = requireTS(ts, extConfigFilePath) as any;
-    const extConfig = extConfigObject.default ?? extConfigObject;
+    const extConfig = extConfigObject.default
+      ? await extConfigObject.default
+      : extConfigObject;
 
     return {
       extConfigType: 'ts',
@@ -124,14 +153,14 @@ async function loadExtConfigTS(
 async function loadExtConfigJS(
   rootDir: string,
   extConfigName: string,
-  extConfigFilePath: string
+  extConfigFilePath: string,
 ): Promise<ExtConfigPairs> {
   try {
     return {
       extConfigType: 'js',
       extConfigName,
       extConfigFilePath: extConfigFilePath,
-      extConfig: require(extConfigFilePath),
+      extConfig: await require(extConfigFilePath),
     };
   } catch (e: any) {
     fatal(`Parsing ${c.strong(extConfigName)} failed.\n\n${e.stack ?? e}`);
@@ -164,10 +193,12 @@ async function loadExtConfig(rootDir: string): Promise<ExtConfigPairs> {
 async function loadCLIConfig(rootDir: string): Promise<CLIConfig> {
   const assetsDir = 'assets';
   const assetsDirAbs = join(rootDir, assetsDir);
-  const iosPlatformTemplateArchive = 'ios-template.tar.gz';
-  const iosCordovaPluginsTemplateArchive = 'jigra-cordova-ios-plugins.tar.gz';
+  const iosPlatformTemplateArchive = 'ios-pods-template.tar.gz';
+  const iosCordovaPluginsTemplateArchive =
+    'jigra-cordova-ios-plugins.tar.gz';
   const androidPlatformTemplateArchive = 'android-template.tar.gz';
-  const androidCordovaPluginsTemplateArchive = 'jigra-cordova-android-plugins.tar.gz';
+  const androidCordovaPluginsTemplateArchive =
+    'jigra-cordova-android-plugins.tar.gz';
 
   return {
     rootDir,
@@ -176,15 +207,27 @@ async function loadCLIConfig(rootDir: string): Promise<CLIConfig> {
     assets: {
       ios: {
         platformTemplateArchive: iosPlatformTemplateArchive,
-        platformTemplateArchiveAbs: resolve(assetsDirAbs, iosPlatformTemplateArchive),
+        platformTemplateArchiveAbs: resolve(
+          assetsDirAbs,
+          iosPlatformTemplateArchive,
+        ),
         cordovaPluginsTemplateArchive: iosCordovaPluginsTemplateArchive,
-        cordovaPluginsTemplateArchiveAbs: resolve(assetsDirAbs, iosCordovaPluginsTemplateArchive),
+        cordovaPluginsTemplateArchiveAbs: resolve(
+          assetsDirAbs,
+          iosCordovaPluginsTemplateArchive,
+        ),
       },
       android: {
         platformTemplateArchive: androidPlatformTemplateArchive,
-        platformTemplateArchiveAbs: resolve(assetsDirAbs, androidPlatformTemplateArchive),
+        platformTemplateArchiveAbs: resolve(
+          assetsDirAbs,
+          androidPlatformTemplateArchive,
+        ),
         cordovaPluginsTemplateArchive: androidCordovaPluginsTemplateArchive,
-        cordovaPluginsTemplateArchiveAbs: resolve(assetsDirAbs, androidCordovaPluginsTemplateArchive),
+        cordovaPluginsTemplateArchiveAbs: resolve(
+          assetsDirAbs,
+          androidCordovaPluginsTemplateArchive,
+        ),
       },
     },
     package: await readJSON(resolve(rootDir, 'package.json')),
@@ -195,7 +238,7 @@ async function loadCLIConfig(rootDir: string): Promise<CLIConfig> {
 async function loadAndroidConfig(
   rootDir: string,
   extConfig: ExternalConfig,
-  cliConfig: CLIConfig
+  cliConfig: CLIConfig,
 ): Promise<AndroidConfig> {
   const name = 'android';
   const platformDir = extConfig.android?.path ?? 'android';
@@ -219,7 +262,8 @@ async function loadAndroidConfig(
     keystorePath: extConfig.android?.buildOptions?.keystorePath,
     keystorePassword: extConfig.android?.buildOptions?.keystorePassword,
     keystoreAlias: extConfig.android?.buildOptions?.keystoreAlias,
-    keystoreAliasPassword: extConfig.android?.buildOptions?.keystoreAliasPassword,
+    keystoreAliasPassword:
+      extConfig.android?.buildOptions?.keystoreAliasPassword,
     signingType: extConfig.android?.buildOptions?.signingType,
     releaseType: extConfig.android?.buildOptions?.releaseType,
   };
@@ -252,7 +296,10 @@ async function loadAndroidConfig(
   };
 }
 
-async function loadIOSConfig(rootDir: string, extConfig: ExternalConfig): Promise<IOSConfig> {
+async function loadIOSConfig(
+  rootDir: string,
+  extConfig: ExternalConfig,
+): Promise<IOSConfig> {
   const name = 'ios';
   const platformDir = extConfig.ios?.path ?? 'ios';
   const platformDirAbs = resolve(rootDir, platformDir);
@@ -263,9 +310,23 @@ async function loadIOSConfig(rootDir: string, extConfig: ExternalConfig): Promis
   const nativeTargetDirAbs = resolve(platformDirAbs, nativeTargetDir);
   const nativeXcodeProjDir = `${nativeProjectDir}/App.xcodeproj`;
   const nativeXcodeProjDirAbs = resolve(platformDirAbs, nativeXcodeProjDir);
-  const nativeXcodeWorkspaceDirAbs = lazy(() => determineXcodeWorkspaceDirAbs(nativeProjectDirAbs));
-  const podPath = lazy(() => determineGemfileOrCocoapodPath(rootDir, platformDirAbs, nativeProjectDirAbs));
-  const webDirAbs = lazy(() => determineIOSWebDirAbs(nativeProjectDirAbs, nativeTargetDirAbs, nativeXcodeProjDirAbs));
+  const nativeXcodeWorkspaceDirAbs = lazy(() =>
+    determineXcodeWorkspaceDirAbs(nativeProjectDirAbs),
+  );
+  const podPath = lazy(() =>
+    determineGemfileOrCocoapodPath(
+      rootDir,
+      platformDirAbs,
+      nativeProjectDirAbs,
+    ),
+  );
+  const webDirAbs = lazy(() =>
+    determineIOSWebDirAbs(
+      nativeProjectDirAbs,
+      nativeTargetDirAbs,
+      nativeXcodeProjDirAbs,
+    ),
+  );
   const cordovaPluginsDir = 'jigra-cordova-ios-plugins';
 
   return {
@@ -282,7 +343,9 @@ async function loadIOSConfig(rootDir: string, extConfig: ExternalConfig): Promis
     nativeTargetDirAbs,
     nativeXcodeProjDir,
     nativeXcodeProjDirAbs,
-    nativeXcodeWorkspaceDir: lazy(async () => relative(platformDirAbs, await nativeXcodeWorkspaceDirAbs)),
+    nativeXcodeWorkspaceDir: lazy(async () =>
+      relative(platformDirAbs, await nativeXcodeWorkspaceDirAbs),
+    ),
     nativeXcodeWorkspaceDirAbs,
     webDir: lazy(async () => relative(platformDirAbs, await webDirAbs)),
     webDirAbs,
@@ -290,7 +353,10 @@ async function loadIOSConfig(rootDir: string, extConfig: ExternalConfig): Promis
   };
 }
 
-async function loadWebConfig(rootDir: string, webDir: string): Promise<WebConfig> {
+async function loadWebConfig(
+  rootDir: string,
+  webDir: string,
+): Promise<WebConfig> {
   const platformDir = webDir;
   const platformDirAbs = resolve(rootDir, platformDir);
 
@@ -314,14 +380,16 @@ function determineOS(os: NodeJS.Platform): OS {
   return OS.Unknown;
 }
 
-async function determineXcodeWorkspaceDirAbs(nativeProjectDirAbs: string): Promise<string> {
+async function determineXcodeWorkspaceDirAbs(
+  nativeProjectDirAbs: string,
+): Promise<string> {
   return resolve(nativeProjectDirAbs, 'App.xcworkspace');
 }
 
 async function determineIOSWebDirAbs(
   nativeProjectDirAbs: string,
   nativeTargetDirAbs: string,
-  nativeXcodeProjDirAbs: string
+  nativeXcodeProjDirAbs: string,
 ): Promise<string> {
   const re = /path\s=\spublic[\s\S]+?sourceTree\s=\s([^;]+)/;
   const pbxprojPath = resolve(nativeXcodeProjDirAbs, 'project.pbxproj');
@@ -332,10 +400,14 @@ async function determineIOSWebDirAbs(
 
     if (m && m[1] === 'SOURCE_ROOT') {
       logger.warn(
-        `Using the iOS project root for the ${c.strong('public')} directory is deprecated.\n` +
-          `Please follow the Upgrade Guide to move ${c.strong('public')} inside the iOS target directory: ${c.strong(
-            'https://jigrajs.web.app/docs/updating/3-0#move-public-into-the-ios-target-directory'
-          )}`
+        `Using the iOS project root for the ${c.strong(
+          'public',
+        )} directory is deprecated.\n` +
+          `Please follow the Upgrade Guide to move ${c.strong(
+            'public',
+          )} inside the iOS target directory: ${c.strong(
+            'https://jigrajs.web.app/docs/updating/3-0#move-public-into-the-ios-target-directory',
+          )}`,
       );
 
       return resolve(nativeProjectDirAbs, 'public');
@@ -391,7 +463,7 @@ async function determineAndroidStudioPath(os: OS): Promise<string> {
 async function determineGemfileOrCocoapodPath(
   rootDir: string,
   platformDir: any,
-  nativeProjectDirAbs: string
+  nativeProjectDirAbs: string,
 ): Promise<string> {
   if (process.env.JIGRA_COCOAPODS_PATH) {
     return process.env.JIGRA_COCOAPODS_PATH;
@@ -411,7 +483,11 @@ async function determineGemfileOrCocoapodPath(
   // Multi-app projects might share a single global 'Gemfile' at the Git repository root directory.
   if (!appSpecificGemfileExists) {
     try {
-      const output = await getCommandOutput('git', ['rev-parse', '--show-toplevel'], { cwd: rootDir });
+      const output = await getCommandOutput(
+        'git',
+        ['rev-parse', '--show-toplevel'],
+        { cwd: rootDir },
+      );
       if (output != null) {
         gemfilePath = resolve(output, 'Gemfile');
       }
@@ -425,7 +501,9 @@ async function determineGemfileOrCocoapodPath(
     if (!gemfileText) {
       return 'pod';
     }
-    const cocoapodsInGemfile = new RegExp(/gem 'cocoapods'/).test(gemfileText);
+    const cocoapodsInGemfile = new RegExp(/gem\s+['"]cocoapods/).test(
+      gemfileText,
+    );
 
     if (cocoapodsInGemfile) {
       return 'bundle exec pod';
@@ -439,7 +517,7 @@ async function determineGemfileOrCocoapodPath(
 
 function formatConfigTS(extConfig: ExternalConfig): string {
   // TODO: <reference> tags
-  return `import { JigraConfig } from '@jigra/cli';
+  return `import type { JigraConfig } from '@jigra/cli';
 
 const config: JigraConfig = ${formatJSObject(extConfig)};
 
@@ -452,6 +530,10 @@ export function checkExternalConfig(config: ExtConfigPairs): void {
     if (config.extConfig.bundledWebRuntime === true) {
       actionMessage = `Please, use a bundler to bundle Jigra and its plugins.`;
     }
-    logger.warn(`The ${c.strong('bundledWebRuntime')} configuration option has been deprecated. ${actionMessage}`);
+    logger.warn(
+      `The ${c.strong(
+        'bundledWebRuntime',
+      )} configuration option has been deprecated. ${actionMessage}`,
+    );
   }
 }

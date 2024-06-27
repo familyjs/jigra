@@ -1,0 +1,1 @@
+public let isJigraApp = true

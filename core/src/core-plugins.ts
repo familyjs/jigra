@@ -31,19 +31,41 @@ const encode = (str: string) =>
  * Safely web decode a string value (inspired by js-cookie)
  * @param str The string value to decode
  */
-const decode = (str: string): string => str.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
+const decode = (str: string): string =>
+  str.replace(/(%[\dA-F]{2})+/gi, decodeURIComponent);
 
 export interface JigraCookiesPlugin {
   getCookies(options?: GetCookieOptions): Promise<HttpCookieMap>;
+  /**
+   * Write a cookie to the device.
+   */
   setCookie(options: SetCookieOptions): Promise<void>;
+  /**
+   * Delete a cookie from the device.
+   */
   deleteCookie(options: DeleteCookieOptions): Promise<void>;
+  /**
+   * Clear cookies from the device at a given URL.
+   */
   clearCookies(options: ClearCookieOptions): Promise<void>;
+  /**
+   * Clear all cookies on the device.
+   */
   clearAllCookies(): Promise<void>;
 }
 
 interface HttpCookie {
+  /**
+   * The URL of the cookie.
+   */
   url?: string;
+  /**
+   * The key of the cookie.
+   */
   key: string;
+  /**
+   * The value of the cookie.
+   */
   value: string;
 }
 
@@ -52,7 +74,13 @@ interface HttpCookieMap {
 }
 
 interface HttpCookieExtras {
+  /**
+   * The path to write the cookie to.
+   */
   path?: string;
+  /**
+   * The date to expire the cookie.
+   */
   expires?: string;
 }
 
@@ -61,11 +89,14 @@ export type SetCookieOptions = HttpCookie & HttpCookieExtras;
 export type DeleteCookieOptions = Omit<HttpCookie, 'value'>;
 export type ClearCookieOptions = Omit<HttpCookie, 'key' | 'value'>;
 
-export class JigraCookiesPluginWeb extends WebPlugin implements JigraCookiesPlugin {
+export class JigraCookiesPluginWeb
+  extends WebPlugin
+  implements JigraCookiesPlugin
+{
   async getCookies(): Promise<HttpCookieMap> {
     const cookies = document.cookie;
     const cookieMap: HttpCookieMap = {};
-    cookies.split(';').forEach((cookie) => {
+    cookies.split(';').forEach(cookie => {
       if (cookie.length <= 0) return;
       // Replace first "=" with JIG_COOKIE to prevent splitting on additional "="
       let [key, value] = cookie.replace(/=/, 'JIG_COOKIE').split('JIG_COOKIE');
@@ -83,12 +114,20 @@ export class JigraCookiesPluginWeb extends WebPlugin implements JigraCookiesPlug
       const encodedValue = encode(options.value);
 
       // Clean & sanitize options
-      const expires = `; expires=${(options.expires || '').replace('expires=', '')}`; // Default is "; expires="
+      const expires = `; expires=${(options.expires || '').replace(
+        'expires=',
+        '',
+      )}`; // Default is "; expires="
 
       const path = (options.path || '/').replace('path=', ''); // Default is "path=/"
-      const domain = options.url != null && options.url.length > 0 ? `domain=${options.url}` : '';
+      const domain =
+        options.url != null && options.url.length > 0
+          ? `domain=${options.url}`
+          : '';
 
-      document.cookie = `${encodedKey}=${encodedValue || ''}${expires}; path=${path}; ${domain};`;
+      document.cookie = `${encodedKey}=${
+        encodedValue || ''
+      }${expires}; path=${path}; ${domain};`;
     } catch (error) {
       return Promise.reject(error);
     }
@@ -106,7 +145,9 @@ export class JigraCookiesPluginWeb extends WebPlugin implements JigraCookiesPlug
     try {
       const cookies = document.cookie.split(';') || [];
       for (const cookie of cookies) {
-        document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+        document.cookie = cookie
+          .replace(/^ +/, '')
+          .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
       }
     } catch (error) {
       return Promise.reject(error);
@@ -122,27 +163,65 @@ export class JigraCookiesPluginWeb extends WebPlugin implements JigraCookiesPlug
   }
 }
 
-export const JigraCookies = registerPlugin<JigraCookiesPlugin>('JigraCookies', {
-  web: () => new JigraCookiesPluginWeb(),
-});
+export const JigraCookies = registerPlugin<JigraCookiesPlugin>(
+  'JigraCookies',
+  {
+    web: () => new JigraCookiesPluginWeb(),
+  },
+);
 
 /******** END COOKIES PLUGIN ********/
 
 /******** HTTP PLUGIN ********/
 export interface JigraHttpPlugin {
+  /**
+   * Make a Http Request to a server using native libraries.
+   */
   request(options: HttpOptions): Promise<HttpResponse>;
+  /**
+   * Make a Http GET Request to a server using native libraries.
+   */
   get(options: HttpOptions): Promise<HttpResponse>;
+  /**
+   * Make a Http POST Request to a server using native libraries.
+   */
   post(options: HttpOptions): Promise<HttpResponse>;
+  /**
+   * Make a Http PUT Request to a server using native libraries.
+   */
   put(options: HttpOptions): Promise<HttpResponse>;
+  /**
+   * Make a Http PATCH Request to a server using native libraries.
+   */
   patch(options: HttpOptions): Promise<HttpResponse>;
+  /**
+   * Make a Http DELETE Request to a server using native libraries.
+   */
   delete(options: HttpOptions): Promise<HttpResponse>;
 }
 
-export type HttpResponseType = 'arraybuffer' | 'blob' | 'json' | 'text' | 'document';
+/**
+ * How to parse the Http response before returning it to the client.
+ */
+export type HttpResponseType =
+  | 'arraybuffer'
+  | 'blob'
+  | 'json'
+  | 'text'
+  | 'document';
 
 export interface HttpOptions {
+  /**
+   * The URL to send the request to.
+   */
   url: string;
+  /**
+   * The Http Request method to run. (Default is GET)
+   */
   method?: string;
+  /**
+   * URL parameters to append to the request.
+   */
   params?: HttpParams;
   /**
    * Note: On Android and iOS, data can only be a string or a JSON.
@@ -153,14 +232,17 @@ export interface HttpOptions {
    * and set the `headers["Content-Type"]` and `dataType` attributes accordingly.
    */
   data?: any;
+  /**
+   * Http Request headers to send with the request.
+   */
   headers?: HttpHeaders;
   /**
-   * How long to wait to read additional data. Resets each time new
-   * data is received
+   * How long to wait to read additional data in milliseconds.
+   * Resets each time new data is received.
    */
   readTimeout?: number;
   /**
-   * How long to wait for the initial connection.
+   * How long to wait for the initial connection in milliseconds.
    */
   connectTimeout?: number;
   /**
@@ -189,17 +271,35 @@ export interface HttpOptions {
 }
 
 export interface HttpParams {
+  /**
+   * A key/value dictionary of URL parameters to set.
+   */
   [key: string]: string | string[];
 }
 
 export interface HttpHeaders {
+  /**
+   * A key/value dictionary of Http headers.
+   */
   [key: string]: string;
 }
 
 export interface HttpResponse {
+  /**
+   * Additional data received with the Http response.
+   */
   data: any;
+  /**
+   * The status code received from the Http response.
+   */
   status: number;
+  /**
+   * The headers received from the Http response.
+   */
   headers: HttpHeaders;
+  /**
+   * The response URL recieved from the Http response.
+   */
   url: string;
 }
 
@@ -215,7 +315,11 @@ export const readBlobAsBase64 = async (blob: Blob): Promise<string> =>
     reader.onload = () => {
       const base64String = reader.result as string;
       // remove prefix "data:application/pdf;base64,"
-      resolve(base64String.indexOf(',') >= 0 ? base64String.split(',')[1] : base64String);
+      resolve(
+        base64String.indexOf(',') >= 0
+          ? base64String.split(',')[1]
+          : base64String,
+      );
     };
     reader.onerror = (error: any) => reject(error);
     reader.readAsDataURL(blob);
@@ -227,7 +331,7 @@ export const readBlobAsBase64 = async (blob: Blob): Promise<string> =>
  */
 const normalizeHttpHeaders = (headers: HttpHeaders = {}): HttpHeaders => {
   const originalKeys = Object.keys(headers);
-  const loweredKeys = Object.keys(headers).map((k) => k.toLocaleLowerCase());
+  const loweredKeys = Object.keys(headers).map(k => k.toLocaleLowerCase());
   const normalized = loweredKeys.reduce<HttpHeaders>((acc, key, index) => {
     acc[key] = headers[originalKeys[index]];
     return acc;
@@ -240,7 +344,10 @@ const normalizeHttpHeaders = (headers: HttpHeaders = {}): HttpHeaders => {
  * @param params A map of url parameters
  * @param shouldEncode true if you should encodeURIComponent() the values (true by default)
  */
-const buildUrlParams = (params?: HttpParams, shouldEncode = true): string | null => {
+const buildUrlParams = (
+  params?: HttpParams,
+  shouldEncode = true,
+): string | null => {
   if (!params) return null;
 
   const output = Object.entries(params).reduce((accumulator, entry) => {
@@ -250,7 +357,7 @@ const buildUrlParams = (params?: HttpParams, shouldEncode = true): string | null
     let item: string;
     if (Array.isArray(value)) {
       item = '';
-      value.forEach((str) => {
+      value.forEach(str => {
         encodedValue = shouldEncode ? encodeURIComponent(str) : str;
         item += `${key}=${encodedValue}&`;
       });
@@ -273,7 +380,10 @@ const buildUrlParams = (params?: HttpParams, shouldEncode = true): string | null
  * @param options The Http plugin options
  * @param extra Any extra RequestInit values
  */
-export const buildRequestInit = (options: HttpOptions, extra: RequestInit = {}): RequestInit => {
+export const buildRequestInit = (
+  options: HttpOptions,
+  extra: RequestInit = {},
+): RequestInit => {
   const output: RequestInit = {
     method: options.method || 'GET',
     headers: options.headers,
@@ -295,7 +405,10 @@ export const buildRequestInit = (options: HttpOptions, extra: RequestInit = {}):
       params.set(key, value as any);
     }
     output.body = params.toString();
-  } else if (type.includes('multipart/form-data') || options.data instanceof FormData) {
+  } else if (
+    type.includes('multipart/form-data') ||
+    options.data instanceof FormData
+  ) {
     const form = new FormData();
     if (options.data instanceof FormData) {
       options.data.forEach((value, key) => {
@@ -310,7 +423,10 @@ export const buildRequestInit = (options: HttpOptions, extra: RequestInit = {}):
     const headers = new Headers(output.headers);
     headers.delete('content-type'); // content-type will be set by `window.fetch` to includy boundary
     output.headers = headers;
-  } else if (type.includes('application/json') || typeof options.data === 'object') {
+  } else if (
+    type.includes('application/json') ||
+    typeof options.data === 'object'
+  ) {
     output.body = JSON.stringify(options.data);
   }
 
@@ -318,14 +434,20 @@ export const buildRequestInit = (options: HttpOptions, extra: RequestInit = {}):
 };
 
 // WEB IMPLEMENTATION
-export class JigraHttpPluginWeb extends WebPlugin implements JigraHttpPlugin {
+export class JigraHttpPluginWeb
+  extends WebPlugin
+  implements JigraHttpPlugin
+{
   /**
    * Perform an Http request given a set of options
    * @param options Options to build the HTTP request
    */
   async request(options: HttpOptions): Promise<HttpResponse> {
     const requestInit = buildRequestInit(options, options.webFetchExtra);
-    const urlParams = buildUrlParams(options.params, options.shouldEncodeUrlParams);
+    const urlParams = buildUrlParams(
+      options.params,
+      options.shouldEncodeUrlParams,
+    );
     const url = urlParams ? `${options.url}?${urlParams}` : options.url;
 
     const response = await fetch(url, requestInit);
@@ -411,8 +533,11 @@ export class JigraHttpPluginWeb extends WebPlugin implements JigraHttpPlugin {
   }
 }
 
-export const JigraHttp = registerPlugin<JigraHttpPlugin>('JigraHttp', {
-  web: () => new JigraHttpPluginWeb(),
-});
+export const JigraHttp = registerPlugin<JigraHttpPlugin>(
+  'JigraHttp',
+  {
+    web: () => new JigraHttpPluginWeb(),
+  },
+);
 
 /******** END HTTP PLUGIN ********/

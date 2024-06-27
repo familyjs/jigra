@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-
 -set -eo pipefail
 
 case $1 in

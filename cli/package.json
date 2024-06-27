@@ -1,6 +1,6 @@
 {
   "name": "@jigra/cli",
-  "version": "5.7.7",
+  "version": "6.0.0-alpha.0",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Family Team",
@@ -27,7 +27,7 @@
     "cross platform"
   ],
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "main": "dist/index.js",
   "types": "dist/declarations.d.ts",
@@ -46,7 +46,8 @@
   "dependencies": {
     "@familyjs/cli-framework-output": "^2.2.6",
     "@familyjs/utils-fs": "^3.1.7",
-    "@familyjs/utils-subprocess": "^2.1.12",
+    "@familyjs/utils-process": "^2.1.11",
+    "@familyjs/utils-subprocess": "2.1.12",
     "@familyjs/utils-terminal": "^2.3.4",
     "commander": "^9.3.0",
     "debug": "^4.3.4",

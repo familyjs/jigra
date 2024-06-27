@@ -12,8 +12,8 @@ mkdir -p ./tmp
 export JIG_VERSION
 export JIG_PUBLISH=true
 
-# Get latest io.github.jigrajs:core XML version info
-JIGRA_PUBLISHED_URL="https://repo1.maven.org/maven2/io/github/jigrajs/core/maven-metadata.xml"
+# Get latest com.jigrajs:core XML version info
+JIGRA_PUBLISHED_URL="https://repo1.maven.org/maven2/com/jigrajs/core/maven-metadata.xml"
 JIGRA_PUBLISHED_DATA=$(curl -s $JIGRA_PUBLISHED_URL)
 JIGRA_PUBLISHED_VERSION="$(perl -ne 'print and last if s/.*<latest>(.*)<\/latest>.*/\1/;' <<< $JIGRA_PUBLISHED_DATA)"
 

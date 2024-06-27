@@ -43,17 +43,24 @@ export async function checkBundler(config: Config): Promise<string | null> {
 }
 
 export async function checkCocoaPods(config: Config): Promise<string | null> {
-  if (!(await isInstalled(await config.ios.podPath)) && config.cli.os === OS.Mac) {
+  if (
+    !(await isInstalled(await config.ios.podPath)) &&
+    config.cli.os === OS.Mac
+  ) {
     return (
       `CocoaPods is not installed.\n` +
-      `See this install guide: ${c.strong('https://jigrajs.web.app/docs/getting-started/environment-setup#homebrew')}`
+      `See this install guide: ${c.strong(
+        'https://jigrajs.web.app/docs/getting-started/environment-setup#homebrew',
+      )}`
     );
   }
   return null;
 }
 
 export async function getIOSPlugins(allPlugins: Plugin[]): Promise<Plugin[]> {
-  const resolved = await Promise.all(allPlugins.map(async (plugin) => await resolvePlugin(plugin)));
+  const resolved = await Promise.all(
+    allPlugins.map(async plugin => await resolvePlugin(plugin)),
+  );
   return resolved.filter((plugin): plugin is Plugin => !!plugin);
 }
 
@@ -71,7 +78,10 @@ export async function resolvePlugin(plugin: Plugin): Promise<Plugin | null> {
       type: PluginType.Cordova,
       path: 'src/' + platform,
     };
-    if (getIncompatibleCordovaPlugins(platform).includes(plugin.id) || !getPluginPlatform(plugin, platform)) {
+    if (
+      getIncompatibleCordovaPlugins(platform).includes(plugin.id) ||
+      !getPluginPlatform(plugin, platform)
+    ) {
       plugin.ios.type = PluginType.Incompatible;
     }
   } else {
@@ -85,7 +95,10 @@ export async function resolvePlugin(plugin: Plugin): Promise<Plugin | null> {
  */
 export async function editProjectSettingsIOS(config: Config): Promise<void> {
   const appId = config.app.appId;
-  const appName = config.app.appName.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const appName = config.app.appName
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
 
   const pbxPath = `${config.ios.nativeXcodeProjDirAbs}/project.pbxproj`;
   const plistPath = resolve(config.ios.nativeTargetDirAbs, 'Info.plist');
@@ -94,11 +107,14 @@ export async function editProjectSettingsIOS(config: Config): Promise<void> {
 
   plistContent = plistContent.replace(
     /<key>CFBundleDisplayName<\/key>[\s\S]?\s+<string>([^<]*)<\/string>/,
-    `<key>CFBundleDisplayName</key>\n        <string>${appName}</string>`
+    `<key>CFBundleDisplayName</key>\n        <string>${appName}</string>`,
   );
 
   let pbxContent = await readFile(pbxPath, { encoding: 'utf-8' });
-  pbxContent = pbxContent.replace(/PRODUCT_BUNDLE_IDENTIFIER = ([^;]+)/g, `PRODUCT_BUNDLE_IDENTIFIER = ${appId}`);
+  pbxContent = pbxContent.replace(
+    /PRODUCT_BUNDLE_IDENTIFIER = ([^;]+)/g,
+    `PRODUCT_BUNDLE_IDENTIFIER = ${appId}`,
+  );
 
   await writeFile(plistPath, plistContent, { encoding: 'utf-8' });
   await writeFile(pbxPath, pbxContent, { encoding: 'utf-8' });

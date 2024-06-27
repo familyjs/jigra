@@ -9,10 +9,15 @@ import { PluginType, getPluginType, getPlugins, printPlugins } from '../plugin';
 import type { Plugin } from '../plugin';
 import { allSerial } from '../util/promise';
 
-export async function listCommand(config: Config, selectedPlatformName: string): Promise<void> {
+export async function listCommand(
+  config: Config,
+  selectedPlatformName: string,
+): Promise<void> {
   const platforms = await selectPlatforms(config, selectedPlatformName);
   try {
-    await allSerial(platforms.map((platformName) => () => list(config, platformName)));
+    await allSerial(
+      platforms.map(platformName => () => list(config, platformName)),
+    );
   } catch (e: any) {
     if (isFatal(e)) {
       throw e;
@@ -36,10 +41,16 @@ export async function list(config: Config, platform: string): Promise<void> {
     throw `Platform ${c.input(platform)} is not valid.`;
   }
 
-  const jigraPlugins = plugins.filter((p) => getPluginType(p, platform) === PluginType.Core);
+  const jigraPlugins = plugins.filter(
+    p => getPluginType(p, platform) === PluginType.Core,
+  );
   printPlugins(jigraPlugins, platform);
-  const cordovaPlugins = plugins.filter((p) => getPluginType(p, platform) === PluginType.Cordova);
+  const cordovaPlugins = plugins.filter(
+    p => getPluginType(p, platform) === PluginType.Cordova,
+  );
   printPlugins(cordovaPlugins, platform, 'cordova');
-  const incompatibleCordovaPlugins = plugins.filter((p) => getPluginType(p, platform) === PluginType.Incompatible);
+  const incompatibleCordovaPlugins = plugins.filter(
+    p => getPluginType(p, platform) === PluginType.Incompatible,
+  );
   printPlugins(incompatibleCordovaPlugins, platform, 'incompatible');
 }

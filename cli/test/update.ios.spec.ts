@@ -1,6 +1,14 @@
-import { APP_ID, APP_NAME, CORDOVA_PLUGIN_ID, MappedFS, makeAppDir, run, installPlatform } from './util';
+import {
+  APP_ID,
+  APP_NAME,
+  CORDOVA_PLUGIN_ID,
+  MappedFS,
+  makeAppDir,
+  run,
+  installPlatform,
+} from './util';
 
-describe.each([false, true])('Update: iOS (monoRepoLike: %p)', (monoRepoLike) => {
+describe.each([false, true])('Update: iOS (monoRepoLike: %p)', monoRepoLike => {
   let appDirObj: any;
   let appDir: string;
   let FS: MappedFS;
@@ -22,7 +30,9 @@ describe.each([false, true])('Update: iOS (monoRepoLike: %p)', (monoRepoLike) =>
   });
 
   it('Should install Cordova plugin JS', async () => {
-    const cordovaPluginJSContent = await FS.read('ios/App/App/public/cordova_plugins.js');
+    const cordovaPluginJSContent = await FS.read(
+      'ios/App/App/public/cordova_plugins.js',
+    );
     const regex = new RegExp(CORDOVA_PLUGIN_ID);
     expect(regex.test(cordovaPluginJSContent)).toBe(true);
   });

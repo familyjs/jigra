@@ -46,13 +46,13 @@ export async function runAndroid(
   const apkName = parseApkNameFromFlavor(runFlavor);
   const apkPath = resolve(pathToApk, apkName);
 
-  const nativeRunArgs = ['android', '--app', apkPath, '--target', target.id];
+  const fmlNativeRunArgs = ['android', '--app', apkPath, '--target', target.id];
 
   if (selectedPorts) {
-    nativeRunArgs.push('--forward', `${selectedPorts}`);
+    fmlNativeRunArgs.push('--forward', `${selectedPorts}`);
   }
 
-  debug('Invoking fml-native-run with args: %O', nativeRunArgs);
+  debug('Invoking fml-native-run with args: %O', fmlNativeRunArgs);
 
-  await runTask(`Deploying ${c.strong(apkName)} to ${c.input(target.id)}`, async () => runFmlNativeRun(nativeRunArgs));
+  await runTask(`Deploying ${c.strong(apkName)} to ${c.input(target.id)}`, async () => runFmlNativeRun(fmlNativeRunArgs));
 }

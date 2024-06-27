@@ -1,12 +1,7 @@
 module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint', 'import'],
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-    'plugin:import/typescript',
-  ],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier', 'plugin:import/typescript'],
   rules: {
     // https://eslint.org/docs/rules/
     'no-fallthrough': 'off',
@@ -15,10 +10,7 @@ module.exports = {
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin/docs/rules
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/explicit-module-boundary-types': [
-      'error',
-      { allowArgumentsExplicitlyTypedAsAny: true },
-    ],
+    '@typescript-eslint/explicit-module-boundary-types': ['error', { allowArgumentsExplicitlyTypedAsAny: true }],
 
     // https://github.com/typescript-eslint/typescript-eslint/tree/master/packages/eslint-plugin/docs/rules
     '@typescript-eslint/array-type': 'error',
@@ -32,8 +24,8 @@ module.exports = {
     'import/order': [
       'error',
       {
-        'alphabetize': { order: 'asc', caseInsensitive: false },
-        'groups': [['builtin', 'external'], 'parent', ['sibling', 'index']],
+        alphabetize: { order: 'asc', caseInsensitive: false },
+        groups: [['builtin', 'external'], 'parent', ['sibling', 'index']],
         'newlines-between': 'always',
       },
     ],

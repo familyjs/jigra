@@ -1,10 +1,5 @@
 import type { ReaddirPOptions } from '@familyjs/utils-fs';
-import {
-  readFileSync,
-  readdirp,
-  readJSONSync,
-  writeJSONSync,
-} from '@familyjs/utils-fs';
+import { readFileSync, readdirp, readJSONSync, writeJSONSync } from '@familyjs/utils-fs';
 import { resolve } from 'path';
 
 import { getCordovaPlugins } from '../cordova';
@@ -16,7 +11,7 @@ export async function getPluginFiles(plugins: Plugin[]): Promise<string[]> {
   let filenameList: string[] = [];
 
   const options: ReaddirPOptions = {
-    filter: item => {
+    filter: (item) => {
       if (item.path.endsWith('.swift') || item.path.endsWith('.m')) {
         return true;
       } else {
@@ -58,23 +53,14 @@ export async function findPluginClasses(files: string[]): Promise<string[]> {
   return classList;
 }
 
-export async function writePluginJSON(
-  config: Config,
-  classList: string[],
-): Promise<void> {
-  const jigJSONFile = resolve(
-    config.ios.nativeTargetDirAbs,
-    'jigra.config.json',
-  );
+export async function writePluginJSON(config: Config, classList: string[]): Promise<void> {
+  const jigJSONFile = resolve(config.ios.nativeTargetDirAbs, 'jigra.config.json');
   const jigJSON = readJSONSync(jigJSONFile);
   jigJSON['packageClassList'] = classList;
   writeJSONSync(jigJSONFile, jigJSON, { spaces: '\t' });
 }
 
-export async function generateIOSPackageJSON(
-  config: Config,
-  plugins: Plugin[],
-): Promise<void> {
+export async function generateIOSPackageJSON(config: Config, plugins: Plugin[]): Promise<void> {
   const fileList = await getPluginFiles(plugins);
   const classList = await findPluginClasses(fileList);
   const cordovaPlugins = await getCordovaPlugins(config, 'ios');

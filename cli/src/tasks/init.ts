@@ -3,11 +3,7 @@ import { basename, dirname, resolve } from 'path';
 
 import c from '../colors';
 import { check, checkAppId, checkAppName, runTask } from '../common';
-import {
-  CONFIG_FILE_NAME_JSON,
-  CONFIG_FILE_NAME_TS,
-  writeConfig,
-} from '../config';
+import { CONFIG_FILE_NAME_JSON, CONFIG_FILE_NAME_TS, writeConfig } from '../config';
 import { getCordovaPreferences } from '../cordova';
 import type { Config, ExternalConfig } from '../definitions';
 import { fatal, isFatal } from '../errors';
@@ -17,12 +13,7 @@ import { readConfig, writeConfig as sysWriteConfig } from '../sysconfig';
 import { resolveNode } from '../util/node';
 import { checkInteractive, isInteractive } from '../util/term';
 
-export async function initCommand(
-  config: Config,
-  name: string,
-  id: string,
-  webDirFromCLI?: string,
-): Promise<void> {
+export async function initCommand(config: Config, name: string, id: string, webDirFromCLI?: string): Promise<void> {
   try {
     if (!checkInteractive(name, id)) {
       return;
@@ -30,10 +21,8 @@ export async function initCommand(
 
     if (config.app.extConfigType !== 'json') {
       fatal(
-        `Cannot run ${c.input(
-          'init',
-        )} for a project using a non-JSON configuration file.\n` +
-          `Delete ${c.strong(config.app.extConfigName)} and try again.`,
+        `Cannot run ${c.input('init')} for a project using a non-JSON configuration file.\n` +
+          `Delete ${c.strong(config.app.extConfigName)} and try again.`
       );
     }
 
@@ -45,10 +34,7 @@ export async function initCommand(
       ? await getWebDir(config, webDirFromCLI)
       : webDirFromCLI ?? config.app.extConfig.webDir ?? 'www';
 
-    await check([
-      () => checkAppName(config, appName),
-      () => checkAppId(config, appId),
-    ]);
+    await check([() => checkAppName(config, appName), () => checkAppId(config, appId)]);
 
     const cordova = await getCordovaPreferences(config);
 
@@ -60,14 +46,11 @@ export async function initCommand(
         webDir,
         cordova,
       },
-      isNewConfig && tsInstalled ? 'ts' : 'json',
+      isNewConfig && tsInstalled ? 'ts' : 'json'
     );
   } catch (e: any) {
     if (!isFatal(e)) {
-      output.write(
-        'Usage: npx jig init appName appId\n' +
-          'Example: npx jig init "My App" "com.example.myapp"\n\n',
-      );
+      output.write('Usage: npx jig init appName appId\n' + 'Example: npx jig init "My App" "com.example.myapp"\n\n');
 
       fatal(e.stack ?? e);
     }
@@ -85,10 +68,8 @@ async function getName(config: Config, name: string) {
         type: 'text',
         name: 'name',
         message: `Name`,
-        initial: config.app.appName
-          ? config.app.appName
-          : config.app.package.name ?? 'App',
-      },
+        initial: config.app.appName ? config.app.appName : config.app.package.name ?? 'App',
+      }
     );
     return answers.name;
   }
@@ -105,7 +86,7 @@ async function getAppId(config: Config, id: string) {
         name: 'id',
         message: `Package ID`,
         initial: config.app.appId ? config.app.appId : 'com.example.app',
-      },
+      }
     );
     return answers.id;
   }
@@ -121,49 +102,31 @@ async function getWebDir(config: Config, webDir?: string) {
 
     const answers = await logPrompt(
       `${c.strong(`What is the web asset directory for your app?`)}\n` +
-        `This directory should contain the final ${c.strong(
-          'index.html',
-        )} of your app.`,
+        `This directory should contain the final ${c.strong('index.html')} of your app.`,
       {
         type: 'text',
         name: 'webDir',
         message: `Web asset directory`,
         initial: config.app.webDir ? config.app.webDir : 'www',
-      },
+      }
     );
     return answers.webDir;
   }
   return webDir;
 }
 
-async function runMergeConfig(
-  config: Config,
-  extConfig: ExternalConfig,
-  type: 'json' | 'ts',
-) {
+async function runMergeConfig(config: Config, extConfig: ExternalConfig, type: 'json' | 'ts') {
   const configDirectory = dirname(config.app.extConfigFilePath);
-  const newConfigPath = resolve(
-    configDirectory,
-    type === 'ts' ? CONFIG_FILE_NAME_TS : CONFIG_FILE_NAME_JSON,
-  );
+  const newConfigPath = resolve(configDirectory, type === 'ts' ? CONFIG_FILE_NAME_TS : CONFIG_FILE_NAME_JSON);
 
-  await runTask(
-    `Creating ${c.strong(basename(newConfigPath))} in ${c.input(
-      config.app.rootDir,
-    )}`,
-    async () => {
-      await mergeConfig(config, extConfig, newConfigPath);
-    },
-  );
+  await runTask(`Creating ${c.strong(basename(newConfigPath))} in ${c.input(config.app.rootDir)}`, async () => {
+    await mergeConfig(config, extConfig, newConfigPath);
+  });
 
   printNextSteps(basename(newConfigPath));
 }
 
-async function mergeConfig(
-  config: Config,
-  extConfig: ExternalConfig,
-  newConfigPath: string,
-): Promise<void> {
+async function mergeConfig(config: Config, extConfig: ExternalConfig, newConfigPath: string): Promise<void> {
   const oldConfig = { ...config.app.extConfig };
   const newConfig = { ...oldConfig, ...extConfig };
 
@@ -172,9 +135,5 @@ async function mergeConfig(
 
 function printNextSteps(newConfigName: string) {
   logSuccess(`${c.strong(newConfigName)} created!`);
-  output.write(
-    `\nNext steps: \n${c.strong(
-      `https://jigrajs.web.app/docs/getting-started#where-to-go-next`,
-    )}\n`,
-  );
+  output.write(`\nNext steps: \n${c.strong(`https://jigrajs.web.app/docs/getting-started#where-to-go-next`)}\n`);
 }

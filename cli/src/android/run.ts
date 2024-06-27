@@ -2,11 +2,7 @@ import Debug from 'debug';
 import { resolve } from 'path';
 
 import c from '../colors';
-import {
-  parseApkNameFromFlavor,
-  promptForPlatformTarget,
-  runTask,
-} from '../common';
+import { parseApkNameFromFlavor, promptForPlatformTarget, runTask } from '../common';
 import type { Config } from '../definitions';
 import type { RunCommandOptions } from '../tasks/run';
 import { runNativeRun, getPlatformTargets } from '../util/native-run';
@@ -16,16 +12,9 @@ const debug = Debug('jigra:android:run');
 
 export async function runAndroid(
   config: Config,
-  {
-    target: selectedTarget,
-    flavor: selectedFlavor,
-    forwardPorts: selectedPorts,
-  }: RunCommandOptions,
+  { target: selectedTarget, flavor: selectedFlavor, forwardPorts: selectedPorts }: RunCommandOptions
 ): Promise<void> {
-  const target = await promptForPlatformTarget(
-    await getPlatformTargets('android'),
-    selectedTarget,
-  );
+  const target = await promptForPlatformTarget(await getPlatformTargets('android'), selectedTarget);
 
   const runFlavor = selectedFlavor || config.android?.flavor || '';
 
@@ -38,21 +27,21 @@ export async function runAndroid(
     await runTask('Running Gradle build', async () =>
       runCommand('./gradlew', gradleArgs, {
         cwd: config.android.platformDirAbs,
-      }),
+      })
     );
   } catch (e: any) {
     if (e.includes('EACCES')) {
       throw `gradlew file does not have executable permissions. This can happen if the Android platform was added on a Windows machine. Please run ${c.strong(
-        `chmod +x ./${config.android.platformDir}/gradlew`,
+        `chmod +x ./${config.android.platformDir}/gradlew`
       )} and try again.`;
     } else {
       throw e;
     }
   }
 
-  const pathToApk = `${config.android.platformDirAbs}/${
-    config.android.appDir
-  }/build/outputs/apk${runFlavor !== '' ? '/' + runFlavor : ''}/debug`;
+  const pathToApk = `${config.android.platformDirAbs}/${config.android.appDir}/build/outputs/apk${
+    runFlavor !== '' ? '/' + runFlavor : ''
+  }/debug`;
 
   const apkName = parseApkNameFromFlavor(runFlavor);
   const apkPath = resolve(pathToApk, apkName);
@@ -65,8 +54,5 @@ export async function runAndroid(
 
   debug('Invoking native-run with args: %O', nativeRunArgs);
 
-  await runTask(
-    `Deploying ${c.strong(apkName)} to ${c.input(target.id)}`,
-    async () => runNativeRun(nativeRunArgs),
-  );
+  await runTask(`Deploying ${c.strong(apkName)} to ${c.input(target.id)}`, async () => runNativeRun(nativeRunArgs));
 }

@@ -19,17 +19,12 @@ export class WebPlugin implements Plugin {
   constructor(config?: WebPluginConfig) {
     if (config) {
       // TODO: add link to upgrade guide
-      console.warn(
-        `Jigra WebPlugin "${config.name}" config object was deprecated in v3 and will be removed in v4.`,
-      );
+      console.warn(`Jigra WebPlugin "${config.name}" config object was deprecated in v3 and will be removed in v4.`);
       this.config = config;
     }
   }
 
-  addListener(
-    eventName: string,
-    listenerFunc: ListenerCallback,
-  ): Promise<PluginListenerHandle> {
+  addListener(eventName: string, listenerFunc: ListenerCallback): Promise<PluginListenerHandle> {
     let firstListener = false;
 
     const listeners = this.listeners[eventName];
@@ -66,11 +61,7 @@ export class WebPlugin implements Plugin {
     this.windowListeners = {};
   }
 
-  protected notifyListeners(
-    eventName: string,
-    data: any,
-    retainUntilConsumed?: boolean,
-  ): void {
+  protected notifyListeners(eventName: string, data: any, retainUntilConsumed?: boolean): void {
     const listeners = this.listeners[eventName];
     if (!listeners) {
       if (retainUntilConsumed) {
@@ -87,22 +78,19 @@ export class WebPlugin implements Plugin {
       return;
     }
 
-    listeners.forEach(listener => listener(data));
+    listeners.forEach((listener) => listener(data));
   }
 
   protected hasListeners(eventName: string): boolean {
     return !!this.listeners[eventName].length;
   }
 
-  protected registerWindowListener(
-    windowEventName: string,
-    pluginEventName: string,
-  ): void {
+  protected registerWindowListener(windowEventName: string, pluginEventName: string): void {
     this.windowListeners[pluginEventName] = {
       registered: false,
       windowEventName,
       pluginEventName,
-      handler: event => {
+      handler: (event) => {
         this.notifyListeners(pluginEventName, event);
       },
     };
@@ -116,10 +104,7 @@ export class WebPlugin implements Plugin {
     return new Jigra.Exception(msg, ExceptionCode.Unavailable);
   }
 
-  private async removeListener(
-    eventName: string,
-    listenerFunc: ListenerCallback,
-  ): Promise<void> {
+  private async removeListener(eventName: string, listenerFunc: ListenerCallback): Promise<void> {
     const listeners = this.listeners[eventName];
     if (!listeners) {
       return;
@@ -157,7 +142,7 @@ export class WebPlugin implements Plugin {
 
     delete this.retainedEventArguments[eventName];
 
-    args.forEach(arg => {
+    args.forEach((arg) => {
       this.notifyListeners(eventName, arg);
     });
   }

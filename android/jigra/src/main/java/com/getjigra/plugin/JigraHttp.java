@@ -43,9 +43,7 @@ public class JigraHttp extends Plugin {
 
             if (call.getData().has("activeJigraHttpUrlConnection")) {
                 try {
-                    JigraHttpUrlConnection connection = (JigraHttpUrlConnection) call
-                        .getData()
-                        .get("activeJigraHttpUrlConnection");
+                    JigraHttpUrlConnection connection = (JigraHttpUrlConnection) call.getData().get("activeJigraHttpUrlConnection");
                     connection.disconnect();
                     call.getData().remove("activeJigraHttpUrlConnection");
                 } catch (Exception ignored) {}

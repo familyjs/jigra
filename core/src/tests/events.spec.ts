@@ -1,8 +1,5 @@
 import { initBridge } from '../../native-bridge';
-import type {
-  JigraInstance,
-  WindowJigra,
-} from '../definitions-internal';
+import type { JigraInstance, WindowJigra } from '../definitions-internal';
 import { createJigra } from '../runtime';
 
 describe('plugin', () => {

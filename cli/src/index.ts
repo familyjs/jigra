@@ -11,11 +11,9 @@ import { telemetryAction } from './telemetry';
 import { wrapAction } from './util/cli';
 import { emoji as _e } from './util/emoji';
 
-type Writable<T> = T extends object
-  ? { -readonly [K in keyof T]: Writable<T[K]> }
-  : T;
+type Writable<T> = T extends object ? { -readonly [K in keyof T]: Writable<T[K]> } : T;
 
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error) => {
   console.error(c.failure('[fatal]'), error);
 });
 
@@ -42,7 +40,7 @@ export function runProgram(config: Config): void {
       wrapAction(async ({ json }) => {
         const { configCommand } = await import('./tasks/config');
         await configCommand(config, json);
-      }),
+      })
     );
 
   program
@@ -52,23 +50,20 @@ export function runProgram(config: Config): void {
       wrapAction(async () => {
         const { createCommand } = await import('./tasks/create');
         await createCommand();
-      }),
+      })
     );
 
   program
     .command('init [appName] [appId]')
     .description(`Initialize Jigra configuration`)
-    .option(
-      '--web-dir <value>',
-      'Optional: Directory of your projects built web assets',
-    )
+    .option('--web-dir <value>', 'Optional: Directory of your projects built web assets')
     .action(
       wrapAction(
         telemetryAction(config, async (appName, appId, { webDir }) => {
           const { initCommand } = await import('./tasks/init');
           await initCommand(config, appName, appId, webDir);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -78,20 +73,17 @@ export function runProgram(config: Config): void {
       wrapAction(async () => {
         const { serveCommand } = await import('./tasks/serve');
         await serveCommand();
-      }),
+      })
     );
 
   program
     .command('sync [platform]')
     .description(`${c.input('copy')} + ${c.input('update')}`)
-    .option(
-      '--deployment',
-      'Optional: if provided, pod install will use --deployment option',
-    )
+    .option('--deployment', 'Optional: if provided, pod install will use --deployment option')
     .option(
       '--inline',
       'Optional: if true, all source maps will be inlined for easier debugging on mobile devices',
-      false,
+      false
     )
     .action(
       wrapAction(
@@ -99,29 +91,22 @@ export function runProgram(config: Config): void {
           checkExternalConfig(config.app);
           const { syncCommand } = await import('./tasks/sync');
           await syncCommand(config, platform, deployment, inline);
-        }),
-      ),
+        })
+      )
     );
 
   program
     .command('update [platform]')
-    .description(
-      `updates the native plugins and dependencies based on ${c.strong(
-        'package.json',
-      )}`,
-    )
-    .option(
-      '--deployment',
-      'Optional: if provided, pod install will use --deployment option',
-    )
+    .description(`updates the native plugins and dependencies based on ${c.strong('package.json')}`)
+    .option('--deployment', 'Optional: if provided, pod install will use --deployment option')
     .action(
       wrapAction(
         telemetryAction(config, async (platform, { deployment }) => {
           checkExternalConfig(config.app);
           const { updateCommand } = await import('./tasks/update');
           await updateCommand(config, platform, deployment);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -130,7 +115,7 @@ export function runProgram(config: Config): void {
     .option(
       '--inline',
       'Optional: if true, all source maps will be inlined for easier debugging on mobile devices',
-      false,
+      false
     )
     .action(
       wrapAction(
@@ -138,8 +123,8 @@ export function runProgram(config: Config): void {
           checkExternalConfig(config.app);
           const { copyCommand } = await import('./tasks/copy');
           await copyCommand(config, platform, inline);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -151,21 +136,18 @@ export function runProgram(config: Config): void {
     .option('--keystorepass <keystorePass>', 'Password to the keystore')
     .option('--keystorealias <keystoreAlias>', 'Key Alias in the keystore')
     .option('--configuration <name>', 'Configuration name of the iOS Scheme')
-    .option(
-      '--keystorealiaspass <keystoreAliasPass>',
-      'Password for the Key Alias',
+    .option('--keystorealiaspass <keystoreAliasPass>', 'Password for the Key Alias')
+    .addOption(
+      new Option('--androidreleasetype <androidreleasetype>', 'Android release type; APK or AAB').choices([
+        'AAB',
+        'APK',
+      ])
     )
     .addOption(
-      new Option(
-        '--androidreleasetype <androidreleasetype>',
-        'Android release type; APK or AAB',
-      ).choices(['AAB', 'APK']),
-    )
-    .addOption(
-      new Option(
-        '--signing-type <signingtype>',
-        'Program used to sign apps (default: jarsigner)',
-      ).choices(['apksigner', 'jarsigner']),
+      new Option('--signing-type <signingtype>', 'Program used to sign apps (default: jarsigner)').choices([
+        'apksigner',
+        'jarsigner',
+      ])
     )
     .action(
       wrapAction(
@@ -183,7 +165,7 @@ export function runProgram(config: Config): void {
               androidreleasetype,
               signingType,
               configuration,
-            },
+            }
           ) => {
             const { buildCommand } = await import('./tasks/build');
             await buildCommand(config, platform, {
@@ -197,29 +179,21 @@ export function runProgram(config: Config): void {
               signingtype: signingType,
               configuration,
             });
-          },
-        ),
-      ),
+          }
+        )
+      )
     );
   program
     .command(`run [platform]`)
-    .description(
-      `runs ${c.input('sync')}, then builds and deploys the native app`,
-    )
+    .description(`runs ${c.input('sync')}, then builds and deploys the native app`)
     .option('--scheme <schemeName>', 'set the scheme of the iOS project')
-    .option(
-      '--flavor <flavorName>',
-      'set the flavor of the Android project (flavor dimensions not yet supported)',
-    )
+    .option('--flavor <flavorName>', 'set the flavor of the Android project (flavor dimensions not yet supported)')
     .option('--list', 'list targets, then quit')
     // TODO: remove once --json is a hidden option (https://github.com/tj/commander.js/issues/1106)
     .allowUnknownOption(true)
     .option('--target <id>', 'use a specific target')
     .option('--no-sync', `do not run ${c.input('sync')}`)
-    .option(
-      '--forwardPorts <port:port>',
-      'Automatically run "adb reverse" for better live-reloading support',
-    )
+    .option('--forwardPorts <port:port>', 'Automatically run "adb reverse" for better live-reloading support')
     .option('-l, --live-reload', 'Enable Live Reload')
     .option('--host <host>', 'Host used for live reload')
     .option('--port <port>', 'Port used for live reload')
@@ -230,18 +204,7 @@ export function runProgram(config: Config): void {
           config,
           async (
             platform,
-            {
-              scheme,
-              flavor,
-              list,
-              target,
-              sync,
-              forwardPorts,
-              liveReload,
-              host,
-              port,
-              configuration,
-            },
+            { scheme, flavor, list, target, sync, forwardPorts, liveReload, host, port, configuration }
           ) => {
             const { runCommand } = await import('./tasks/run');
             await runCommand(config, platform, {
@@ -256,9 +219,9 @@ export function runProgram(config: Config): void {
               port,
               configuration,
             });
-          },
-        ),
-      ),
+          }
+        )
+      )
     );
 
   program
@@ -266,11 +229,11 @@ export function runProgram(config: Config): void {
     .description('opens the native project workspace (Xcode for iOS)')
     .action(
       wrapAction(
-        telemetryAction(config, async platform => {
+        telemetryAction(config, async (platform) => {
           const { openCommand } = await import('./tasks/open');
           await openCommand(config, platform);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -278,7 +241,7 @@ export function runProgram(config: Config): void {
     .description('add a native platform project')
     .option(
       '--packagemanager <packageManager>',
-      'The package manager to use for dependency installs (Cocoapods, SPM **experimental**)',
+      'The package manager to use for dependency installs (Cocoapods, SPM **experimental**)'
     )
     .action(
       wrapAction(
@@ -288,17 +251,16 @@ export function runProgram(config: Config): void {
 
           const configWritable: Writable<Config> = config as Writable<Config>;
           if (packagemanager === 'SPM') {
-            configWritable.cli.assets.ios.platformTemplateArchive =
-              'ios-spm-template.tar.gz';
+            configWritable.cli.assets.ios.platformTemplateArchive = 'ios-spm-template.tar.gz';
             configWritable.cli.assets.ios.platformTemplateArchiveAbs = resolve(
               configWritable.cli.assetsDirAbs,
-              configWritable.cli.assets.ios.platformTemplateArchive,
+              configWritable.cli.assets.ios.platformTemplateArchive
             );
           }
 
           await addCommand(configWritable as Config, platform);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -306,12 +268,12 @@ export function runProgram(config: Config): void {
     .description('list installed Cordova and Jigra plugins')
     .action(
       wrapAction(
-        telemetryAction(config, async platform => {
+        telemetryAction(config, async (platform) => {
           checkExternalConfig(config.app);
           const { listCommand } = await import('./tasks/list');
           await listCommand(config, platform);
-        }),
-      ),
+        })
+      )
     );
 
   program
@@ -319,22 +281,22 @@ export function runProgram(config: Config): void {
     .description('checks the current setup for common errors')
     .action(
       wrapAction(
-        telemetryAction(config, async platform => {
+        telemetryAction(config, async (platform) => {
           checkExternalConfig(config.app);
           const { doctorCommand } = await import('./tasks/doctor');
           await doctorCommand(config, platform);
-        }),
-      ),
+        })
+      )
     );
 
   program
     .command('telemetry [on|off]', { hidden: true })
     .description('enable or disable telemetry')
     .action(
-      wrapAction(async onOrOff => {
+      wrapAction(async (onOrOff) => {
         const { telemetryCommand } = await import('./tasks/telemetry');
         await telemetryCommand(onOrOff);
-      }),
+      })
     );
 
   program
@@ -351,39 +313,35 @@ export function runProgram(config: Config): void {
       wrapAction(async () => {
         const { newPluginCommand } = await import('./tasks/new-plugin');
         await newPluginCommand();
-      }),
+      })
     );
 
   program
     .command('migrate')
     .option('--noprompt', 'do not prompt for confirmation')
-    .option(
-      '--packagemanager <packageManager>',
-      'The package manager to use for dependency installs (npm, pnpm, yarn)',
-    )
-    .description(
-      'Migrate your current Jigra app to the latest major version of Jigra.',
-    )
+    .option('--packagemanager <packageManager>', 'The package manager to use for dependency installs (npm, pnpm, yarn)')
+    .description('Migrate your current Jigra app to the latest major version of Jigra.')
     .action(
       wrapAction(async ({ noprompt, packagemanager }) => {
         const { migrateCommand } = await import('./tasks/migrate');
         await migrateCommand(config, noprompt, packagemanager);
-      }),
+      })
     );
 
   program.arguments('[command]').action(
-    wrapAction(async cmd => {
+    wrapAction(async (cmd) => {
       if (typeof cmd === 'undefined') {
         output.write(
-          `\n  ${_e('⚡️', '--')}  ${c.strong(
-            'Jigra - Cross-Platform apps with JavaScript and the Web',
-          )}  ${_e('⚡️', '--')}\n\n`,
+          `\n  ${_e('⚡️', '--')}  ${c.strong('Jigra - Cross-Platform apps with JavaScript and the Web')}  ${_e(
+            '⚡️',
+            '--'
+          )}\n\n`
         );
         program.outputHelp();
       } else {
         fatal(`Unknown command: ${c.input(cmd)}`);
       }
-    }),
+    })
   );
 
   program.parse(process.argv);

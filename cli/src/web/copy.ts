@@ -9,17 +9,11 @@ import { resolveNode } from '../util/node';
 
 export async function copyWeb(config: Config): Promise<void> {
   if (config.app.bundledWebRuntime) {
-    const runtimePath = resolveNode(
-      config.app.rootDir,
-      '@jigra/core',
-      'dist',
-      'jigra.js',
-    );
+    const runtimePath = resolveNode(config.app.rootDir, '@jigra/core', 'dist', 'jigra.js');
     if (!runtimePath) {
       fatal(
-        `Unable to find ${c.strong(
-          'node_modules/@jigra/core/dist/jigra.js',
-        )}.\n` + `Are you sure ${c.strong('@jigra/core')} is installed?`,
+        `Unable to find ${c.strong('node_modules/@jigra/core/dist/jigra.js')}.\n` +
+          `Are you sure ${c.strong('@jigra/core')} is installed?`
       );
     }
 

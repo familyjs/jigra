@@ -23,7 +23,7 @@ class MockPlugin extends WebPlugin {
       {
         value: 'Test Retained Value 1',
       },
-      true,
+      true
     );
 
     this.notifyListeners(
@@ -31,7 +31,7 @@ class MockPlugin extends WebPlugin {
       {
         value: 'Test Retained Value 2',
       },
-      true,
+      true
     );
   }
 
@@ -137,10 +137,7 @@ describe('Web Plugin', () => {
   });
 
   it('Should register and remove window listeners', async () => {
-    const pluginAddWindowListener = jest.spyOn(
-      MockPlugin.prototype as any,
-      'addWindowListener',
-    );
+    const pluginAddWindowListener = jest.spyOn(MockPlugin.prototype as any, 'addWindowListener');
     plugin.registerFakeWindowListener();
 
     const lf = jest.fn();

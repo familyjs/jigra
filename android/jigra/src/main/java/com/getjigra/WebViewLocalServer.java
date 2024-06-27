@@ -259,8 +259,7 @@ public class WebViewLocalServer {
     }
 
     private WebResourceResponse handleJigraHttpRequest(WebResourceRequest request) throws IOException {
-        boolean isHttps =
-            request.getUrl().getPath() != null && request.getUrl().getPath().startsWith(Bridge.JIGRA_HTTPS_INTERCEPTOR_START);
+        boolean isHttps = request.getUrl().getPath() != null && request.getUrl().getPath().startsWith(Bridge.JIGRA_HTTPS_INTERCEPTOR_START);
 
         String urlString = request
             .getUrl()

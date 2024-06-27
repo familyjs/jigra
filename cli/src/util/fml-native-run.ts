@@ -8,15 +8,8 @@ import { resolveNode } from './node';
 import { runCommand } from './subprocess';
 import type { RunCommandOptions } from './subprocess';
 
-export async function runFmlNativeRun(
-  args: readonly string[],
-  options: RunCommandOptions = {},
-): Promise<string> {
-  const p = resolveNode(
-    __dirname,
-    dirname('fml-native-run/package'),
-    'bin/fml-native-run',
-  );
+export async function runFmlNativeRun(args: readonly string[], options: RunCommandOptions = {}): Promise<string> {
+  const p = resolveNode(__dirname, dirname('fml-native-run/package'), 'bin/fml-native-run');
 
   if (!p) {
     fatal(`${c.input('fml-native-run')} not found.`);
@@ -25,9 +18,7 @@ export async function runFmlNativeRun(
   return await runCommand(p, args, options);
 }
 
-export async function getPlatformTargets(
-  platformName: string,
-): Promise<PlatformTarget[]> {
+export async function getPlatformTargets(platformName: string): Promise<PlatformTarget[]> {
   const errors = [];
   try {
     const output = await runFmlNativeRun([platformName, '--list', '--json']);
@@ -57,7 +48,7 @@ export async function getPlatformTargets(
     })
     .join('\n')}
   \n\tMore details for this error${plural} may be available online: ${c.strong(
-    'https://github.com/familyjs/fml-native-run/wiki/Android-Errors',
+    'https://github.com/familyjs/fml-native-run/wiki/Android-Errors'
   )}
   `;
   throw errMsg;

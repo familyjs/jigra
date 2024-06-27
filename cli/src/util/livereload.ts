@@ -40,16 +40,10 @@ class JigLiveReload {
     };
     const isPrivate = (addr: string) => {
       return (
-        /^(::f{4}:)?10\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(
-          addr,
-        ) ||
+        /^(::f{4}:)?10\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
         /^(::f{4}:)?192\.168\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
-        /^(::f{4}:)?172\.(1[6-9]|2\d|30|31)\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(
-          addr,
-        ) ||
-        /^(::f{4}:)?127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(
-          addr,
-        ) ||
+        /^(::f{4}:)?172\.(1[6-9]|2\d|30|31)\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
+        /^(::f{4}:)?127\.([0-9]{1,3})\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
         /^(::f{4}:)?169\.254\.([0-9]{1,3})\.([0-9]{1,3})$/i.test(addr) ||
         /^f[cd][0-9a-f]{2}:/i.test(addr) ||
         /^fe80:/i.test(addr) ||
@@ -94,7 +88,7 @@ class JigLiveReload {
     }
 
     const all = Object.keys(interfaces)
-      .map(nic => {
+      .map((nic) => {
         //
         // Note: name will only be `public` or `private`
         // when this is called.
@@ -108,9 +102,7 @@ class JigLiveReload {
             return true;
           }
 
-          return name === 'public'
-            ? isPrivate(details.address)
-            : isPublic(details.address);
+          return name === 'public' ? isPrivate(details.address) : isPublic(details.address);
         });
 
         return addresses.length ? addresses[0].address : undefined;
@@ -124,7 +116,7 @@ class JigLiveReload {
     config: Config,
     platformName: string,
     options: RunCommandOptions,
-    rootConfigChange = false,
+    rootConfigChange = false
   ): Promise<any> {
     const platformAbsPath =
       platformName == config.ios.name
@@ -133,9 +125,7 @@ class JigLiveReload {
         ? config.android.assetsDirAbs
         : null;
     if (platformAbsPath == null) throw new Error('Platform not found.');
-    const jigConfigPath = rootConfigChange
-      ? config.app.extConfigFilePath
-      : join(platformAbsPath, 'jigra.config.json');
+    const jigConfigPath = rootConfigChange ? config.app.extConfigFilePath : join(platformAbsPath, 'jigra.config.json');
 
     const configJson = { ...config.app.extConfig };
     this.configJsonToRevertTo.json = JSON.stringify(configJson, null, 2);
@@ -151,7 +141,7 @@ class JigLiveReload {
     config: Config,
     platformName: string,
     options: RunCommandOptions,
-    rootConfigChange = false,
+    rootConfigChange = false
   ): Promise<void> {
     const platformAbsPath =
       platformName == config.ios.name
@@ -160,9 +150,7 @@ class JigLiveReload {
         ? config.android.assetsDirAbs
         : null;
     if (platformAbsPath == null) throw new Error('Platform not found.');
-    const jigConfigPath = rootConfigChange
-      ? config.app.extConfigFilePath
-      : join(platformAbsPath, 'jigra.config.json');
+    const jigConfigPath = rootConfigChange ? config.app.extConfigFilePath : join(platformAbsPath, 'jigra.config.json');
 
     const configJson = readJSONSync(jigConfigPath);
     this.configJsonToRevertTo.json = JSON.stringify(configJson, null, 2);
@@ -175,11 +163,7 @@ class JigLiveReload {
   }
 
   async revertJigConfigForLiveReload(): Promise<void> {
-    if (
-      this.configJsonToRevertTo.json == null ||
-      this.configJsonToRevertTo.platformPath == null
-    )
-      return;
+    if (this.configJsonToRevertTo.json == null || this.configJsonToRevertTo.platformPath == null) return;
     const jigConfigPath = this.configJsonToRevertTo.platformPath;
     const configJson = this.configJsonToRevertTo.json;
     writeJSONSync(jigConfigPath, JSON.parse(configJson), { spaces: '\t' });

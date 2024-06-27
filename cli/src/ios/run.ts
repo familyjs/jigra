@@ -66,7 +66,7 @@ export async function runIOS(
 
   const nativeRunArgs = ['ios', '--app', appPath, '--target', target.id];
 
-  debug('Invoking native-run with args: %O', nativeRunArgs);
+  debug('Invoking fml-native-run with args: %O', nativeRunArgs);
 
   await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () => runFmlNativeRun(nativeRunArgs));
 }

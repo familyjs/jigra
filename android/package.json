@@ -1,6 +1,6 @@
 {
   "name": "@jigra/android",
-  "version": "6.0.0-alpha.1",
+  "version": "6.0.0-alpha.2",
   "description": "Jigra: Cross-platform apps with JavaScript and the web",
   "homepage": "https://jigrajs.web.app",
   "author": "Family Team",
@@ -23,7 +23,7 @@
     "verify": "./gradlew clean lint build test -b jigra/build.gradle"
   },
   "peerDependencies": {
-    "@jigra/core": "^6.0.0-alpha.1"
+    "@jigra/core": "^6.0.0-alpha.2"
   },
   "publishConfig": {
     "access": "public"

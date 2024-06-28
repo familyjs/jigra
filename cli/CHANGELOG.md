@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.0.0-alpha.2](https://github.com/familyjs/jigra/compare/6.0.0-alpha.1...6.0.0-alpha.2) (2024-06-28)
+
+**Note:** Version bump only for package @jigra/cli
+
 # [6.0.0-alpha.1](https://github.com/familyjs/jigra/compare/5.6.0...6.0.0-alpha.1) (2024-06-28)
 
 ### Bug Fixes

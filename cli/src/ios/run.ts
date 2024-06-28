@@ -68,5 +68,7 @@ export async function runIOS(
 
   debug('Invoking fml-native-run with args: %O', fmlNativeRunArgs);
 
-  await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () => runFmlNativeRun(fmlNativeRunArgs));
+  await runTask(`Deploying ${c.strong(appName)} to ${c.input(target.id)}`, async () =>
+    runFmlNativeRun(fmlNativeRunArgs)
+  );
 }

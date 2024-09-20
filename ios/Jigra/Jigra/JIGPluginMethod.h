@@ -31,6 +31,6 @@ typedef NSString JIGPluginReturnType;
 @property (nonatomic, strong) JIGPluginReturnType *returnType; // Return type of method (i.e. callback/promise/sync)
 
 - (instancetype)initWithName:(NSString *)name returnType:(JIGPluginReturnType *)returnType;
-
+- (instancetype)initWithSelector:(SEL)selector returnType:(JIGPluginReturnType *)returnType;
 
 @end

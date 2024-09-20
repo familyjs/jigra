@@ -12,7 +12,7 @@ import { logger, logPrompt, logSuccess } from '../log';
 import { getPlugins } from '../plugin';
 import { deleteFolderRecursive } from '../util/fs';
 import { resolveNode } from '../util/node';
-import { runCommand, getCommandOutput } from '../util/subprocess';
+import { runCommand } from '../util/subprocess';
 import { extractTemplate } from '../util/template';
 
 // eslint-disable-next-line prefer-const
@@ -153,6 +153,14 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
         });
       }
 
+      if (!installFailed) {
+        await runTask(`Running jig sync.`, () => {
+          return runCommand('npx', ['jig', 'sync']);
+        });
+      } else {
+        logger.warn('Skipped Running jig sync.');
+      }
+
       if (allDependencies['@jigra/android'] && existsSync(config.android.platformDirAbs)) {
         const gradleWrapperVersion = getGradleWrapperVersion(
           join(config.android.platformDirAbs, 'gradle', 'wrapper', 'gradle-wrapper.properties')
@@ -275,15 +283,6 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
         } else {
           logger.warn('Skipped migrating package from Manifest to build.gradle in Jigra plugins');
         }
-      }
-
-      if (!installFailed) {
-        // Run Jig Sync
-        await runTask(`Running jig sync.`, () => {
-          return getCommandOutput('npx', ['jig', 'sync']);
-        });
-      } else {
-        logger.warn('Skipped Running jig sync.');
       }
 
       // Write all breaking changes

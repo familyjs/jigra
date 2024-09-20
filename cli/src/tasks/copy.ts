@@ -2,7 +2,15 @@ import { copy as fsCopy, pathExists, remove, writeJSON } from '@familyjs/utils-f
 import { basename, join, relative, resolve } from 'path';
 
 import c from '../colors';
-import { checkWebDir, resolvePlatform, runHooks, runPlatformHook, runTask, isValidPlatform, selectPlatforms } from '../common';
+import {
+  checkWebDir,
+  resolvePlatform,
+  runHooks,
+  runPlatformHook,
+  runTask,
+  isValidPlatform,
+  selectPlatforms,
+} from '../common';
 import { getCordovaPlugins, handleCordovaPluginsJS, writeCordovaAndroidManifest } from '../cordova';
 import type { Config } from '../definitions';
 import { isFatal } from '../errors';

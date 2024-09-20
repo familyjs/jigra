@@ -2,7 +2,7 @@ import { copy as fsCopy, pathExists, remove, writeJSON } from '@familyjs/utils-f
 import { basename, join, relative, resolve } from 'path';
 
 import c from '../colors';
-import { checkWebDir, resolvePlatform, runPlatformHook, runTask, isValidPlatform, selectPlatforms } from '../common';
+import { checkWebDir, resolvePlatform, runHooks, runPlatformHook, runTask, isValidPlatform, selectPlatforms } from '../common';
 import { getCordovaPlugins, handleCordovaPluginsJS, writeCordovaAndroidManifest } from '../cordova';
 import type { Config } from '../definitions';
 import { isFatal } from '../errors';
@@ -44,7 +44,7 @@ export async function copy(config: Config, platformName: string, inline = false)
       throw result;
     }
 
-    await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:copy:before');
+    await runHooks(config, platformName, config.app.rootDir, 'jigra:copy:before');
 
     const allPlugins = await getPlugins(config, platformName);
     let usesLiveUpdates = false;
@@ -89,7 +89,7 @@ export async function copy(config: Config, platformName: string, inline = false)
     }
   });
 
-  await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:copy:after');
+  await runHooks(config, platformName, config.app.rootDir, 'jigra:copy:after');
 }
 
 async function copyJigraConfig(config: Config, nativeAbsDir: string) {

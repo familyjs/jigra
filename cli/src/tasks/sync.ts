@@ -1,4 +1,4 @@
-import { check, checkPackage, checkWebDir, selectPlatforms, isValidPlatform, runPlatformHook } from '../common';
+import { check, checkPackage, checkWebDir, selectPlatforms, isValidPlatform, runHooks } from '../common';
 import type { Config } from '../definitions';
 import { fatal, isFatal } from '../errors';
 import { logger } from '../log';
@@ -43,7 +43,7 @@ export async function syncCommand(
 }
 
 export async function sync(config: Config, platformName: string, deployment: boolean, inline = false): Promise<void> {
-  await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:sync:before');
+  await runHooks(config, platformName, config.app.rootDir, 'jigra:sync:before');
 
   try {
     await copy(config, platformName, inline);
@@ -52,5 +52,5 @@ export async function sync(config: Config, platformName: string, deployment: boo
   }
   await update(config, platformName, deployment);
 
-  await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:sync:after');
+  await runHooks(config, platformName, config.app.rootDir, 'jigra:sync:after');
 }

@@ -4,6 +4,7 @@ import {
   check,
   checkPackage,
   resolvePlatform,
+  runHooks,
   runPlatformHook,
   runTask,
   selectPlatforms,
@@ -63,7 +64,7 @@ export function updateChecks(config: Config, platforms: string[]): CheckFunction
 
 export async function update(config: Config, platformName: string, deployment: boolean): Promise<void> {
   await runTask(c.success(c.strong(`update ${platformName}`)), async () => {
-    await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:update:before');
+    await runHooks(config, platformName, config.app.rootDir, 'jigra:update:before');
 
     if (platformName === config.ios.name) {
       await updateIOS(config, deployment);
@@ -71,6 +72,6 @@ export async function update(config: Config, platformName: string, deployment: b
       await updateAndroid(config);
     }
 
-    await runPlatformHook(config, platformName, config.app.rootDir, 'jigra:update:after');
+    await runHooks(config, platformName, config.app.rootDir, 'jigra:update:after');
   });
 }

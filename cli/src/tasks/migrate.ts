@@ -226,24 +226,17 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
             for (const variable of Object.keys(variablesAndClasspaths.variables)) {
               let replaceStart = `${variable} = '`;
               let replaceEnd = `'\n`;
-              if (
-                typeof variablesAndClasspaths.variables[variable] === 'number'
-              ) {
+              if (typeof variablesAndClasspaths.variables[variable] === 'number') {
                 replaceStart = `${variable} = `;
                 replaceEnd = `\n`;
               }
               if (txt.includes(replaceStart)) {
                 const first = txt.indexOf(replaceStart) + replaceStart.length;
-                const value = txt.substring(
-                  first,
-                  txt.indexOf(replaceEnd, first),
-                );
+                const value = txt.substring(first, txt.indexOf(replaceEnd, first));
                 if (
-                  (typeof variablesAndClasspaths.variables[variable] ===
-                    'number' &&
+                  (typeof variablesAndClasspaths.variables[variable] === 'number' &&
                     value <= variablesAndClasspaths.variables[variable]) ||
-                  (typeof variablesAndClasspaths.variables[variable] ===
-                    'string' &&
+                  (typeof variablesAndClasspaths.variables[variable] === 'string' &&
                     lt(value, variablesAndClasspaths.variables[variable]))
                 ) {
                   await updateFile(
@@ -252,7 +245,7 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
                     replaceStart,
                     replaceEnd,
                     variablesAndClasspaths.variables[variable].toString(),
-                    true,
+                    true
                   );
                 }
               } else {
@@ -260,9 +253,7 @@ export async function migrateCommand(config: Config, noprompt: boolean, packagem
                 if (file) {
                   file = file.replace(
                     '}',
-                    `    ${replaceStart}${variablesAndClasspaths.variables[
-                      variable
-                      ].toString()}${replaceEnd}}`,
+                    `    ${replaceStart}${variablesAndClasspaths.variables[variable].toString()}${replaceEnd}}`
                   );
                   writeFileSync(variablesPath, file);
                 }

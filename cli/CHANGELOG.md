@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
+
+### Bug Fixes
+
+- **cli:** Avoid duplicate entries in `packageClassList` ([70c3ac7](https://github.com/familyjs/jigra/commit/70c3ac74788b52dfa69e873397692ff275f91774))
+- **cli:** Don't downgrade variables on migrate ([7e39411](https://github.com/familyjs/jigra/commit/7e39411bf3129ceb75832f38a13ac55e400d289a))
+- **cli:** Run sync before updating gradle ([f85a928](https://github.com/familyjs/jigra/commit/f85a928ec4749b20a7fb3ec715cb2521536dae69))
+- **http:** don't override `readyState` for non POST requests ([c6ccf8f](https://github.com/familyjs/jigra/commit/c6ccf8f744b76d5ee971433ce0308ee0a9a6345a))
+
+### Features
+
+- **cli:** run plugin hooks ([1cc8879](https://github.com/familyjs/jigra/commit/1cc8879d3d44502b956bfda3c578b78abeb84afe))
+
 # [6.0.0](https://github.com/familyjs/jigra/compare/6.0.0-alpha.2...6.0.0) (2024-06-28)
 
 **Note:** Version bump only for package @jigra/cli

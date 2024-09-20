@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
+
+### Bug Fixes
+
+- **android:** avoid crash if server url ends in / ([6f7e9fd](https://github.com/familyjs/jigra/commit/6f7e9fda2a2d825802ca2a8bcd31ac8ab759af98))
+- **http:** don't override `readyState` for non POST requests ([c6ccf8f](https://github.com/familyjs/jigra/commit/c6ccf8f744b76d5ee971433ce0308ee0a9a6345a))
+
 # [6.0.0](https://github.com/familyjs/jigra/compare/6.0.0-alpha.2...6.0.0) (2024-06-28)
 
 **Note:** Version bump only for package @jigra/android

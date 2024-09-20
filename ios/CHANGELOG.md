@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
+
+### Bug Fixes
+
+- **http:** don't override `readyState` for non POST requests ([c6ccf8f](https://github.com/familyjs/jigra/commit/c6ccf8f744b76d5ee971433ce0308ee0a9a6345a))
+- **ios:** check if `urlSchemeTask` is stopped before calling its methods ([07c0cb0](https://github.com/familyjs/jigra/commit/07c0cb03cc5ce7f92c551d8800d2f85d91be7d55))
+
+### Features
+
+- **ios:** `JIGPluginMethod` selector-based initializer ([fcfbd87](https://github.com/familyjs/jigra/commit/fcfbd87de76cdfeccd3372cdf62586b5598d980b))
+
 # [6.0.0](https://github.com/familyjs/jigra/compare/6.0.0-alpha.2...6.0.0) (2024-06-28)
 
 **Note:** Version bump only for package @jigra/ios

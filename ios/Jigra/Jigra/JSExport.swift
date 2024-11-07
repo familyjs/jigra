@@ -67,6 +67,9 @@ internal class JSExport {
                     t.addListener = function(eventName, callback) {
                     return w.Jigra.addListener('\(plugin.jsName)', eventName, callback);
                     }
+                    t.removeAllListeners = function() {
+                    return w.Jigra.nativePromise('\(plugin.jsName)', 'removeAllListeners');
+                    }
                     """)
 
         for method in plugin.pluginMethods {

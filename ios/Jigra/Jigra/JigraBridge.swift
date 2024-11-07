@@ -388,7 +388,7 @@ open class JigraBridge: NSObject, JIGBridgeProtocol {
     }
 
     @objc public func releaseCall(withID: String) {
-        let _ = storedCalls.withLock { $0.removeValue(forKey: withID) }
+        _ = storedCalls.withLock { $0.removeValue(forKey: withID) }
     }
 
     // MARK: - Deprecated Versions

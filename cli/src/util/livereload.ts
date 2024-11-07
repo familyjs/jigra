@@ -112,6 +112,7 @@ class JigLiveReload {
     return !all.length ? loopback(family) : all[0];
   }
 
+  // TODO remove on next major as it's unused
   async editExtConfigForLiveReload(
     config: Config,
     platformName: string,
@@ -137,6 +138,7 @@ class JigLiveReload {
     return configJson;
   }
 
+  // TODO remove rootConfigChange param on next major as it's unused
   async editJigConfigForLiveReload(
     config: Config,
     platformName: string,

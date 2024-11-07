@@ -546,6 +546,7 @@ export function getIncompatibleCordovaPlugins(platform: string): string[] {
 export function needsStaticPod(plugin: Plugin, config: Config): boolean {
   let pluginList = ['phonegap-plugin-push', '@batch.com/cordova-plugin', 'onesignal-cordova-plugin'];
   if (config.app.extConfig?.cordova?.staticPlugins) {
+    logger.warn('cordova.staticPlugins is deprecated, make sure you are using latest version of the plugin');
     pluginList = pluginList.concat(config.app.extConfig?.cordova?.staticPlugins);
   }
   return pluginList.includes(plugin.id) || useFrameworks(plugin);

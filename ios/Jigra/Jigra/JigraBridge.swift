@@ -113,7 +113,7 @@ open class JigraBridge: NSObject, JIGBridgeProtocol {
     // Manager for getting Cordova plugins
     var cordovaPluginManager: CDVPluginManager?
     // Calls we are storing to resolve later
-    var storedCalls = [String: JIGPluginCall]()
+    var storedCalls = ConcurrentDictionary<JIGPluginCall>()
     // Whether to inject the Cordova files
     private var injectCordovaFiles = false
     private var cordovaParser: CDVConfigParser?
@@ -278,7 +278,7 @@ open class JigraBridge: NSObject, JIGBridgeProtocol {
      sending data back to the page from a previous page.
      */
     func reset() {
-        storedCalls = [String: JIGPluginCall]()
+        storedCalls.withLock { $0.removeAll() }
     }
 
     /**
@@ -388,7 +388,7 @@ open class JigraBridge: NSObject, JIGBridgeProtocol {
     }
 
     @objc public func releaseCall(withID: String) {
-        storedCalls.removeValue(forKey: withID)
+        let _ = storedCalls.withLock { $0.removeValue(forKey: withID) }
     }
 
     // MARK: - Deprecated Versions

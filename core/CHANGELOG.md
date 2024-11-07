@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/familyjs/jigra/compare/6.1.0...6.1.1) (2024-11-07)
+
+### Bug Fixes
+
+- **http:** handle UInt8Array on body and run fmt ([d3d9daa](https://github.com/familyjs/jigra/commit/d3d9daa1598d9e4c78c65044d4e247ca4bed221d))
+
 # [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
 
 ### Bug Fixes

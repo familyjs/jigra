@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/familyjs/jigra/compare/6.1.0...6.1.1) (2024-11-07)
+
+### Bug Fixes
+
+- **cli:** enable cleartext for live reload ([41f9a00](https://github.com/familyjs/jigra/commit/41f9a00a0d04d532e084d69ae63fabadaa795e4e))
+- **ios:** Match JigApp-SPM iOS version with project version ([95ee987](https://github.com/familyjs/jigra/commit/95ee987d2beae8562d22b3f478dedee8e8b24326))
+
 # [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
 
 ### Bug Fixes

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.1](https://github.com/familyjs/jigra/compare/6.1.0...6.1.1) (2024-11-07)
+
+### Bug Fixes
+
+- **android:** Allow WebView to load blob urls ([5ed5b31](https://github.com/familyjs/jigra/commit/5ed5b3121f404099fb82c7c4b1904306bc6f2c5c))
+- **android:** javascript injection not working on urls with query ([08cf71a](https://github.com/familyjs/jigra/commit/08cf71af6c86b003d3d53a3cb5a23a0f01ad19e6))
+- **android:** send FormData on older devices ([16f16e3](https://github.com/familyjs/jigra/commit/16f16e3e4580cea0e428ed95c495e6caffe5777c))
+- **android:** UTF-8 encode form data value ([bcca076](https://github.com/familyjs/jigra/commit/bcca076c214ed4ed9adc924408c7227684ce8b0c))
+- **cli:** enable cleartext for live reload ([41f9a00](https://github.com/familyjs/jigra/commit/41f9a00a0d04d532e084d69ae63fabadaa795e4e))
+- **http:** handle UInt8Array on body and run fmt ([d3d9daa](https://github.com/familyjs/jigra/commit/d3d9daa1598d9e4c78c65044d4e247ca4bed221d))
+- **ios:** make `removeAllListeners` accessible from javascript ([f3a7f44](https://github.com/familyjs/jigra/commit/f3a7f449d9e6a6e0165c4cba94a7698eb515df5d))
+- **ios:** Match JigApp-SPM iOS version with project version ([95ee987](https://github.com/familyjs/jigra/commit/95ee987d2beae8562d22b3f478dedee8e8b24326))
+
 # [6.1.0](https://github.com/familyjs/jigra/compare/6.0.0...6.1.0) (2024-09-20)
 
 ### Bug Fixes

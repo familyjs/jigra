@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.2](https://github.com/familyjs/jigra/compare/6.1.1...6.1.2) (2024-11-07)
+
+### Bug Fixes
+
+- **android:** better cleaning of `allowedOrigin` url ([22129bc](https://github.com/familyjs/jigra/commit/22129bc2598bc0fd4d2405dccd5949189b084304))
+- **http:** pass original url as query param on the proxy url ([cf28344](https://github.com/familyjs/jigra/commit/cf283442ea260189ad38a2eda62f86c221538618))
+- support dependencies with `.swift` at the end of name ([cc089a8](https://github.com/familyjs/jigra/commit/cc089a8570ac495ed54790b576b0a7f9178282e1))
+
 ## [6.1.1](https://github.com/familyjs/jigra/compare/6.1.0...6.1.1) (2024-11-07)
 
 ### Bug Fixes

@@ -140,23 +140,20 @@ var nativeBridge = (function (exports) {
         return { data: body, type: 'json' };
     };
     const JIGRA_HTTP_INTERCEPTOR = '/_jigra_http_interceptor_';
-    const JIGRA_HTTPS_INTERCEPTOR = '/_jigra_https_interceptor_';
+    const JIGRA_HTTP_INTERCEPTOR_URL_PARAM = 'u';
     // TODO: export as Jig function
     const isRelativeOrProxyUrl = (url) => !url ||
         !(url.startsWith('http:') || url.startsWith('https:')) ||
         url.indexOf(JIGRA_HTTP_INTERCEPTOR) > -1 ||
-        url.indexOf(JIGRA_HTTPS_INTERCEPTOR) > -1;
+        url.indexOf(JIGRA_HTTP_INTERCEPTOR) > -1;
     // TODO: export as Jig function
     const createProxyUrl = (url, win) => {
         var _a, _b;
         if (isRelativeOrProxyUrl(url))
             return url;
-        const proxyUrl = new URL(url);
         const bridgeUrl = new URL((_b = (_a = win.Jigra) === null || _a === void 0 ? void 0 : _a.getServerUrl()) !== null && _b !== void 0 ? _b : '');
-        const isHttps = proxyUrl.protocol === 'https:';
-        bridgeUrl.search = proxyUrl.search;
-        bridgeUrl.hash = proxyUrl.hash;
-        bridgeUrl.pathname = `${isHttps ? JIGRA_HTTPS_INTERCEPTOR : JIGRA_HTTP_INTERCEPTOR}/${encodeURIComponent(proxyUrl.host)}${proxyUrl.pathname}`;
+        bridgeUrl.pathname = JIGRA_HTTP_INTERCEPTOR;
+        bridgeUrl.searchParams.append(JIGRA_HTTP_INTERCEPTOR_URL_PARAM, url);
         return bridgeUrl.toString();
     };
     const initBridge = (w) => {

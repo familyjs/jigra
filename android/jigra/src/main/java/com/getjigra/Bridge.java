@@ -92,7 +92,12 @@ public class Bridge {
     public static final String JIGRA_FILE_START = "/_jigra_file_";
     public static final String JIGRA_CONTENT_START = "/_jigra_content_";
     public static final String JIGRA_HTTP_INTERCEPTOR_START = "/_jigra_http_interceptor_";
+
+    /** @deprecated JIGRA_HTTPS_INTERCEPTOR_START is no longer required. All proxied requests are handled via JIGRA_HTTP_INTERCEPTOR_START instead */
+    @Deprecated
     public static final String JIGRA_HTTPS_INTERCEPTOR_START = "/_jigra_https_interceptor_";
+
+    public static final String JIGRA_HTTP_INTERCEPTOR_URL_PARAM = "u";
 
     public static final int DEFAULT_ANDROID_WEBVIEW_VERSION = 60;
     public static final int MINIMUM_ANDROID_WEBVIEW_VERSION = 55;

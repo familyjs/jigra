@@ -30,7 +30,6 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -172,13 +171,7 @@ public class WebViewLocalServer {
     public WebResourceResponse shouldInterceptRequest(WebResourceRequest request) {
         Uri loadingUrl = request.getUrl();
 
-        if (
-            null != loadingUrl.getPath() &&
-            (
-                loadingUrl.getPath().startsWith(Bridge.JIGRA_HTTP_INTERCEPTOR_START) ||
-                loadingUrl.getPath().startsWith(Bridge.JIGRA_HTTPS_INTERCEPTOR_START)
-            )
-        ) {
+        if (null != loadingUrl.getPath() && loadingUrl.getPath().startsWith(Bridge.JIGRA_HTTP_INTERCEPTOR_START)) {
             Logger.debug("Handling JigraHttp request: " + loadingUrl);
             try {
                 return handleJigraHttpRequest(request);
@@ -259,15 +252,7 @@ public class WebViewLocalServer {
     }
 
     private WebResourceResponse handleJigraHttpRequest(WebResourceRequest request) throws IOException {
-        boolean isHttps = request.getUrl().getPath() != null && request.getUrl().getPath().startsWith(Bridge.JIGRA_HTTPS_INTERCEPTOR_START);
-
-        String urlString = request
-            .getUrl()
-            .toString()
-            .replace(bridge.getLocalUrl(), isHttps ? "https:/" : "http:/")
-            .replace(Bridge.JIGRA_HTTP_INTERCEPTOR_START, "")
-            .replace(Bridge.JIGRA_HTTPS_INTERCEPTOR_START, "");
-        urlString = URLDecoder.decode(urlString, "UTF-8");
+        String urlString = request.getUrl().getQueryParameter(Bridge.JIGRA_HTTP_INTERCEPTOR_URL_PARAM);
         URL url = new URL(urlString);
         JSObject headers = new JSObject();
 

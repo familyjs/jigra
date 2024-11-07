@@ -35,11 +35,6 @@ open class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
             return
         }
 
-        if url.path.starts(with: JigraBridge.httpsInterceptorStartIdentifier) {
-            handleJigraHttpRequest(urlSchemeTask, localUrl, true)
-            return
-        }
-
         if stringToLoad.starts(with: JigraBridge.fileStartIdentifier) {
             startPath = stringToLoad.replacingOccurrences(of: JigraBridge.fileStartIdentifier, with: "")
         } else {
@@ -138,20 +133,11 @@ open class WebViewAssetHandler: NSObject, WKURLSchemeHandler {
     func handleJigraHttpRequest(_ urlSchemeTask: WKURLSchemeTask, _ localUrl: URL, _ isHttpsRequest: Bool) {
         var urlRequest = urlSchemeTask.request
         guard let url = urlRequest.url else { return }
-        var targetUrl = url.absoluteString
-            .replacingOccurrences(of: JigraBridge.httpInterceptorStartIdentifier, with: "")
-            .replacingOccurrences(of: JigraBridge.httpsInterceptorStartIdentifier, with: "")
-        // Only replace first occurrence of the scheme
-        if let range = targetUrl.range(of: localUrl.scheme ?? InstanceDescriptorDefaults.scheme) {
-            targetUrl = targetUrl.replacingCharacters(in: range, with: isHttpsRequest ? "https" : "http")
+        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        if let targetUrl = urlComponents?.queryItems?.first(where: { $0.name == JigraBridge.httpInterceptorUrlParam })?.value,
+           !targetUrl.isEmpty {
+            urlRequest.url = URL(string: targetUrl)
         }
-
-        // Only replace first occurrence of the hostname
-        if let range = targetUrl.range(of: (localUrl.host ?? InstanceDescriptorDefaults.hostname) + "/") {
-            targetUrl = targetUrl.replacingCharacters(in: range, with: "")
-        }
-
-        urlRequest.url = URL(string: targetUrl.removingPercentEncoding ?? targetUrl)
 
         let urlSession = URLSession.shared
         let task = urlSession.dataTask(with: urlRequest) { (data, response, error) in

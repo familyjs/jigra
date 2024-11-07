@@ -95,7 +95,9 @@ open class JigraBridge: NSObject, JIGBridgeProtocol {
     public static let jigraSite = "https://jigrajs.web.app/"
     public static let fileStartIdentifier = "/_jigra_file_"
     public static let httpInterceptorStartIdentifier = "/_jigra_http_interceptor_"
+    @available(*, deprecated, message: "`httpsInterceptorStartIdentifier` is no longer required. All proxied requests are handled via `httpInterceptorStartIdentifier` instead")
     public static let httpsInterceptorStartIdentifier = "/_jigra_https_interceptor_"
+    public static let httpInterceptorUrlParam = "u"
     public static let defaultScheme = "jigra"
 
     public private(set) var webViewAssetHandler: WebViewAssetHandler
